@@ -1,0 +1,9 @@
+# Red Hat Single Sign-On 7.1 OpenShift container image
+
+NOTE: Extends link:https://github.com/jboss-container-images/redhat-sso-7-image[Red Hat Single Sign-On 7.1 container image]
+
+# License
+
+See link:LICENSE[LICENSE] file.
+
+
