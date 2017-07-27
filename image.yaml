@@ -172,7 +172,7 @@ sources:
     - artifact: oauth-20100527.jar
       md5: 91c7c70579f95b7ddee95b2143a49b41
 dogen:
-    version: 2.1.0
+    version: 2.4.0
     plugins:
         cct:
             verbose: true
