@@ -173,6 +173,8 @@ sources:
       md5: 2f74acc3efc68e3781b7004f5a683fdc
     - artifact: oauth-20100527.jar
       md5: 91c7c70579f95b7ddee95b2143a49b41
+    - artifact: hawkular-javaagent-1.0.0.CR5-redhat-1-shaded.jar
+      md5: f5d3e0220e10c706ef86af84771cf74e
 dogen:
     version: 2.4.3
     plugins:
@@ -228,6 +230,19 @@ cct:
                 - user: 185
                 - configure_sh:
           - cct_module.os-eap-db-drivers:
+                - user: 185
+                - configure_sh:
+          - cct_module.os-java-hawkular:
+                - install_as_root:
+          - cct_module.os-eap70-hawkular:
+                - install_as_root:
+          - cct_module.os-eap-hawkular:
+                - user: 185
+                - configure_sh:
+          - cct_module.os-eap-deployment-scanner:
+                - user: 185
+                - configure_sh:
+          - cct_module.os-eap-extensions:
                 - user: 185
                 - configure_sh:
           - cct_module.os-sso71:
