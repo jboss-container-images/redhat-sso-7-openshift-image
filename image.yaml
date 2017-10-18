@@ -181,6 +181,7 @@ modules:
           - name: openshift-layer
           - name: openshift-passwd
           - name: keycloak-layer
+          - name: os-logging
 packages:
       repositories:
           - jboss-os
