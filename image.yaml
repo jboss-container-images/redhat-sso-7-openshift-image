@@ -177,7 +177,7 @@ modules:
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          - name: os-sso71
+          - name: os-sso72
           - name: openshift-layer
           - name: openshift-passwd
           - name: keycloak-layer
