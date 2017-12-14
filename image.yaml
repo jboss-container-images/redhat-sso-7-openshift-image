@@ -209,8 +209,6 @@ artifacts:
       md5: 2f74acc3efc68e3781b7004f5a683fdc
     - path: oauth-20100527.jar
       md5: 91c7c70579f95b7ddee95b2143a49b41
-    - path: hawkular-javaagent-1.0.0.CR5-redhat-1-shaded.jar
-      md5: f5d3e0220e10c706ef86af84771cf74e
 run:
       user: 185
       cmd:
