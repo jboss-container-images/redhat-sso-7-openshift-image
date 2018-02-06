@@ -1,14 +1,14 @@
 schema_version: 1
 
-name: "redhat-sso-7/sso71-openshift"
-description: "Red Hat Single Sign-On 7.1 OpenShift container image"
-version: "1.2"
-from: "redhat-sso-7/sso71:latest"
+name: "redhat-sso-7/sso72-openshift"
+description: "Red Hat Single Sign-On 7.2 OpenShift container image"
+version: "1.0"
+from: "redhat-sso-7/sso72:latest"
 labels:
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO 7.1"
+      value: "Red Hat SSO 7.2"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -218,4 +218,4 @@ run:
 osbs:
       repository:
             name: redhat-sso-7-docker
-            branch: ce-1.2-openshift-sso-7.1-jdk-8-rhel-7
+            branch: jb-sso-7.2-openshift-rhel-7
