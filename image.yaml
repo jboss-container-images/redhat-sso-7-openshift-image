@@ -207,4 +207,4 @@ run:
 osbs:
       repository:
             name: redhat-sso-7-docker
-            branch: ce-1.4-openshift-sso-7.1-jdk-8-rhel-7
+            branch: jb-sso-7.1-openshift-rhel-7
