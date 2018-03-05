@@ -5,6 +5,8 @@ description: "Red Hat Single Sign-On 7.2 OpenShift container image"
 version: "1.0"
 from: "redhat-sso-7/sso72:latest"
 labels:
+    - name: "com.redhat.component"
+      value: "redhat-sso-7-sso72-openshift-container"
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
@@ -204,5 +206,5 @@ run:
           - "/opt/eap/bin/openshift-launch.sh"
 osbs:
       repository:
-            name: redhat-sso-7-docker
+            name: containers/redhat-sso-7
             branch: jb-sso-7.2-openshift-rhel-7
