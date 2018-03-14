@@ -148,13 +148,7 @@ packages:
           - python-requests
           - python-enum34
           - PyYAML
-artifacts:
-    - path: javax.json-1.0.4.jar
-      md5: 569870f975deeeb6691fcb9bc02a9555
-    - path: jboss-logmanager-ext-1.0.0.Alpha2-redhat-1.jar
-      md5: 7c743e35463db5f55f415dd666d705c5
-    - path: oauth-20100527.jar
-      md5: 91c7c70579f95b7ddee95b2143a49b41
+
 run:
       user: 185
       cmd:
