@@ -148,7 +148,7 @@ packages:
           - python-requests
           - python-enum34
           - PyYAML
-
+          - openssl
 run:
       user: 185
       cmd:
