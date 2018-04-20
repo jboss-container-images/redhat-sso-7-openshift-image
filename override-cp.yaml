@@ -2,6 +2,7 @@ modules:
       repositories:
           - name: cct_module
             git:
+                  url: https://github.com/jboss-openshift/cct_module.git
                   ref: sprint-16
 osbs:
       repository:
