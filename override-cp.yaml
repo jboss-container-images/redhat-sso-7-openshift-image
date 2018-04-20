@@ -1,3 +1,4 @@
+from: "redhat-sso-7/sso72:cp"
 modules:
       repositories:
           - name: cct_module
