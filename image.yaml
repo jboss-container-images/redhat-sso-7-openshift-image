@@ -2,7 +2,7 @@ schema_version: 1
 
 name: "redhat-sso-7/sso72-openshift"
 description: "Red Hat Single Sign-On 7.2 OpenShift container image"
-version: "1.1"
+version: "1.2"
 from: "redhat-sso-7/sso72:latest"
 labels:
     - name: "com.redhat.component"
