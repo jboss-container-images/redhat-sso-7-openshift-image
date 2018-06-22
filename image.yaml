@@ -1,16 +1,16 @@
 schema_version: 1
 
-name: "redhat-sso-7/sso73-openshift"
-description: "Red Hat Single Sign-On 7.3 OpenShift container image"
+name: "redhat-sso-7-tech-preview/sso-cd-openshift"
+description: "Red Hat Single Sign-On 7.3 continuous delivery OpenShift container image"
 version: "1.0"
-from: "redhat-sso-7/sso73:latest"
+from: "redhat-sso-7-tech-preview/sso-cd:latest"
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-7-sso73-openshift-container"
+      value: "redhat-sso-7-sso-cd-openshift-container"
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO 7.3"
+      value: "Red Hat SSO 7.3 CD"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -79,7 +79,7 @@ modules:
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          - name: os-sso73
+          - name: os-sso72
           - name: openshift-layer
           - name: openshift-passwd
           - name: keycloak-layer
@@ -91,4 +91,4 @@ run:
 osbs:
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-7.3-openshift-rhel-7
+            branch: jb-sso-cd-openshift-rhel-7
