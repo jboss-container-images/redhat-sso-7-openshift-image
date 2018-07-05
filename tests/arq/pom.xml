@@ -19,7 +19,7 @@
 
     <properties>
         <version.arquillian>1.4.0.Final</version.arquillian>
-        <version.arquillian.cube>1.15.3.ce</version.arquillian.cube>
+        <version.arquillian.cube>1.16.0</version.arquillian.cube>
         <version.json-simple>1.1.1</version.json-simple>
         <version.junit>4.12</version.junit>
         <version.org.jboss.as.arquillian.container>7.2.0.Final</version.org.jboss.as.arquillian.container>
