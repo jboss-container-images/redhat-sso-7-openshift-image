@@ -50,7 +50,7 @@ import java.net.URL;
         })
 
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap7-app-secret.json")
-@OpenShiftDynamicImageStreamResource(name = "${imageStream.eap71.name:jboss-eap71-openshift}", image = "${imageStream.eap71.image:registry.access.redhat.com/jboss-eap-7/eap71-openshift:1.2}", version = "${imageStream.eap71.version:1.2}")
+@OpenShiftDynamicImageStreamResource(name = "${imageStream.eap71.name:jboss-eap71-openshift}", image = "${imageStream.eap71.image:registry.access.redhat.com/jboss-eap-7/eap71-openshift:1.3}", version = "${imageStream.eap71.version:1.3}")
 public class SsoEap71SecureDeploymentsTest extends SsoEapSecureDeploymentsBase {
     @RouteURL("eap-app")
     private URL routeURL;
