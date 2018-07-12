@@ -22,7 +22,7 @@
                 }
             },
             "labels": {
-                "xpaas": "7.3.0.CD02"
+                "rhsso": "7.3.0.CD02"
             },
             "spec": {
                 "tags": [
