@@ -56,7 +56,12 @@ modules:
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
                   ref: master
+          - name: sso73_modules
+            path: modules
       install:
+          # Order of the modules installation below matters!!! DO NOT CHANGE it unless
+          # you first verified the image with changed order still works correctly
+          # Common modules from the main CE cct_module repository
           - name: dynamic-resources
           - name: s2i-common
           - name: java-alternatives
@@ -79,7 +84,9 @@ modules:
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          - name: os-sso72
+          # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
+          - name: sso.config.launch.setup.73
+          # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: openshift-passwd
           - name: keycloak-layer

@@ -24,6 +24,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |Variable name |Image Environment Variable |Description |Example value |Required
 
 |`APPLICATION_NAME` | -- | The name for the application. | sso | True
+|`SSO_HOSTNAME` | `SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}` | False
 |`JGROUPS_CLUSTER_PASSWORD` | `JGROUPS_CLUSTER_PASSWORD` | The password for the JGroups cluster. | `${JGROUPS_CLUSTER_PASSWORD}` | True
 |`DB_JNDI` | `DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql | java:jboss/datasources/KeycloakDS | False
 |`DB_DATABASE` | `DB_DATABASE` | Database name | root | True
@@ -181,7 +182,8 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.19+| `${APPLICATION_NAME}`
+.20+| `${APPLICATION_NAME}`
+|`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-mysql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql | `${DB_JNDI}`
 |`DB_USERNAME` | Database user name | `${DB_USERNAME}`

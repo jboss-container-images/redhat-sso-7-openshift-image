@@ -43,6 +43,13 @@
             "required": false
         },
         {
+            "displayName": "Custom RH-SSO Server Hostname",
+            "description": "Custom hostname for the RH-SSO server.",
+            "name": "SSO_HOSTNAME",
+            "value": "",
+            "required": false
+        },
+        {
             "displayName": "Server Keystore Secret Name",
             "description": "The name of the secret containing the keystore file",
             "name": "HTTPS_SECRET",
@@ -437,6 +444,10 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "SSO_HOSTNAME",
+                                        "value": "${SSO_HOSTNAME}"
+                                    },
                                     {
                                         "name": "DB_MIN_POOL_SIZE",
                                         "value": "${DB_MIN_POOL_SIZE}"
