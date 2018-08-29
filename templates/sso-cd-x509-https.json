@@ -29,6 +29,13 @@
             "required": true
         },
         {
+            "displayName": "Custom RH-SSO Server Hostname",
+            "description": "Custom hostname for the RH-SSO server.",
+            "name": "SSO_HOSTNAME",
+            "value": "",
+            "required": false
+        },
+        {
             "displayName": "JGroups Cluster Password",
             "description": "The password for the JGroups cluster.",
             "name": "JGROUPS_CLUSTER_PASSWORD",
@@ -291,6 +298,10 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "SSO_HOSTNAME",
+                                        "value": "${SSO_HOSTNAME}"
+                                    },
                                     {
                                         "name": "DB_MIN_POOL_SIZE",
                                         "value": "${DB_MIN_POOL_SIZE}"

@@ -43,6 +43,13 @@
             "required": false
         },
         {
+            "displayName": "Custom RH-SSO Server Hostname",
+            "description": "Custom hostname for the RH-SSO server.",
+            "name": "SSO_HOSTNAME",
+            "value": "",
+            "required": false
+        },
+        {
             "displayName": "Database JNDI Name",
             "description": "Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql",
             "name": "DB_JNDI",
@@ -537,6 +544,10 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "SSO_HOSTNAME",
+                                        "value": "${SSO_HOSTNAME}"
+                                    },
                                     {
                                         "name": "DB_SERVICE_PREFIX_MAPPING",
                                         "value": "${APPLICATION_NAME}-mysql=DB"

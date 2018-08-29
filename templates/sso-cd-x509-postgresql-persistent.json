@@ -29,6 +29,13 @@
             "required": true
         },
         {
+            "displayName": "Custom RH-SSO Server Hostname",
+            "description": "Custom hostname for the RH-SSO server.",
+            "name": "SSO_HOSTNAME",
+            "value": "",
+            "required": false
+        },
+        {
             "displayName": "JGroups Cluster Password",
             "description": "The password for the JGroups cluster.",
             "name": "JGROUPS_CLUSTER_PASSWORD",
@@ -372,6 +379,10 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "SSO_HOSTNAME",
+                                        "value": "${SSO_HOSTNAME}"
+                                    },
                                     {
                                         "name": "DB_SERVICE_PREFIX_MAPPING",
                                         "value": "${APPLICATION_NAME}-postgresql=DB"

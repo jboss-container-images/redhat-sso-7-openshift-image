@@ -26,6 +26,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`APPLICATION_NAME` | -- | The name for the application. | sso | True
 |`HOSTNAME_HTTP` | -- | Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix> | -- | False
 |`HOSTNAME_HTTPS` | -- | Custom hostname for https service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix> | -- | False
+|`SSO_HOSTNAME` | `SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}` | False
 |`DB_JNDI` | `DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql | java:jboss/datasources/KeycloakDS | False
 |`DB_DATABASE` | `DB_DATABASE` | Database name | root | True
 |`HTTPS_SECRET` | -- | The name of the secret containing the keystore file | sso-app-secret | False
@@ -199,7 +200,8 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.31+| `${APPLICATION_NAME}`
+.32+| `${APPLICATION_NAME}`
+|`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-mysql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql | `${DB_JNDI}`
 |`DB_USERNAME` | Database user name | `${DB_USERNAME}`
