@@ -18,11 +18,11 @@
                     "description": "Red Hat Single Sign-On 7.3 continuous delivery",
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7.3.0.CD02"
+                    "version": "7.3.0.CD03"
                 }
             },
             "labels": {
-                "rhsso": "7.3.0.CD02"
+                "rhsso": "7.3.0.CD03"
             },
             "spec": {
                 "tags": [
