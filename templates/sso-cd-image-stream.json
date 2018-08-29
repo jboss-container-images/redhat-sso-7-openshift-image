@@ -36,9 +36,12 @@
                             "version": "latest",
                             "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery (Tech Preview)"
                         },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.access.redhat.com/redhat-sso-7-tech-preview/sso-cd-openshift:latest"
+                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:latest"
                         }
                     },
                     {
@@ -51,9 +54,12 @@
                             "version": "1.0",
                             "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery (Tech Preview)"
                         },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.access.redhat.com/redhat-sso-7-tech-preview/sso-cd-openshift:1.0"
+                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:1.0"
                         }
                     }
                 ]
