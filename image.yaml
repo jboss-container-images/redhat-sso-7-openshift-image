@@ -18,21 +18,9 @@ labels:
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
 envs:
-    - name: "SSO_ADMIN_USERNAME"
-      example: "admin"
-      description: "Username of the administrator account for the 'master' realm of the SSO server. Required. If no value is specified, it is auto generated and displayed as an OpenShift Instructional message when the template is instantiated."
-    - name: "SSO_ADMIN_PASSWORD"
-      example: "hardtoguess"
-      description: "Password of the administrator account for the 'master' realm of the SSO server. Required. If no value is specified, it is auto generated and displayed as an OpenShift Instructional message when the template is instantiated."
     - name: "SSO_REALM"
       example: "demo"
       description: "SSO Realm created if this ENV is provided"
-    - name: "SSO_SERVICE_USERNAME"
-      example: "username"
-      description: "SSO Server service username with rights to create Client configurations in SSO_REALM. This user is created if this ENV is provided"
-    - name: "SSO_SERVICE_PASSWORD"
-      example: "password"
-      description: "Password for SSO_SERVICE_USERNAME"
     - name: "SSO_TRUSTSTORE"
       example: "truststore.jks"
       description: "The name of the truststore file within the secret"
@@ -45,8 +33,8 @@ envs:
     - name: "SSO_TRUSTSTORE_SECRET"
       example: "truststore-secret"
       description: "The name of the secret containing the truststore file. Used for volume secretName"
-    - name: SCRIPT_DEBUG
-      description: If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed.
+    - name: "SCRIPT_DEBUG"
+      description: "If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed."
       example: "true"
 ports:
     - value: 8443

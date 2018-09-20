@@ -182,7 +182,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.20+| `${APPLICATION_NAME}`
+.22+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-mysql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/mysql | `${DB_JNDI}`
@@ -198,6 +198,8 @@ for more information.
 |`OPENSHIFT_DNS_PING_SERVICE_PORT` | -- | 8888
 |X509_CA_BUNDLE | -- | `/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt`
 |`JGROUPS_CLUSTER_PASSWORD` | The password for the JGroups cluster. | `${JGROUPS_CLUSTER_PASSWORD}`
+|`SERVICE_WAIT_NAME` | -- | `${APPLICATION_NAME}-mysql`
+|`SERVICE_WAIT_INTRO_MESSAGE` | -- | Ensure a persistent volume is available for the "${APPLICATION_NAME}-mysql-claim" or a storage class is set.
 |`SSO_ADMIN_USERNAME` | RH-SSO Server administrator username | `${SSO_ADMIN_USERNAME}`
 |`SSO_ADMIN_PASSWORD` | RH-SSO Server administrator password | `${SSO_ADMIN_PASSWORD}`
 |`SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}`
