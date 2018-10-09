@@ -18,11 +18,11 @@
                     "description": "Red Hat SSO 7.2",
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.2",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "1.4.16"
+                    "version": "1.2.0"
                 }
             },
             "labels": {
-                "xpaas": "1.4.16"
+                "rh-sso": "1.2.0"
             },
             "spec": {
                 "tags": [
