@@ -1,0 +1,134 @@
+
+////
+  the source for the release notes part of this page is in the file
+  ./release-notes.adoc.in
+////
+
+== Release Notes
+
+=== Release 1.4.16
+ * Changed image stream URLs from registry.access.redhat.com to registry.redhat.io
+ * Removed JBoss Data Grid 6.5 resources
+ * Removed Jboss Data Virtualization 6.3 resources
+
+=== Release 1.4.10
+
+=== Release 1.4.9
+ * Add probes for DB pods
+ * Update datavirt secret to use correct location for database files
+ * Add support for SSO 7.2
+ * Update EAP templates to reference AMQ 6.3, from 6.2
+ * Split jboss-image-streams.json into separate files, e.g. eap/eap64-image-sream.json
+
+=== Release 1.4.8
+ * Update default volume capacity to 1G
+ * Add emptyDir volumes for non-persistent databases
+ * Add parameter for configuring memory limits (default 1G)
+ * Move from KUBE_PING to DNS_PING for clustering in AMQ and EAP based products
+ * Removed service accounts (DNS_PING requires no special privileges).
+ * Added templates for automated TX recovery in EAP (tech-preview)
+
+=== Release 1.4.7
+ * Support clean shutdown on TERM for EAP 7.x based products
+ * Remove JWS 3.0 templates
+ * Remove BxMS 6.3 templates
+ * Deprecate SSO 7.0
+ * Add support for configuring queue memory limit (AMQ)
+
+=== Release 1.4.5
+ * Add support for JDG 7.1
+
+=== Release 1.4.4
+ * Add templates for AMQ message migration
+
+=== Release 1.4.1
+ * Update BxMS templates to reference AMQ 6.3, from 6.2
+
+=== Release 1.4.0
+ * Add parameter for specifying DB version
+
+=== Release 1.3.7
+ * Add client images for datavirt and datagrid
+
+=== Release 1.3.6
+ * Add support for Java S2I image
+
+=== Release 1.3.5
+ * Updated datavirt templates to reference new quickstart
+ * Modified datavirt-app-secret to include secret for datasource configuration
+ * datavirt-app-secret.json renamed datavirt-app-secret.yaml to improve readability
+
+=== Release 1.3.4
+
+ * New image definitions for:
+ ** Red Hat JBoss Data Virtualization 6.3
+
+=== Release 1.3.3
+
+ * New image definitions for:
+ ** Red Hat JBoss BPM Suite 6.3 intelligent process server
+ ** Red Hat JBoss BRMS 6.3 decision server
+
+=== Release 1.3.2
+
+ * New image definitions for:
+ ** EAP 6.4
+ ** EAP 7
+ ** Red Hat SS0 7 GA
+ * Added support for configuring EAP timer service to use an external data source
+ * Service account name is specified using a parameter in EAP and SSO templates
+ * Added ability to deploy exploded archives
+
+=== Release 1.3.1
+
+ * New image definitions for:
+ ** EAP 7 GA
+ ** A-MQ 6
+ * A-MQ persistent templates now support meshing.  Use AMQ_SPLIT=true to use separate storage directories for each pod in a cluster.
+
+=== Release 1.3.0
+
+ * New image definitions for:
+ ** Red Hat SSO
+ ** EAP 7 Beta
+ ** Red Hat SSO support in EAP 6.4 and 7 beta
+ * Switch templates using deprecated key serviceAccount to serviceAccountName
+
+=== Release 1.2.0
+ * Added support for JBoss Data Grid
+ * Added support for JBoss Decision Server
+ * Added liveness probe to EAP templates
+ * Encrypt JGroups communication (EAP based templates)
+ * JMS physical names
+ * Add Jolokia port to templates
+ * Renamed APPLICATION_DOMAIN to HOSTNAME_HTTP and HOSTNAME_HTTPS to correspond to http and https routes
+
+=== Release 1.1.0
+ * Added terminationGracePeriodSeconds to pod templates
+ * Renamed templates:
+ ** Include product minor version in names (e.g. eap6-basic-s2i => eap64-basic-s2i)
+ ** Replaced sti with s2i
+ * Add ConfigChange trigger to DeploymentConfig in all templates
+ * Set appropriate defaults so all templates can be instantiated as-is
+ * Image names and tags have changed from product release to xPaaS release (e.g. jboss-eap-6/eap6-openshift:6.4 => jboss-eap-6/eap64-openshift:1.1)
+ * ImageStream names have changed to include minor version in names (e.g. jboss-eap6-openshift => jboss-eap64-openshift) 
+ * Use Kubernetes to locate cluster nodes instead of DNS (e.g. KUBE_PING vs DNS_PING in JGroups configuration)
+ * Add ConfigChange trigger to BuildConfig in all templates
+ * Add forcePull=true to BuildConfig in all templates
+ * Add required=true to all required parameters
+ * Fix inconsistency in A-MQ templates, MQ_PROTOCOL and AMQ_TRANSPORTS
+ * Modified route names to produce better default hostnames
+ * Updated source parameter names to be consistent with other OpenShift templates (e.g. GIT_URI => SOURCE_REPOSITORY_URL)
+ * Add missing mqtt+ssl port to A-MQ templates
+ * Add parameter to select ImageStream namespace, defaulting to "openshift"
+
+=== Release 1.0.2
+ * Fix capitalization of GitHub trigger type
+
+=== Release 1.0.1
+ * Shorten port names
+ * update deprecated items in BuildConfig
+
+=== Release 1.0.0
+ * Initial release with support for JBoss EAP, JBoss Web Server, and JBoss A-MQ
+
