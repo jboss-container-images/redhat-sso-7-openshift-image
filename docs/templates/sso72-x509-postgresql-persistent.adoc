@@ -178,7 +178,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.20+| `${APPLICATION_NAME}`
+.22+| `${APPLICATION_NAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
 |`DB_USERNAME` | Database user name | `${DB_USERNAME}`
@@ -193,6 +193,8 @@ for more information.
 |`OPENSHIFT_DNS_PING_SERVICE_PORT` | -- | 8888
 |X509_CA_BUNDLE | -- | `/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt`
 |`JGROUPS_CLUSTER_PASSWORD` | The password for the JGroups cluster. | `${JGROUPS_CLUSTER_PASSWORD}`
+|`SERVICE_WAIT_NAME` | -- | `${APPLICATION_NAME}-postgresql`
+|`SERVICE_WAIT_INTRO_MESSAGE` | -- | Ensure a persistent volume is available for the "${APPLICATION_NAME}-postgresql-claim" or a storage class is set.
 |`JGROUPS_ENCRYPT_PROTOCOL` | -- | `ASYM_ENCRYPT`
 |`SSO_ADMIN_USERNAME` | RH-SSO Server administrator username | `${SSO_ADMIN_USERNAME}`
 |`SSO_ADMIN_PASSWORD` | RH-SSO Server administrator password | `${SSO_ADMIN_PASSWORD}`

@@ -195,7 +195,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.31+| `${APPLICATION_NAME}`
+.32+| `${APPLICATION_NAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
 |`DB_USERNAME` | Database user name | `${DB_USERNAME}`
@@ -219,6 +219,7 @@ for more information.
 |`JGROUPS_ENCRYPT_NAME` | The name associated with the server certificate (e.g. secret-key) | `${JGROUPS_ENCRYPT_NAME}`
 |`JGROUPS_ENCRYPT_PASSWORD` | The password for the keystore and certificate (e.g. password) | `${JGROUPS_ENCRYPT_PASSWORD}`
 |`JGROUPS_CLUSTER_PASSWORD` | JGroups cluster password | `${JGROUPS_CLUSTER_PASSWORD}`
+|`SERVICE_WAIT_NAME` | -- | `${APPLICATION_NAME}-postgresql`
 |`SSO_ADMIN_USERNAME` | RH-SSO Server administrator username | `${SSO_ADMIN_USERNAME}`
 |`SSO_ADMIN_PASSWORD` | RH-SSO Server administrator password | `${SSO_ADMIN_PASSWORD}`
 |`SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}`

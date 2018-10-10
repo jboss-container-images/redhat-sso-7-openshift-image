@@ -441,6 +441,14 @@
                                         "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     },
                                     {
+                                        "name": "SERVICE_WAIT_NAME",
+                                        "value": "${APPLICATION_NAME}-mysql"
+                                    },
+                                    {
+                                        "name": "SERVICE_WAIT_INTRO_MESSAGE",
+                                        "value": "Ensure a persistent volume is available for the \"${APPLICATION_NAME}-mysql-claim\" or a storage class is set."
+                                    },
+                                    {
                                         "name": "JGROUPS_ENCRYPT_PROTOCOL",
                                         "value": "ASYM_ENCRYPT"
                                     },
