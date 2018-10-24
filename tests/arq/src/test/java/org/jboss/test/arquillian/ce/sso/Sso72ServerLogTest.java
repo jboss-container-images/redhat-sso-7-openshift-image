@@ -41,7 +41,7 @@ import java.util.Map;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-@Template(url = "https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/sso/sso72-https.json",
+@Template(url = "file://${user.dir}/templates/sso-cd-https.json",
         labels = "application=sso",
         parameters = {
                 @TemplateParameter(name = "IMAGE_STREAM_NAMESPACE", value = "${kubernetes.namespace:openshift}"),
