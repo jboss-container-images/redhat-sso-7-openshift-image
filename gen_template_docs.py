@@ -22,7 +22,7 @@ REPO_NAME = "redhat-sso-7-openshift-image/"
 TEMPLATE_DOCS = "docs/"
 template_dirs = [ 'templates' ]
 
-LINKS =  { "redhat-sso72-openshift:1.2": "../../templates/sso-openshift{outfilesuffix}[`redhat-sso-7/sso72-openshift`]", }
+LINKS =  { "redhat-sso72-openshift:1.3": "../../templates/sso-openshift{outfilesuffix}[`redhat-sso-7/sso72-openshift`]", }
 
 PARAMETER_VALUES = {"APPLICATION_DOMAIN": "secure-app.test.router.default.local", \
                    "SOURCE_REPOSITORY_URL": "https://github.com/jboss-openshift/openshift-examples.git", \
