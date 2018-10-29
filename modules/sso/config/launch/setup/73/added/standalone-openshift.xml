@@ -62,7 +62,7 @@
                 </handlers>
             </logger>
         </audit-log>
-    <management-interfaces>
+        <management-interfaces>
             <http-interface console-enabled="false"><!-- ##MGMT_IFACE_REALM## -->
                 <http-upgrade enabled="true"/>
                 <socket-binding http="management-http"/>
@@ -208,6 +208,7 @@
             <default-security-domain value="other"/>
             <default-missing-method-permissions-deny-access value="true"/>
             <log-system-exceptions value="true"/>
+            <!-- ##EJB_APPLICATION_SECURITY_DOMAINS## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:io:3.0">
             <worker name="default"/>
@@ -485,6 +486,7 @@
             </sasl>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:security:2.0">
+            <!-- ##ELYTRON_INTEGRATION## -->
             <security-domains>
                 <security-domain name="other" cache-type="default">
                     <authentication>
@@ -546,6 +548,7 @@
             <handlers>
                 <file name="sso-welcome-content" path="${jboss.home.dir}/root-app-redirect"/>
             </handlers>
+            <!-- ##HTTP_APPLICATION_SECURITY_DOMAINS## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:keycloak-server:1.1">
             <web-context>auth</web-context>
