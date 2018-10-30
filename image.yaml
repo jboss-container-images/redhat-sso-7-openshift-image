@@ -56,6 +56,10 @@ modules:
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
                   ref: master
+          - name: jboss-eap-modules
+            git:
+                  url: https://github.com/jboss-container-images/jboss-eap-modules.git
+                  ref: CD14
           - name: sso73_modules
             path: modules
       install:
@@ -68,14 +72,16 @@ modules:
           - name: os-eap7-openshift
           - name: os-eap-s2i
           - name: os-java-jolokia
-          - name: jolokia
+          - name: jboss.eap.cd.jolokia
           - name: os-eap7-openshift
-          - name: os-eap7-modules
+          - name: jboss.eap.cd.openshift.modules
           - name: os-eap7-ping
           - name: os-java-run
           - name: os-eap-launch
           - name: os-eap7-launch
-          - name: os-eap-logging
+          - name: jboss.eap.cd.logging
+          - name: jboss.eap.config.jgroups
+          - name: jboss.eap.config.elytron
           - name: os-eap-probes
           - name: jboss-maven
           - name: os-eap-db-drivers
