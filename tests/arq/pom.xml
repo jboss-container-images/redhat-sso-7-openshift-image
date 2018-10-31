@@ -133,11 +133,6 @@
                         <include>org/jboss/**/*Test.java</include>
                     </includes>
                     <systemPropertyVariables>
-                        <!-- the property below ere needed to run the All in One tests, if it is not set then it
-                        will be default to cloudapps.example.com, then make sure your openshift instance can resolve this
-                        domain internally -->
-                        <route.suffix>cloudapps.example.com</route.suffix>
-                        <!-- end -->
                         <sun.net.spi.nameservice.provider.1>dns,ArquillianCubeNameService</sun.net.spi.nameservice.provider.1>
                         <sun.net.spi.nameservice.provider.2>default</sun.net.spi.nameservice.provider.2>
                         <kubernetes.master>${kubernetes.master}</kubernetes.master>
