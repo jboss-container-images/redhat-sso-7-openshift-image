@@ -32,7 +32,7 @@ TOKEN=$(oc whoami -t)
 Now you can run the tests
 
 ```
-mvn clean install -Dkubernetes.master=https://${OPENSHIFT_URL}:${OPENSHIFT_PORT} -Dkubernetes.auth.token=${TOKEN} -Drouter.hostIP=${ROUTER_IP} -Droute.suffix=${ROUTE_SUFFIX} -Darquillian.startup.timeout=6000
+mvn clean install -Dkubernetes.master=https://${OPENSHIFT_URL}:${OPENSHIFT_PORT} -Dkubernetes.auth.token=${TOKEN} -Drouter.hostIP=${ROUTER_IP} -Darquillian.startup.timeout=6000
 ```
 
 Additionally you can (or even should) specify which images should be used to run the tests against by specifying additional parameters:
