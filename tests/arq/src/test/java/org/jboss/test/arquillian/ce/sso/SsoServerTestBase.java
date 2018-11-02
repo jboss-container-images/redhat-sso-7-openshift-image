@@ -128,6 +128,6 @@ public abstract class SsoServerTestBase extends SsoTestBase {
 
         HttpResponse response = client.execute(request, execOptions);
 
-        assertTrue(response.getResponseBodyAsString().contains("Welcome to Red Hat Single Sign-On"));
+        assertTrue(response.getResponseBodyAsString().contains("Welcome to rh-sso"));
     }
 }
