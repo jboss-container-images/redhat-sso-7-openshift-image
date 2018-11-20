@@ -59,7 +59,7 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP72-RC1
+                  ref: EAP72-CR1
           - name: sso73_modules
             path: modules
       install:
