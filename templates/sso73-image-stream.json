@@ -2,9 +2,9 @@
     "kind": "List",
     "apiVersion": "v1",
     "metadata": {
-        "name": "sso-cd-image-stream",
+        "name": "sso73-image-stream",
         "annotations": {
-            "description": "ImageStream definition for Red Hat Single Sign-On 7.3 continuous delivery.",
+            "description": "ImageStream definition for Red Hat Single Sign-On 7.3.",
             "openshift.io/provider-display-name": "Red Hat, Inc."
         }
     },
@@ -13,53 +13,53 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "redhat-sso-cd-openshift",
+                "name": "redhat-sso73-openshift",
                 "annotations": {
-                    "description": "Red Hat Single Sign-On 7.3 continuous delivery",
-                    "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery",
+                    "description": "Red Hat Single Sign-On 7.3",
+                    "openshift.io/display-name": "Red Hat Single Sign-On 7.3",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7.3.0.CD03"
+                    "version": "7.3.0.ER1"
                 }
             },
             "labels": {
-                "rhsso": "7.3.0.CD03"
+                "rhsso": "7.3.0.ER1"
             },
             "spec": {
                 "tags": [
                     {
                         "name": "latest",
                         "annotations": {
-                            "description": "Latest build of Red Hat Single Sign-On 7.3 continuous delivery Tech Preview image",
+                            "description": "Latest build of Red Hat Single Sign-On 7.3 image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
                             "supports": "sso:7.3",
                             "version": "latest",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3"
                         },
                         "referencePolicy": {
                             "type": "Local"
                         },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:latest"
+                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso73-openshift:1.0"
                         }
                     },
                     {
                         "name": "1.0",
                         "annotations": {
-                            "description": "Red Hat Single Sign-On 7.3 continuous delivery Tech Preview image",
+                            "description": "Red Hat Single Sign-On 7.3 image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
                             "supports": "sso:7.3",
                             "version": "1.0",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3"
                         },
                         "referencePolicy": {
                             "type": "Local"
                         },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:1.0"
+                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso73-openshift:1.0"
                         }
                     }
                 ]
