@@ -1,16 +1,16 @@
 schema_version: 1
 
-name: "redhat-sso-7-tech-preview/sso-cd-openshift"
-description: "Red Hat Single Sign-On 7.3 continuous delivery OpenShift container image"
+name: "redhat-sso-7/sso73-openshift"
+description: "Red Hat Single Sign-On 7.3 OpenShift container image"
 version: "1.0"
-from: "redhat-sso-7-tech-preview/sso-cd:latest"
+from: "redhat-sso-7/sso73:latest"
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-7-sso-cd-openshift-container"
+      value: "redhat-sso-7-sso73-openshift-container"
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO 7.3 CD"
+      value: "Red Hat SSO 7.3"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -59,7 +59,7 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: CD14
+                  ref: EAP72-RC1
           - name: sso73_modules
             path: modules
       install:
@@ -90,7 +90,7 @@ modules:
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
+          # RH-SSO 7.3 product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
@@ -104,4 +104,4 @@ run:
 osbs:
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-cd-openshift-rhel-7
+            branch: jb-sso-7.3-openshift-rhel-7
