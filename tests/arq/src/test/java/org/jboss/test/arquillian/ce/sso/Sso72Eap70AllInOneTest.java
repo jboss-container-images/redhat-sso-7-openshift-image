@@ -35,10 +35,10 @@ import org.junit.runner.RunWith;
         labels = "application=helloworld,component=eap",
         parameters = {
                 @TemplateParameter(name = "IMAGE_STREAM_NAMESPACE", value = "${kubernetes.namespace:openshift}"),
-                @TemplateParameter(name = "SSO_HOSTNAME_HTTP", value = "sso.${route.suffix:cloudapps.example.com}"),
-                @TemplateParameter(name = "SSO_HOSTNAME_HTTPS", value = "secure-sso.${route.suffix:cloudapps.example.com}"),
-                @TemplateParameter(name = "HOSTNAME_HTTP", value = "helloworld.${route.suffix:cloudapps.example.com}"),
-                @TemplateParameter(name = "HOSTNAME_HTTPS", value = "secure-helloworld.${route.suffix:cloudapps.example.com}")
+                @TemplateParameter(name = "SSO_HOSTNAME_HTTP", value = "sso.${kubernetes.domain:cloudapps.example.com}"),
+                @TemplateParameter(name = "SSO_HOSTNAME_HTTPS", value = "secure-sso.${kubernetes.domain:cloudapps.example.com}"),
+                @TemplateParameter(name = "HOSTNAME_HTTP", value = "helloworld.${kubernetes.domain:cloudapps.example.com}"),
+                @TemplateParameter(name = "HOSTNAME_HTTPS", value = "secure-helloworld.${kubernetes.domain:cloudapps.example.com}")
         }
 )
 @OpenShiftResource("https://raw.githubusercontent.com/jboss-openshift/openshift-examples/master/demos/sso/sso-demo-secret.json")

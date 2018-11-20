@@ -31,7 +31,7 @@ import org.junit.Test;
 
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap7-app-secret.json")
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
-@OpenShiftDynamicImageStreamResource(name = "${imageStream.eap71.name:jboss-eap71-openshift}", image = "${imageStream.eap71.image:registry.access.redhat.com/jboss-eap-7/eap71-openshift:1.2}", version = "${imageStream.eap71.version:1.2}")
+@OpenShiftDynamicImageStreamResource(name = "${imageStream.eap71.name:jboss-eap71-openshift}", image = "${imageStream.eap71.image:registry.access.redhat.com/jboss-eap-7/eap71-openshift:1.3}", version = "${imageStream.eap71.version:1.3}")
 @OpenShiftDynamicImageStreamResource(name = "${imageStream.eap64.name:jboss-eap64-openshift}", image = "${imageStream.eap64.image:registry.access.redhat.com/jboss-eap-6/eap64-openshift:1.8}", version = "${imageStream.eap64.version:1.8}")
 public abstract class SsoEapTestBase extends SsoTestBase {
 
