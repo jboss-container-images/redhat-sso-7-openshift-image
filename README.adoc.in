@@ -1,0 +1,9 @@
+= Red Hat Single Sign-On 7.2 Application Templates
+
+This project contains OpenShift v3 application templates which support applications based on Red Hat Single Sign-On 7.2 product.
+Source can be found https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso72-dev[here]
+
+:icons: font
+:toc: macro
+
+toc::[levels=1]
