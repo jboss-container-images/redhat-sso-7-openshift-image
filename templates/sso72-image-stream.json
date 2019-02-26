@@ -19,10 +19,10 @@
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.2",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
                     "version": "rh-sso-7.2-v1.3.0"
+                },
+                "labels": {
+                    "rh-sso": "7.2-v1.3.0"
                 }
-            },
-            "labels": {
-                "rh-sso": "7.2-v1.3.0"
             },
             "spec": {
                 "tags": [
