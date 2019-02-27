@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<server xmlns="urn:jboss:domain:8.0">
+<server xmlns="urn:jboss:domain:9.0">
     <extensions>
         <extension module="org.jboss.as.clustering.infinispan"/>
         <extension module="org.jboss.as.clustering.jgroups"/>
@@ -251,6 +251,7 @@
             <cache-container name="web" default-cache="repl" module="org.wildfly.clustering.web.infinispan">
                 <transport lock-timeout="60000"/>
                 <replicated-cache name="repl">
+                    <locking isolation="REPEATABLE_READ"/>
                     <transaction mode="BATCH"/>
                     <file-store/>
                 </replicated-cache>
@@ -263,6 +264,8 @@
             <cache-container name="ejb" aliases="sfsb" default-cache="repl" module="org.wildfly.clustering.ejb.infinispan">
                 <transport lock-timeout="60000"/>
                 <replicated-cache name="repl">
+                    <locking isolation="REPEATABLE_READ"/>
+                    <object-memory size="10000"/>
                     <transaction mode="BATCH"/>
                     <file-store/>
                 </replicated-cache>
@@ -529,7 +532,7 @@
             <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/>
             <!-- ##JDBC_STORE## -->
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:undertow:7.0" default-server="default-server" default-virtual-host="default-host" default-servlet-container="default" default-security-domain="other">
+        <subsystem xmlns="urn:jboss:domain:undertow:8.0" default-server="default-server" default-virtual-host="default-host" default-servlet-container="default" default-security-domain="other">
             <buffer-cache name="default"/>
             <server name="default-server">
                 <ajp-listener name="ajp" socket-binding="ajp"/>
