@@ -97,10 +97,6 @@ modules:
           - name: openshift-passwd
           - name: keycloak-layer
           - name: os-logging
-artifacts:
-    - name: txn-recovery-marker-jdbc-common
-      target: txn-recovery-marker-jdbc-common-1.1.2.Final-redhat-00001.jar
-      md5: 252aa2b4bcded8e5bf8a7087ad7bbbeb
 run:
       user: 185
       cmd:
