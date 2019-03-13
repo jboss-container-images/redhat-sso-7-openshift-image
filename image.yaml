@@ -2,7 +2,7 @@ schema_version: 1
 
 name: "redhat-sso-7-tech-preview/sso-cd-openshift"
 description: "Red Hat Single Sign-On 7.3 continuous delivery OpenShift container image"
-version: "1.0"
+version: "5.0"
 from: "redhat-sso-7-tech-preview/sso-cd:latest"
 labels:
     - name: "com.redhat.component"
