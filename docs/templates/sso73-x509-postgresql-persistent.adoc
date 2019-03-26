@@ -4,7 +4,7 @@
     generator or the input template (./*.in)
 ////
 
-= sso-cd-x509-postgresql-persistent
+= sso73-x509-postgresql-persistent
 :toc:
 :toc-placement!:
 :toclevels: 5
