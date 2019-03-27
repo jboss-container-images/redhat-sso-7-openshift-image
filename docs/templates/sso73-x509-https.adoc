@@ -4,7 +4,7 @@
     generator or the input template (./*.in)
 ////
 
-= sso-cd-x509-https
+= sso73-x509-https
 :toc:
 :toc-placement!:
 :toclevels: 5
