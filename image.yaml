@@ -97,6 +97,10 @@ modules:
           - name: openshift-passwd
           - name: keycloak-layer
           - name: os-logging
+packages:
+      repositories:
+          - jboss-os
+          - jboss-rhscl
 run:
       user: 185
       cmd:
