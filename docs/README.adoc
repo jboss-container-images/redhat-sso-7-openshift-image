@@ -4,7 +4,7 @@
     generator or the input template (./*.in)
 ////
 
-= Application Templates for Red Hat Single Sign-On 7.3 continuous delivery (CD) Tech Preview OpenShift container image
+= Application Templates for Red Hat Single Sign-On Continuous Delivery (CD) Tech Preview OpenShift container image
 
 This project contains OpenShift v3 application templates which support applications based on JBoss Middleware products.
 Source can be found https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso-cd-dev[here].

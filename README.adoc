@@ -1,6 +1,6 @@
-# Red Hat Single Sign-On 7.3 continuous delivery (CD) Tech Preview OpenShift container image
+# Red Hat Single Sign-On Continuous Delivery (CD) Tech Preview OpenShift container image
 
-NOTE: Extends link:https://github.com/jboss-container-images/redhat-sso-7-image[Red Hat Single Sign-On 7.3 container image]
+NOTE: Extends link:https://github.com/jboss-container-images/redhat-sso-7-image[Red Hat Single Sign-On container image]
 
 # License
 

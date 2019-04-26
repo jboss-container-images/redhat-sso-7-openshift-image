@@ -4,7 +4,7 @@
     "metadata": {
         "name": "sso-cd-image-stream",
         "annotations": {
-            "description": "ImageStream definition for Red Hat Single Sign-On 7.4 continuous delivery.",
+            "description": "ImageStream definition for Red Hat Single Sign-On Continuous Delivery.",
             "openshift.io/provider-display-name": "Red Hat, Inc."
         }
     },
@@ -15,26 +15,26 @@
             "metadata": {
                 "name": "redhat-sso-cd-openshift",
                 "annotations": {
-                    "description": "Red Hat Single Sign-On 7.4 continuous delivery",
-                    "openshift.io/display-name": "Red Hat Single Sign-On 7.4 continuous delivery",
+                    "description": "Red Hat Single Sign-On Continuous Delivery",
+                    "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7.4.0.CD05"
+                    "version": "6"
                 }
             },
             "labels": {
-                "rhsso": "7.4.0.CD05"
+                "rhsso": "6"
             },
             "spec": {
                 "tags": [
                     {
                         "name": "latest",
                         "annotations": {
-                            "description": "Latest build of Red Hat Single Sign-On 7.4 continuous delivery Tech Preview image",
+                            "description": "Latest build of Red Hat Single Sign-On Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
                             "supports": "sso:7.4",
                             "version": "latest",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 continuous delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery (Tech Preview)"
                         },
                         "referencePolicy": {
                             "type": "Local"
@@ -47,12 +47,12 @@
                     {
                         "name": "1.0",
                         "annotations": {
-                            "description": "Red Hat Single Sign-On 7.3 continuous delivery Tech Preview image",
+                            "description": "Red Hat Single Sign-On 7.3 Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
                             "supports": "sso:7.3",
                             "version": "1.0",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3 continuous delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.3 Continuous Delivery (Tech Preview)"
                         },
                         "referencePolicy": {
                             "type": "Local"
@@ -65,12 +65,12 @@
                     {
                         "name": "5.0",
                         "annotations": {
-                            "description": "Red Hat Single Sign-On 7.4 continuous delivery Tech Preview image",
+                            "description": "Red Hat Single Sign-On 7.4 Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
                             "supports": "sso:7.4",
                             "version": "5.0",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 continuous delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 Continuous Delivery (Tech Preview)"
                         },
                         "referencePolicy": {
                             "type": "Local"
@@ -78,6 +78,31 @@
                         "from": {
                             "kind": "DockerImage",
                             "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:5.0"
+                        }
+                    },
+                    {
+                        "name": "6",
+                        "annotations": {
+                            "description": "Red Hat Single Sign-On Continuous Delivery 6 Tech Preview image",
+                            "iconClass": "icon-sso",
+                            "tags": "sso,keycloak,redhat,hidden",
+                            "supports": "sso:6",
+                            "version": "6",
+                            "openshift.io/display-name": "Red Hat Single Sign-On 6 Continuous Delivery (Tech Preview)"
+                        },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "registry.redhat.io/redhat-sso-7-tech-preview/sso-cd-openshift:6"
+                        }
+                    },
+                    {
+                        "name": "6.0",
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "6"
                         }
                     }
                 ]

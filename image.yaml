@@ -1,8 +1,8 @@
 schema_version: 1
 
 name: "redhat-sso-7-tech-preview/sso-cd-openshift"
-description: "Red Hat Single Sign-On 7.3 continuous delivery OpenShift container image"
-version: "5.0"
+description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image"
+version: "6"
 from: "redhat-sso-7-tech-preview/sso-cd:latest"
 labels:
     - name: "com.redhat.component"
@@ -10,7 +10,7 @@ labels:
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO 7.3 CD"
+      value: "Red Hat SSO CD 6"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -46,7 +46,7 @@ envs:
       example: "truststore-secret"
       description: "The name of the secret containing the truststore file. Used for volume secretName"
     - name: SCRIPT_DEBUG
-      description: If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed.
+      description: "If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed."
       example: "true"
 ports:
     - value: 8443
@@ -55,7 +55,7 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: master
+                  ref: sprint-31
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
