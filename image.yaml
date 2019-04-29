@@ -1,9 +1,9 @@
 schema_version: 1
 
-name: "redhat-sso-7-tech-preview/sso-cd-openshift"
+name: "redhat-sso-cd-tech-preview/sso-cd-openshift"
 description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image"
 version: "6"
-from: "redhat-sso-7-tech-preview/sso-cd:latest"
+from: "redhat-sso-cd-tech-preview/sso-cd:latest"
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso-cd-openshift-container"
@@ -14,7 +14,7 @@ labels:
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
-      value: "sso,sso7,keycloak"
+      value: "sso,sso-cd,keycloak"
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
 envs:
