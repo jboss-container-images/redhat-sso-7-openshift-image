@@ -100,6 +100,9 @@
                     },
                     {
                         "name": "6.0",
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
                         "from": {
                             "kind": "ImageStreamTag",
                             "name": "6"
