@@ -1,0 +1,11 @@
+schema_version: 1
+name: sso.db.drivers
+version: '1.0'
+description: Legacy sso.db.drivers script package, derived from [EAP_722 release of os-eap-db-drivers package for JBoss EAP for OpenShift image](https://github.com/jboss-container-images/jboss-eap-modules/tree/c910472e03d6ce281654f171d56c227d493cb900/os-eap-db-drivers). Compared to the original version, the MongoDB driver was intentionally excluded.
+execute:
+- script: configure.sh
+  user: '185'
+packages:
+      install:
+          - postgresql-jdbc
+          - mysql-connector-java

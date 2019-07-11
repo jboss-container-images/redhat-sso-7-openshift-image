@@ -84,7 +84,6 @@ modules:
           - name: jboss.eap.config.elytron
           - name: os-eap-probes
           - name: jboss-maven
-          - name: os-eap-db-drivers
           - name: os-java-hawkular
           - name: os-eap70-hawkular
           - name: os-eap-hawkular
@@ -92,6 +91,7 @@ modules:
           - name: os-eap-extensions
           # RH-SSO 7.3 product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
+          - name: sso.db.drivers
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: openshift-passwd
