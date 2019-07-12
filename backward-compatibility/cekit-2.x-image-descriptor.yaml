@@ -1,5 +1,22 @@
 schema_version: 1
 
+# Backward-compatible image descriptor file for the Red Hat Single Sign-On 7 OpenShift container image
+# to build the image:
+#
+# * Using CEKit 2.x,
+# * Using yum as the package manager (this assumes the parent Red Hat Single Sign-On 7 container image
+#   was based on Red Hat Enterprise Linux 7 image),
+# * Use JBoss EAP modules of version 'CD16' (or earlier) in the image.
+#
+# Due to changes introduced in CEKit 3.x (for example the "module merging change":
+#
+#   https://cekit.io/blog/2019/04/module-merging-changes/
+#
+# ), it is NOT POSSIBLE to build this specific 'image.yaml' file using CEKit 3.x!!!
+#
+# Use the 'image.yaml' from the main directory of the directory tree of this repository if building
+# the Red Hat Single Sign-On 7 OpenShift container image using CEKit 3.x is desired!
+
 name: "redhat-sso-cd-tech-preview/sso-cd-openshift"
 description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image"
 version: "6"
@@ -45,7 +62,7 @@ envs:
     - name: "SSO_TRUSTSTORE_SECRET"
       example: "truststore-secret"
       description: "The name of the secret containing the truststore file. Used for volume secretName"
-    - name: "SCRIPT_DEBUG"
+    - name: SCRIPT_DEBUG
       description: "If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed."
       example: "true"
 ports:
@@ -55,44 +72,41 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: master
+                  ref: sprint-31
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: master
+                  ref: CD16-CR1
           - name: sso73_modules
-            path: modules
+            path: ../modules
       install:
           # Order of the modules installation below matters!!! DO NOT CHANGE it unless
           # you first verified the image with changed order still works correctly
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
-          - name: jboss.container.eap.s2i.bash
+          - name: s2i-common
+          - name: java-alternatives
           - name: os-eap7-openshift
+          - name: os-eap-s2i
           - name: os-java-jolokia
           - name: jboss.eap.cd.jolokia
           - name: os-eap7-openshift
           - name: jboss.eap.cd.openshift.modules
           - name: os-eap7-ping
-          - name: jboss.container.java.jvm.bash
+          - name: os-java-run
           - name: os-eap-launch
           - name: os-eap7-launch
-          - name: os-eap-datasource
-            version: '1.0'
           - name: jboss.eap.cd.logging
           - name: jboss.eap.config.jgroups
           - name: jboss.eap.config.elytron
           - name: os-eap-probes
-            version: '2.0'
-          - name: jboss.container.maven.35.bash
-            version: '3.5'
-# Will be dealt within separate commit for separate KEYCLOAK-10556 JIRA
-#         - name: os-eap-db-drivers
+          - name: jboss-maven
+          - name: os-eap-db-drivers
+          - name: os-java-hawkular
+          - name: os-eap70-hawkular
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          - name: os-eap-python
-            version: '3.6'
           # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
           # Other common modules from the main CE cct_module repository
@@ -101,11 +115,9 @@ modules:
           - name: keycloak-layer
           - name: os-logging
 packages:
-      manager: microdnf
-      content_sets:
-            x86_64:
-                - rhel-8-for-x86_64-baseos-rpms
-                - rhel-8-for-x86_64-appstream-rpms
+      repositories:
+          - jboss-os
+          - jboss-rhscl
 run:
       user: 185
       cmd:
