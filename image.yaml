@@ -86,8 +86,6 @@ modules:
             version: '2.0'
           - name: jboss.container.maven.35.bash
             version: '3.5'
-# Will be dealt within separate commit for separate KEYCLOAK-10556 JIRA
-#         - name: os-eap-db-drivers
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
@@ -95,6 +93,7 @@ modules:
             version: '3.6'
           # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
+          - name: sso.db.drivers
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: openshift-passwd
