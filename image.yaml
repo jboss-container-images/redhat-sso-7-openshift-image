@@ -94,6 +94,9 @@ modules:
           # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
           - name: sso.db.drivers
+            version: '1.0'
+          - name: sso.datasource.overrides
+            version: '1.0'
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: openshift-passwd
