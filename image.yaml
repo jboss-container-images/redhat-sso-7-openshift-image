@@ -89,8 +89,6 @@ modules:
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          - name: os-eap-python
-            version: '3.6'
           # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
           - name: sso.db.drivers
@@ -104,6 +102,11 @@ modules:
           - name: os-logging
 packages:
       manager: microdnf
+      install:
+      # RHEL-8 UBI Minimal image configures python3 alternatives right by install,
+      # thus another 'alternatives --set python /usr/bin/python3' call fails
+      # Instead of using 'os-eap-python/3.6' module just install 'python36' RPM directly
+          - python36
       content_sets:
             x86_64:
                 - rhel-8-for-x86_64-baseos-rpms
