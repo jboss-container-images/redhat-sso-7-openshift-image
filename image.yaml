@@ -1,12 +1,12 @@
 schema_version: 1
 
-name: "redhat-sso-cd-tech-preview/sso-cd-openshift"
-description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image"
+name: "redhat-sso-cd-tech-preview/sso-cd-openshift-rhel8"
+description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 version: "6"
-from: "redhat-sso-cd-tech-preview/sso-cd:latest"
+from: "redhat-sso-cd-tech-preview/sso-cd-rhel8:latest"
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-7-sso-cd-openshift-container"
+      value: "redhat-sso-cd-rhel8-openshift-container"
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
@@ -115,4 +115,4 @@ run:
 osbs:
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-cd-openshift-rhel-7
+            branch: jb-sso-cd-openshift-rhel8
