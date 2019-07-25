@@ -55,11 +55,11 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: sprint-35
+                  ref: 0.35.1
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_722_CR1
+                  ref: EAP_723_CR2
           - name: sso73_modules
             path: modules
       install:
