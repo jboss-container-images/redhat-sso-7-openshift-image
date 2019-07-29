@@ -1,0 +1,6 @@
+# CEKit Overrides module to use the -dev branch for the Red Hat Single Sign-On 7 OpenShift container image in OSBS
+# See README.adoc and https://docs.cekit.io/en/latest/handbook/overrides.html for details
+osbs:
+      repository:
+            name: containers/redhat-sso-7
+            branch: jb-sso-cd-openshift-dev-rhel8

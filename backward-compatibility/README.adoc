@@ -1,0 +1,12 @@
+# Various Red Hat Single Sign-On 7 OpenShift container image link:https://docs.cekit.io/en/latest/descriptor/image.html[image descriptors] for link:https://cekit.io/[CEKit] to preserve backward compatibility
+
+This directory contains definition of various image descriptor files the Red Hat Single Sign-On 7 OpenShift container image, needed to ensure backward compatibility (reproducible image (reb)uilds over time). Such descriptor files need to be archived, in case of a major link:https://cekit.io/[CEKit] tool upgrade, leading to backward-incompatible changes, for example the link:https://cekit.io/blog/2019/04/module-merging-changes/[module merging change] introduced in link:https://cekit.io/blog/2019/04/cekit-3.0.0-released/[CEKit v3.0.0].
+
+* To build using CEKit 2.x use command:
++
+[source,bash,subs="attributes+,macros+"]
+----
+cekit build \
+--descriptor backward-compatibility/cekit-2.x-image-descriptor.yaml \
+--build-engine=docker
+----

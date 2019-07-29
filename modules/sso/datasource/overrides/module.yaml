@@ -1,0 +1,7 @@
+schema_version: 1
+name: sso.datasource.overrides
+version: '1.0'
+description: "Red Hat Single Sign-On datasource refinements module to override the definition(s) of certain TX and XA datasource manipulation routines, as defined in ['os-eap7-launch/1.0'](https://github.com/jboss-container-images/jboss-eap-modules/tree/master/os-eap7-launch) and ['os-eap-datasource/1.0'](https://github.com/jboss-container-images/jboss-eap-modules/tree/master/os-eap-datasource/1.0) modules."
+execute:
+- script: configure.sh
+  user: '185'

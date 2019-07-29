@@ -1,0 +1,3 @@
+# Various link:https://cekit.io/[CEKit] Overrides modules for the Red Hat Single Sign-On 7 OpenShift container image
+
+link:https://cekit.io/[CEKit] provides link:https://docs.cekit.io/en/latest/handbook/overrides.html[Overrides] feature to customize image builds (e.g. use different base image, include different version of specific libraries etc.). It's even possible to link:https://docs.cekit.io/en/latest/handbook/overrides.html#overrides-chaining[chain multiple overrides] to combine the requests together.

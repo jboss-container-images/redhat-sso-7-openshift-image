@@ -1,4 +1,0 @@
-osbs:
-      repository:
-            name: containers/redhat-sso-7
-            branch: jb-sso-cd-openshift-dev-rhel-7
