@@ -2,7 +2,7 @@ schema_version: 1
 
 name: "redhat-sso-cd-tech-preview/sso-cd-openshift-rhel8"
 description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
-version: "6"
+version: "7"
 from: "redhat-sso-cd-tech-preview/sso-cd-rhel8:latest"
 labels:
     - name: "com.redhat.component"
@@ -10,7 +10,7 @@ labels:
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO CD 6"
+      value: "Red Hat SSO CD 7"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -55,11 +55,11 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: master
+                  ref: 0.35.1
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: master
+                  ref: CD17_CR2
           - name: sso73_modules
             path: modules
       install:

@@ -9,7 +9,7 @@
 :toc-placement!:
 :toclevels: 5
 
-An example application based on RH-SSO CD 6 Tech Preview image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/docs.
+An example application based on RH-SSO CD 7 Tech Preview image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/docs.
 
 toc::[]
 
