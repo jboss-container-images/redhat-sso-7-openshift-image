@@ -95,6 +95,8 @@ modules:
             version: '1.0'
           - name: sso.datasource.overrides
             version: '1.0'
+          - name: sso.python
+            version: '3'
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: openshift-passwd
@@ -102,11 +104,6 @@ modules:
           - name: os-logging
 packages:
       manager: microdnf
-      install:
-      # RHEL-8 UBI Minimal image configures python3 alternatives right by install,
-      # thus another 'alternatives --set python /usr/bin/python3' call fails
-      # Instead of using 'os-eap-python/3.6' module just install 'python36' RPM directly
-          - python36
       content_sets:
             x86_64:
                 - rhel-8-for-x86_64-baseos-rpms
