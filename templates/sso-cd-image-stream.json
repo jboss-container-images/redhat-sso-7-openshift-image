@@ -4,7 +4,7 @@
     "metadata": {
         "name": "sso-cd-image-stream",
         "annotations": {
-            "description": "ImageStream definition for Red Hat Single Sign-On Continuous Delivery.",
+            "description": "ImageStream definitions for Red Hat Single Sign-On Continuous Delivery.",
             "openshift.io/provider-display-name": "Red Hat, Inc."
         }
     },
@@ -18,11 +18,11 @@
                     "description": "Red Hat Single Sign-On Continuous Delivery",
                     "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7"
+                    "version": "6"
                 }
             },
             "labels": {
-                "rhsso": "7"
+                "rhsso": "6"
             },
             "spec": {
                 "tags": [
@@ -32,7 +32,7 @@
                             "description": "Latest build of Red Hat Single Sign-On Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:7",
+                            "supports": "sso:7.4",
                             "version": "latest",
                             "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery (Tech Preview)"
                         },
@@ -41,7 +41,7 @@
                         },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-cd-tech-preview/sso-cd-openshift-rhel8:latest"
+                            "name": "registry.redhat.io/redhat-sso-cd-tech-preview/sso-cd-openshift:latest"
                         }
                     },
                     {
@@ -50,7 +50,7 @@
                             "description": "Red Hat Single Sign-On 7.3 Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:7.3",
+                            "supports": "sso-cd:1.0,sso:7.3",
                             "version": "1.0",
                             "openshift.io/display-name": "Red Hat Single Sign-On 7.3 Continuous Delivery (Tech Preview)"
                         },
@@ -68,7 +68,7 @@
                             "description": "Red Hat Single Sign-On 7.4 Continuous Delivery Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:7.4",
+                            "supports": "sso-cd:5.0,sso:7.4",
                             "version": "5.0",
                             "openshift.io/display-name": "Red Hat Single Sign-On 7.4 Continuous Delivery (Tech Preview)"
                         },
@@ -86,7 +86,7 @@
                             "description": "Red Hat Single Sign-On Continuous Delivery 6 Tech Preview image",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:6",
+                            "supports": "sso-cd:6,sso:7.4",
                             "version": "6",
                             "openshift.io/display-name": "Red Hat Single Sign-On 6 Continuous Delivery (Tech Preview)"
                         },
@@ -107,16 +107,54 @@
                             "kind": "ImageStreamTag",
                             "name": "6"
                         }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "redhat-sso-cd-openshift-rhel8",
+                "annotations": {
+                    "description": "Red Hat Single Sign-On Continuous Delivery based on Red Hat Universal Base Image 8 Minimal",
+                    "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery based on Red Hat Universal Base Image 8 Minimal",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "version": "7"
+                }
+            },
+            "labels": {
+                "rhsso": "7"
+            },
+            "spec": {
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": {
+                            "description": "Latest build of Red Hat Single Sign-On Continuous Delivery Tech Preview image based on Red Hat Universal Base Image 8 Minimal",
+                            "iconClass": "icon-sso",
+                            "tags": "sso,keycloak,redhat,hidden",
+                            "supports": "sso:7",
+                            "version": "latest",
+                            "openshift.io/display-name": "Red Hat Single Sign-On Continuous Delivery based on Red Hat Universal Base Image 8 Minimal (Tech Preview)"
+                        },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "registry.redhat.io/redhat-sso-cd-tech-preview/sso-cd-openshift-rhel8:latest"
+                        }
                     },
                     {
                         "name": "7",
                         "annotations": {
-                            "description": "Red Hat Single Sign-On Continuous Delivery 7 Tech Preview image",
+                            "description": "Red Hat Single Sign-On Continuous Delivery 7 Tech Preview image based on Red Hat Universal Base Image 8 Minimal",
                             "iconClass": "icon-sso",
                             "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:7",
+                            "supports": "sso-cd:7,sso:7",
                             "version": "7",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7 Continuous Delivery (Tech Preview)"
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7 Continuous Delivery based on Red Hat Universal Base Image 8 Minimal (Tech Preview)"
                         },
                         "referencePolicy": {
                             "type": "Local"
