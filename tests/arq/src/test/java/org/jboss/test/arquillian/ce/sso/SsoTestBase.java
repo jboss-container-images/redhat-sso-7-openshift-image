@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  * @author Ales justin
  */
 @OpenShiftResource("${openshift.imageStreams}")
-@OpenShiftDynamicImageStreamResource(name = "${imageStream.sso-cd.name:sso-cd-openshift-rhel8}", image = "${imageStream.sso-cd.image:registry.access.redhat.com/redhat-sso-7-tech-preview/sso-cd-openshift:1.0}", version = "${imageStream.sso-cd.version:1.0}")
+@OpenShiftDynamicImageStreamResource(name = "${imageStream.sso-cd.name:redhat-sso-cd-openshift}", image = "${imageStream.sso-cd.image:registry.access.redhat.com/redhat-sso-7-tech-preview/sso-cd-openshift:1.0}", version = "${imageStream.sso-cd.version:1.0}")
 public abstract class SsoTestBase {
     protected final Logger log = Logger.getLogger(getClass().getName());
 
