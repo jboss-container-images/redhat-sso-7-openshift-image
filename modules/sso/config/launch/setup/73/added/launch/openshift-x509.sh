@@ -76,10 +76,17 @@ function autogenerate_keystores() {
   local -r X509_CRT_DELIMITER="/-----BEGIN CERTIFICATE-----/"
   local JKS_TRUSTSTORE_FILE="truststore.jks"
   local JKS_TRUSTSTORE_PATH="${KEYSTORES_STORAGE}/${JKS_TRUSTSTORE_FILE}"
-  local PASSWORD=$(openssl rand -base64 32)
+  local PASSWORD=$(openssl rand -base64 32 2>/dev/null)
+  local TEMPORARY_CERTIFICATE="temporary_ca.crt"
   if [ -n "${X509_CA_BUNDLE}" ]; then
+    pushd /tmp >& /dev/null
     log_info "Creating RH-SSO truststore.."
-    csplit -s -z -f crt- "${X509_CA_BUNDLE}" "${X509_CRT_DELIMITER}" '{*}'
+     # We use cat here, so that users could specify multiple CA Bundles using space or even wildcard:
+    # X509_CA_BUNDLE=/var/run/secrets/kubernetes.io/serviceaccount/*.crt
+    # Note, that there is no quotes here, that's intentional. Once can use spaces in the $X509_CA_BUNDLE like this:
+    # X509_CA_BUNDLE=/ca.crt /ca2.crt
+    cat ${X509_CA_BUNDLE} > ${TEMPORARY_CERTIFICATE}
+    csplit -s -z -f crt- "${TEMPORARY_CERTIFICATE}" "${X509_CRT_DELIMITER}" '{*}'
     for CERT_FILE in crt-*; do
       keytool -import -noprompt -keystore "${JKS_TRUSTSTORE_PATH}" -file "${CERT_FILE}" \
       -storepass "${PASSWORD}" -alias "service-${CERT_FILE}" >& /dev/null
@@ -109,5 +116,6 @@ function autogenerate_keystores() {
     SSO_TRUSTSTORE_PASSWORD="${PASSWORD}"
     SSO_TRUSTSTORE_DIR="${KEYSTORES_STORAGE}"
     SSO_TRUSTSTORE="${JKS_TRUSTSTORE_FILE}"
+    popd >& /dev/null
   fi
 }
