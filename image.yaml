@@ -55,11 +55,11 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.35.1
+                  ref: 0.37.0
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_723_CR2
+                  ref: EAP_724_CR2
           - name: sso73_modules
             path: modules
       install:
@@ -67,36 +67,65 @@ modules:
           # you first verified the image with changed order still works correctly
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
+            version: '1.0'
           - name: s2i-common
+            version: '1.0'
           - name: java-alternatives
+            version: '1.0'
           - name: os-eap7-openshift
+            version: '1.0'
           - name: os-eap-s2i
+            version: '1.0'
           - name: os-java-jolokia
+            version: '1.0' 
           - name: jboss.eap.cd.jolokia
+            version: '1.0'
           - name: os-eap7-openshift
+            version: '1.0'
           - name: jboss.eap.cd.openshift.modules
+            version: '1.0'
           - name: os-eap7-ping
+            version: '1.0'
           - name: os-java-run
+            version: '1.0'
           - name: os-eap-launch
+            version: '1.0'
           - name: os-eap7-launch
+            version: '1.0' 
           - name: jboss.eap.cd.logging
+            version: '1.0'
           - name: jboss.eap.config.jgroups
+            version: '1.0'
           - name: jboss.eap.config.elytron
+            version: '1.0'
           - name: os-eap-probes
+            version: '1.0' 
           - name: jboss-maven
+            version: '1.0'
           - name: os-java-hawkular
+            version: '1.0'
           - name: os-eap70-hawkular
+            version: '1.0'
           - name: os-eap-hawkular
+            version: '1.0'
           - name: os-eap-deployment-scanner
+            version: '1.0'
           - name: os-eap-extensions
+            version: '1.0'
           # RH-SSO 7.3 product specific modules from modules/ path in this repository
           - name: sso.config.launch.setup.73
+            version: '1.0'
           - name: sso.db.drivers
+            version: '1.0'
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
+            version: '1.0'
           - name: openshift-passwd
+            version: '1.0'
           - name: keycloak-layer
+            version: '1.0'
           - name: os-logging
+            version: '1.0'
 packages:
       repositories:
           - jboss-os
