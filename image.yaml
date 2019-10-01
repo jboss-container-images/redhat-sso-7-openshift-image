@@ -113,6 +113,8 @@ run:
       cmd:
           - "/opt/eap/bin/openshift-launch.sh"
 osbs:
+      configuration:
+            container_file: container.yaml
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-cd-openshift-rhel8
