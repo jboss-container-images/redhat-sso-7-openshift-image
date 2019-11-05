@@ -37,6 +37,13 @@ function autogenerate_keystores() {
     local PASSWORD=$(openssl rand -base64 32)
     local JKS_KEYSTORE_FILE="${KEYSTORE_TYPE}-keystore.jks"
     local PKCS12_KEYSTORE_FILE="${KEYSTORE_TYPE}-keystore.pk12"
+    local KEYTOOL="$(which keytool 2>/dev/null)"
+    if [ ! -x "$KEYTOOL" -a -x "$JAVA_HOME/jre/bin/keytool" ]; then
+        KEYTOOL="$JAVA_HOME/jre/bin/keytool"
+    fi
+    if [ ! -x "$KEYTOOL" -a -x "$JAVA_HOME/bin/keytool" ]; then
+        KEYTOOL="$JAVA_HOME/bin/keytool"
+    fi
 
     if [ -d "${X509_KEYSTORE_DIR}" ]; then
 
@@ -49,7 +56,7 @@ function autogenerate_keystores() {
       -out "${KEYSTORES_STORAGE}/${PKCS12_KEYSTORE_FILE}" \
       -password pass:"${PASSWORD}" >& /dev/null
 
-      keytool -importkeystore -noprompt \
+      "$KEYTOOL" -importkeystore -noprompt \
       -srcalias "${NAME}" -destalias "${NAME}" \
       -srckeystore "${KEYSTORES_STORAGE}/${PKCS12_KEYSTORE_FILE}" \
       -srcstoretype pkcs12 \
@@ -81,7 +88,7 @@ function autogenerate_keystores() {
     log_info "Creating RH-SSO truststore.."
     csplit -s -z -f crt- "${X509_CA_BUNDLE}" "${X509_CRT_DELIMITER}" '{*}'
     for CERT_FILE in crt-*; do
-      keytool -import -noprompt -keystore "${JKS_TRUSTSTORE_PATH}" -file "${CERT_FILE}" \
+      "$KEYTOOL" -import -noprompt -keystore "${JKS_TRUSTSTORE_PATH}" -file "${CERT_FILE}" \
       -storepass "${PASSWORD}" -alias "service-${CERT_FILE}" >& /dev/null
     done
 
@@ -90,10 +97,13 @@ function autogenerate_keystores() {
     fi
 
     # Import existing system CA certificates into the newly generated truststore
-    local SYSTEM_CACERTS=$(readlink -e $(dirname $(readlink -e $(which keytool)))"/../lib/security/cacerts")
-    if keytool -v -list -keystore "${SYSTEM_CACERTS}" -storepass "changeit" > /dev/null; then
+    local SYSTEM_CACERTS="$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../lib/security/cacerts")"
+    if [ ! -f "$SYSTEM_CACERTS" -a -f "$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../jre/lib/security/cacerts")" ]; then
+        SYSTEM_CACERTS="$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../jre/lib/security/cacerts")"
+    fi
+    if "$KEYTOOL" -v -list -keystore "${SYSTEM_CACERTS}" -storepass "changeit" > /dev/null; then
       log_info "Importing certificates from system's Java CA certificate bundle into RH-SSO truststore.."
-      keytool -importkeystore -noprompt \
+      "$KEYTOOL" -importkeystore -noprompt \
       -srckeystore "${SYSTEM_CACERTS}" \
       -destkeystore "${JKS_TRUSTSTORE_PATH}" \
       -srcstoretype jks -deststoretype jks \
