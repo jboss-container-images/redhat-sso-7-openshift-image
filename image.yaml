@@ -138,3 +138,8 @@ osbs:
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-7.3-openshift-rhel-7
+      configuration:
+            container:
+                platforms:
+                    only:
+                    - x86_64
