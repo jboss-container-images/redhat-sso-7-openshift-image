@@ -45,7 +45,7 @@ envs:
     - name: "SSO_TRUSTSTORE_SECRET"
       example: "truststore-secret"
       description: "The name of the secret containing the truststore file. Used for volume secretName"
-    - name: SCRIPT_DEBUG
+    - name: "SCRIPT_DEBUG"
       description: If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed.
       example: "true"
 ports:
@@ -68,10 +68,7 @@ modules:
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
             version: '1.0'
-          - name: s2i-common
-            version: '1.0'
-          - name: java-alternatives
-            version: '1.0'
+          - name: jboss.container.eap.s2i.bash
           - name: os-eap7-openshift
             version: '1.0'
           - name: os-eap-s2i
@@ -86,12 +83,13 @@ modules:
             version: '1.0'
           - name: os-eap7-ping
             version: '1.0'
-          - name: os-java-run
-            version: '1.0'
+          - name: jboss.container.java.jvm.bash
           - name: os-eap-launch
             version: '1.0'
           - name: os-eap7-launch
             version: '1.0' 
+          - name: os-eap-datasource
+            version: '1.0'
           - name: jboss.eap.cd.logging
             version: '1.0'
           - name: jboss.eap.config.jgroups
@@ -99,13 +97,9 @@ modules:
           - name: jboss.eap.config.elytron
             version: '1.0'
           - name: os-eap-probes
-            version: '1.0' 
-          - name: jboss-maven
-            version: '1.0'
-          - name: os-java-hawkular
-            version: '1.0'
-          - name: os-eap70-hawkular
-            version: '1.0'
+            version: '2.0' 
+          - name: jboss.container.maven.35.bash
+            version: '3.5'
           - name: os-eap-hawkular
             version: '1.0'
           - name: os-eap-deployment-scanner
@@ -117,6 +111,10 @@ modules:
             version: '1.0'
           - name: sso.db.drivers
             version: '1.0'
+          - name: sso.datasource.overrides
+            version: '1.0'
+          - name: sso.python
+            version: '3'
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
             version: '1.0'
@@ -127,14 +125,18 @@ modules:
           - name: os-logging
             version: '1.0'
 packages:
-      repositories:
-          - jboss-os
-          - jboss-rhscl
+      manager: microdnf
+      content_sets:
+            x86_64:
+                - rhel-7-for-x86_64-baseos-rpms
+                - rhel-7-for-x86_64-appstream-rpms
 run:
       user: 185
       cmd:
           - "/opt/eap/bin/openshift-launch.sh"
 osbs:
+      configuration:
+            container_file: container.yaml
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-7.3-openshift-rhel-7
