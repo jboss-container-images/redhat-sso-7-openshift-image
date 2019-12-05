@@ -68,6 +68,8 @@ modules:
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
             version: '1.0'
+          - name: jboss.container.maven.35.bash
+            version: 3.5scl
           - name: s2i-common
             version: '1.0'
           - name: java-alternatives
@@ -126,10 +128,10 @@ modules:
             version: '1.0'
           - name: os-logging
             version: '1.0'
+
 packages:
-      repositories:
-          - jboss-os
-          - jboss-rhscl
+    content_sets_file: content_sets.yml
+
 run:
       user: 185
       cmd:
@@ -138,3 +140,8 @@ osbs:
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-7.3-openshift-rhel-7
+
+      configuration:
+            container_file: container.yaml
+
+      koji_target: jb-sso-7.3-openshift-rhel-7-containers-candidate
