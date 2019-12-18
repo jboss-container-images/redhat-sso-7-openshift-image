@@ -19,7 +19,7 @@
         "template": "sso-cd-mysql",
         "rhsso": "7"
     },
-    "message": "A new RH-SSO service (using MySQL) has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. The username/password for accessing the MySQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}. Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications; \"${SSO_TRUSTSTORE_SECRET}\" containing the ${SSO_TRUSTSTORE} file used for securing RH-SSO requests.",
+    "message": "A new RH-SSO service (using MySQL) has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. The username/password for accessing the MySQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}. Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications; \"${SSO_TRUSTSTORE_SECRET}\" containing the ${SSO_TRUSTSTORE} file used for securing RH-SSO requests; \"${SSO_VAULT_SECRET}\" containing the secret value.",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -264,6 +264,13 @@
             "required": false
         },
         {
+            "displayName": "RH-SSO Vault Secret",
+            "description": "The name of the file containing the secret value",
+            "name": "SSO_VAULT_SECRET",
+            "value": "sso-vault-secret",
+            "required": false
+        },
+        {
             "displayName": "MySQL Image Stream Tag",
             "description": "The tag to use for the \"mysql\" image stream. Typically, this aligns with the major.minor version of MySQL.",
             "name": "MYSQL_IMAGE_STREAM_TAG",
@@ -500,6 +507,11 @@
                                         "name": "sso-truststore-volume",
                                         "mountPath": "/etc/sso-secret-volume",
                                         "readOnly": true
+                                    },
+                                    {
+                                        "name": "sso-vault-volume",
+                                        "mountPath": "/opt/jboss/keycloak/secrets",
+                                        "readOnly": true
                                     }
                                 ],
                                 "livenessProbe": {
@@ -692,6 +704,12 @@
                                 "name": "sso-truststore-volume",
                                 "secret": {
                                     "secretName": "${SSO_TRUSTSTORE_SECRET}"
+                                }
+                            },
+                            {
+                                "name": "sso-vault-volume",
+                                "secret": {
+                                    "secretName": "${SSO_VAULT_SECRET}"
                                 }
                             }
                         ]
