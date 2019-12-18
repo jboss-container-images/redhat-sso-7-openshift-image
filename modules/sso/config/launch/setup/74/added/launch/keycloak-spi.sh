@@ -7,10 +7,12 @@ function prepareEnv() {
   unset SSO_TRUSTSTORE
   unset SSO_TRUSTSTORE_DIR
   unset SSO_TRUSTSTORE_PASSWORD
+  unset SSO_VAULT_DIR
 }
 
 function configure() {
   add_truststore
+  add_vault
   # KEYCLOAK-8129 Set Keycloak server's hostname to 'request' by default if SSO_HOSTNAME not set
   set_server_hostname_spi_to_request
 }
@@ -23,6 +25,15 @@ function add_truststore() {
 
     sed -i "s|<!-- ##SSO_TRUSTSTORE## -->|${truststore}|" "${CONFIG_FILE}"
 
+  fi
+}
+
+function add_vault() {
+
+  if [ -n "$SSO_VAULT_DIR" ]; then  
+
+    local vault="<spi name=\"vault\"><default-provider>files-plaintext</default-provider><provider name=\"files-plaintext\" enabled=\"true\"><properties><property name=\"dir\" value=\"${SSO_VAULT_DIR}\"/></properties></provider></spi>"
+    sed -i "s|<!-- ##SSO_VAULT_CONFIG## -->|${vault}|" "${CONFIG_FILE}"
   fi
 }
 
