@@ -78,17 +78,11 @@ modules:
             version: '1.0'
           - name: os-eap-s2i
             version: '1.0'
-          - name: os-java-jolokia
-            version: '1.0' 
           - name: jboss.eap.cd.jolokia
-            version: '1.0'
-          - name: os-eap7-openshift
             version: '1.0'
           - name: jboss.eap.cd.openshift.modules
             version: '1.0'
           - name: os-eap7-ping
-            version: '1.0'
-          - name: os-java-run
             version: '1.0'
           - name: os-eap-launch
             version: '1.0'
@@ -101,10 +95,8 @@ modules:
           - name: jboss.eap.config.elytron
             version: '1.0'
           - name: os-eap-probes
-            version: '1.0' 
-          - name: jboss-maven
             version: '1.0'
-          - name: os-java-hawkular
+          - name: jboss-maven
             version: '1.0'
           - name: os-eap70-hawkular
             version: '1.0'
@@ -125,8 +117,6 @@ modules:
           - name: openshift-passwd
             version: '1.0'
           - name: keycloak-layer
-            version: '1.0'
-          - name: os-logging
             version: '1.0'
 
 packages:
