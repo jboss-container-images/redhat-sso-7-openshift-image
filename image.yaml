@@ -98,8 +98,6 @@ modules:
             version: '1.0'
           - name: jboss-maven
             version: '1.0'
-          - name: os-eap70-hawkular
-            version: '1.0'
           - name: os-eap-hawkular
             version: '1.0'
           - name: os-eap-deployment-scanner
