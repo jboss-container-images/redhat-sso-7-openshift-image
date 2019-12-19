@@ -59,7 +59,7 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_726_CR1
+                  ref: 9f010e2c2de6f539db7f3fc100d12f80f70f7c78 # Required for RH-SSO 7.3.6 build because the Jboss EAP Modules repo needed to be altered after the tag was created
           - name: sso73_modules
             path: modules
       install:
@@ -87,7 +87,7 @@ modules:
           - name: os-eap-launch
             version: '1.0'
           - name: os-eap7-launch
-            version: '1.0' 
+            version: '1.0'
           - name: jboss.eap.cd.logging
             version: '1.0'
           - name: jboss.eap.config.jgroups
