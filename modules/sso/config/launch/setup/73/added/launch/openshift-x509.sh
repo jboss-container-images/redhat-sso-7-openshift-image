@@ -45,7 +45,7 @@ function autogenerate_keystores() {
         KEYTOOL="$JAVA_HOME/bin/keytool"
     fi
 
-    if [ -d "${X509_KEYSTORE_DIR}" ]; then
+    if [ -f "${X509_KEYSTORE_DIR}/${X509_KEY}" ] && [ -f "${X509_KEYSTORE_DIR}/${X509_CRT}" ]; then
 
       log_info "Creating ${KEYSTORES[$KEYSTORE_TYPE]} keystore via OpenShift's service serving x509 certificate secrets.."
 
