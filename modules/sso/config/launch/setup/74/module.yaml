@@ -1,7 +1,7 @@
 schema_version: 1
-name: sso.config.launch.setup.73
+name: sso.config.launch.setup.74
 version: '1.0'
-description: Module to define the configuration and the form of the launch script specific to the RH-SSO 7.3 version.
+description: Module to define the configuration and the form of the launch script specific to the RH-SSO 7.4 version.
 
 modules:
   install:
