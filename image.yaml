@@ -73,6 +73,7 @@ modules:
           - name: wildfly-modules
             path: wf-modules
       install:
+          - name: bz-1769831
           ### Image :: standalone ####
           - name: sso-jdk
             version: '11'
