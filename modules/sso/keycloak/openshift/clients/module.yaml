@@ -1,0 +1,10 @@
+schema_version: 1
+name: keycloak.openshift.clients
+version: '1.0'
+description: Package to add Red Hat Single Sign-On / Keycloak client adapters for JBoss EAP.
+execute:
+- script: install
+
+#artifacts:
+  # Set by the pipeline, consists of the adapter zips, renamed to
+  # keycloak-*-adapter.zip

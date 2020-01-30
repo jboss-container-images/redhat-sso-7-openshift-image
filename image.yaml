@@ -1,16 +1,16 @@
 schema_version: 1
 
-name: "redhat-sso-cd-tech-preview/sso-cd-openshift-rhel8"
-description: "Red Hat Single Sign-On Continuous Delivery OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
+name: "redhat-sso-7/sso74-openshift-rhel8"
+description: "Red Hat Single Sign-On 7.4 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 version: "7"
-from: "redhat-sso-cd-tech-preview/sso-cd-rhel8:latest"
+from: "ubi8-minimal:latest"
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-cd-rhel8-openshift-container"
+      value: "redhat-sso-7-sso74-openshift-rhel8-container"
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO CD 7"
+      value: "Red Hat SSO 7.4"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
@@ -55,24 +55,45 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.35.1
+                  ref: 0.39.0
           - name: jboss-eap-modules
             git:
-                  url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: CD17_CR2
-          - name: sso73_modules
+                  # url: https://github.com/jboss-container-images/jboss-eap-modules.git
+                  # ref: 7.3.x-legacy
+                  url: https://github.com/hmlnarik/jboss-eap-modules/tree/CLOUD-3467-legacy-7.3
+                  ref: legacy-7.3
+          - name: jboss-eap-image
+            git:
+                  # url: https://github.com/jboss-container-images/jboss-eap-7-image.git
+                  # ref: 7.3.x-legacy
+                  url: https://github.com/luck3y/jboss-eap-7-image
+                  ref: layered73_module
+          - name: sso-modules
             path: modules
+          - name: wildfly-modules
+            path: wf-modules
       install:
+          - name: bz-1769831
+          ### Image :: standalone ####
+          - name: sso-jdk
+            version: '11'
+          - name: eap-73-latest
+          - name: sso
+            version: '1.0'
+          - name: keycloak.openshift.clients
+            version: '1.0'
+          - name: sso-rm-openjdk
+            version: '1.0'
+
+          ### Image :: OpenShift ####
           # Order of the modules installation below matters!!! DO NOT CHANGE it unless
           # you first verified the image with changed order still works correctly
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
           - name: jboss.container.eap.s2i.bash
-          - name: os-eap7-openshift
-          - name: os-java-jolokia
-          - name: jboss.eap.cd.jolokia
-          - name: os-eap7-openshift
-          - name: jboss.eap.cd.openshift.modules
+          - name: jboss.container.java.jvm.bash
+          - name: jboss.container.jolokia.bash
+          - name: jboss.container.wildfly.standalone-conf.jolokia
           - name: os-eap7-ping
           - name: jboss.container.java.jvm.bash
           - name: os-eap-launch
@@ -83,14 +104,14 @@ modules:
           - name: jboss.eap.config.jgroups
           - name: jboss.eap.config.elytron
           - name: os-eap-probes
-            version: '2.0'
+            version: '3.0'
           - name: jboss.container.maven.35.bash
             version: '3.5'
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
           - name: os-eap-extensions
-          # RH-SSO 7.3 TP CD product specific modules from modules/ path in this repository
-          - name: sso.config.launch.setup.73
+          # RH-SSO 7.4 product specific modules from modules/ path in this repository
+          - name: sso.config.launch.setup.74
           - name: sso.db.drivers
             version: '1.0'
           - name: sso.datasource.overrides
@@ -101,7 +122,7 @@ modules:
           - name: openshift-layer
           - name: openshift-passwd
           - name: keycloak-layer
-          - name: os-logging
+          - name: jboss.container.util.logging.bash
 packages:
       manager: microdnf
       content_sets:
@@ -117,4 +138,4 @@ osbs:
             container_file: container.yaml
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-cd-openshift-rhel8
+            branch: jb-sso-7.4-openshift-rhel8

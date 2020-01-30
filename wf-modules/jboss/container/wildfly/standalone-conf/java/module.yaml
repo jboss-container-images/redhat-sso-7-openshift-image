@@ -1,0 +1,10 @@
+schema_version: 1
+name: jboss.container.wildfly.standalone-conf.java
+version: '1.0'
+description: standalone.conf changes specific to openshift for java
+modules:
+  install:
+  - name: jboss.container.java.jvm.bash
+execute:
+- script: configure.sh
+  user: '185'
