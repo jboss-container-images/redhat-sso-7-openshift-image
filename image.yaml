@@ -60,8 +60,8 @@ modules:
             git:
                   # url: https://github.com/jboss-container-images/jboss-eap-modules.git
                   # ref: 7.3.x-legacy
-                  url: https://github.com/hmlnarik/jboss-eap-modules/tree/CLOUD-3467-legacy-7.3
-                  ref: legacy-7.3
+                  url: https://github.com/hmlnarik/jboss-eap-modules
+                  ref: CLOUD-3467-legacy-7.3
           - name: jboss-eap-image
             git:
                   # url: https://github.com/jboss-container-images/jboss-eap-7-image.git
