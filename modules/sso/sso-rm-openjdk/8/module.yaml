@@ -1,6 +1,6 @@
 schema_version: 1
 name: sso-rm-openjdk
-version: '1.0'
+version: 8
 description: Remove OpenJDK 1.8 if OpenJ9 is present
 
 execute:

@@ -1,0 +1,13 @@
+#!/bin/sh
+# ==============================================================================
+# JDK specific customizations
+#
+# ==============================================================================
+
+function jvm_specific_diagnostics() {
+    if [[ $(uname -i) = s390x ]] ; then
+        echo ""
+    else
+        echo "-XX:NativeMemoryTracking=summary -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UnlockDiagnosticVMOptions"
+    fi
+}
