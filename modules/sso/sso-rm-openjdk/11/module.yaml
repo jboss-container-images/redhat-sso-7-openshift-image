@@ -1,0 +1,7 @@
+schema_version: 1
+name: sso-rm-openjdk
+version: 11
+description: Remove OpenJDK 11 if OpenJ9 is present, and remove OpenJDK 8 if OpenJDK 11 is present
+
+execute:
+- script: configure.sh
