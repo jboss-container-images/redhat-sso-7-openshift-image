@@ -7,6 +7,12 @@ from: "ubi8-minimal:latest"
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso74-openshift-rhel8-container"
+    - name: "org.jboss.product"
+      value: &product "sso"
+    - name: "org.jboss.product.version"
+      value: &product_version "7.4.0.GA"
+    - name: "org.jboss.product.sso.version"
+      value: *product_version
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
@@ -18,6 +24,13 @@ labels:
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
 envs:
+    - name: "JBOSS_PRODUCT"
+      value: *product
+    - name: "JBOSS_SSO_VERSION"
+      value: *product_version
+    - name: "PRODUCT_VERSION"
+      value: *product_version
+
     - name: "SSO_ADMIN_USERNAME"
       example: "admin"
       description: "Username of the administrator account for the 'master' realm of the SSO server. Required. If no value is specified, it is auto generated and displayed as an OpenShift Instructional message when the template is instantiated."
