@@ -631,6 +631,7 @@
             </spi>
             <!-- ##SSO_SERVER_HOSTNAME_SPI## -->
             <!-- ##SSO_TRUSTSTORE## -->
+            <!-- ##SSO_VAULT_CONFIG## -->
         </subsystem>
     </profile>
     <interfaces>
