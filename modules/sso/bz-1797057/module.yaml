@@ -1,0 +1,6 @@
+schema_version: 1
+name: bz-1797057
+# Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1797057
+version: '1.0'
+execute:
+    - script: install

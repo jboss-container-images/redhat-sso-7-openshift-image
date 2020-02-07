@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rpm -e --nodeps mariadb
+rpm -qa |
+    grep -E '^adwaita|^dconf-[0-9]|^gtk3|^perl|^cracklib-dicts|^libwayland|^groff-base' |
+    xargs rpm -e ncurses mariadb-connector-c mariadb-connector-c-config mariadb-common
