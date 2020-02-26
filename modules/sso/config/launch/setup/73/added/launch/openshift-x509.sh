@@ -84,6 +84,7 @@ function autogenerate_keystores() {
   local JKS_TRUSTSTORE_FILE="truststore.jks"
   local JKS_TRUSTSTORE_PATH="${KEYSTORES_STORAGE}/${JKS_TRUSTSTORE_FILE}"
   local PASSWORD=$(openssl rand -base64 32)
+  local TEMPORARY_CERTIFICATE="temporary_ca.crt"
   if [ -n "${X509_CA_BUNDLE}" ]; then
     log_info "Creating RH-SSO truststore.."
     # We use cat here, so that users could specify multiple CA Bundles using space or even wildcard:
@@ -91,7 +92,7 @@ function autogenerate_keystores() {
     # Note, that there is no quotes here, that's intentional. Once can use spaces in the $X509_CA_BUNDLE like this:
     # X509_CA_BUNDLE=/ca.crt /ca2.crt
     cat ${X509_CA_BUNDLE} > ${TEMPORARY_CERTIFICATE}
-    csplit -s -z -f crt- "${X509_CA_BUNDLE}" "${X509_CRT_DELIMITER}" '{*}'
+    csplit -s -z -f crt- "${TEMPORARY_CERTIFICATE}" "${X509_CRT_DELIMITER}" '{*}'
     for CERT_FILE in crt-*; do
       "$KEYTOOL" -import -noprompt -keystore "${JKS_TRUSTSTORE_PATH}" -file "${CERT_FILE}" \
       -storepass "${PASSWORD}" -alias "service-${CERT_FILE}" >& /dev/null
