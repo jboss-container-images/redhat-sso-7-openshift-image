@@ -102,7 +102,7 @@ function autogenerate_keystores() {
     fi
 
     # Import existing system CA certificates into the newly generated truststore
-    local SYSTEM_CACERTS="$(readlink -e $(dirname $(readlinkgit -e $(which "$KEYTOOL")))"/../lib/security/cacerts")"
+    local SYSTEM_CACERTS="$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../lib/security/cacerts")"
     if [ ! -f "$SYSTEM_CACERTS" -a -f "$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../jre/lib/security/cacerts")" ]; then
         SYSTEM_CACERTS="$(readlink -e $(dirname $(readlink -e $(which "$KEYTOOL")))"/../jre/lib/security/cacerts")"
     fi
