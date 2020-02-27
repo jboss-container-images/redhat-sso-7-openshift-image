@@ -83,9 +83,10 @@ function autogenerate_keystores() {
   local -r X509_CRT_DELIMITER="/-----BEGIN CERTIFICATE-----/"
   local JKS_TRUSTSTORE_FILE="truststore.jks"
   local JKS_TRUSTSTORE_PATH="${KEYSTORES_STORAGE}/${JKS_TRUSTSTORE_FILE}"
-  local PASSWORD=$(openssl rand -base64 32)
+  local PASSWORD=$(openssl rand -base64 32 2>/dev/null)
   local TEMPORARY_CERTIFICATE="temporary_ca.crt"
   if [ -n "${X509_CA_BUNDLE}" ]; then
+   pushd /tmp >& /dev/null
     log_info "Creating RH-SSO truststore.."
     # We use cat here, so that users could specify multiple CA Bundles using space or even wildcard:
     # X509_CA_BUNDLE=/var/run/secrets/kubernetes.io/serviceaccount/*.crt
@@ -125,5 +126,6 @@ function autogenerate_keystores() {
     SSO_TRUSTSTORE_PASSWORD="${PASSWORD}"
     SSO_TRUSTSTORE_DIR="${KEYSTORES_STORAGE}"
     SSO_TRUSTSTORE="${JKS_TRUSTSTORE_FILE}"
+    popd >& /dev/null
   fi
 }
