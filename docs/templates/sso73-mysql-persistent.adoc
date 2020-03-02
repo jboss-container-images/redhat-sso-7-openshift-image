@@ -278,3 +278,14 @@ more information.
 
 
 
+
+[[tls]]
+== TLS/SSL configuration
+
+Red Hat Single Sign-On server can be configured to use TLS for handling incoming connections (also known as Key Store) and outgoing connections (also known as Trust Store). The configuration uses an automated script to convert a key or a certificate from PEM format into JKS, which is then consumed by Red Hat Single Sign-On.
+
+The Key Store configuration requires a secret (or a volume), containing the key in PEM format, mounted at `/etc/x509/https`. The name of the file that holds the key is `tls.key` by default. Typically, a key is link:https://docs.openshift.com/container-platform/3.11/dev_guide/secrets.html#service-serving-certificate-secrets[created by OpenShift and mounted as a secret.] The `sso-*-x509-https.json` template contains a example of such a configuration.
+
+The Trust Store configuration uses certificates in PEM format. They should be mounted somewhere in the Pod and `X509_CA_BUNDLE` variable should point to them. A typical example is using the set of CA certificates, as provided by OpenShift - `/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt`. The `X509_CA_BUNDLE` variable might be configured to point to a custom file system path within the Pod, containing the set of CA certificates to use. The space (` `) character is used as a separator for specifying multiple CA bundles.
+
+TIP: With the current implementation it is possible to use `X509_CA_BUNDLE` along with `SSO_TRUSTSTORE_*`. However, the current implementation favors the `X509_CA_BUNDLE` variable and in some cases, `SSO_TRUSTSTORE_*` might be ignored. This behavior is implementation dependent and may change in the future.
