@@ -16,14 +16,14 @@ toc::[levels=1]
 
 == templates
 
-* link:./templates/sso-cd-https.adoc[sso-cd-https]
-* link:./templates/sso-cd-mysql-persistent.adoc[sso-cd-mysql-persistent]
-* link:./templates/sso-cd-mysql.adoc[sso-cd-mysql]
-* link:./templates/sso-cd-postgresql-persistent.adoc[sso-cd-postgresql-persistent]
-* link:./templates/sso-cd-postgresql.adoc[sso-cd-postgresql]
-* link:./templates/sso-cd-x509-https.adoc[sso-cd-x509-https]
-* link:./templates/sso-cd-x509-mysql-persistent.adoc[sso-cd-x509-mysql-persistent]
-* link:./templates/sso-cd-x509-postgresql-persistent.adoc[sso-cd-x509-postgresql-persistent]
+* link:./templates/sso74-https.adoc[sso74-https]
+* link:./templates/sso74-mysql-persistent.adoc[sso74-mysql-persistent]
+* link:./templates/sso74-mysql.adoc[sso74-mysql]
+* link:./templates/sso74-postgresql-persistent.adoc[sso74-postgresql-persistent]
+* link:./templates/sso74-postgresql.adoc[sso74-postgresql]
+* link:./templates/sso74-x509-https.adoc[sso74-x509-https]
+* link:./templates/sso74-x509-mysql-persistent.adoc[sso74-x509-mysql-persistent]
+* link:./templates/sso74-x509-postgresql-persistent.adoc[sso74-x509-postgresql-persistent]
 
 ////
   the source for the release notes part of this page is in the file
