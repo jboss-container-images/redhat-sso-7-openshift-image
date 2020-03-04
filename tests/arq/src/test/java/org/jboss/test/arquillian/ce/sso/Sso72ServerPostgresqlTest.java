@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
 import java.net.URL;
 
 @RunWith(Arquillian.class)
-@Template(url = "file://${user.dir}/../../templates/sso-cd-postgresql.json",
+@Template(url = "classpath:templates/${template.prefix:sso}-postgresql.json",
         labels = "application=sso,component=server",
         parameters = {
                 @TemplateParameter(name = "IMAGE_STREAM_NAMESPACE", value = "${kubernetes.namespace:openshift}"),
