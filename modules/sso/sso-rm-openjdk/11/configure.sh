@@ -7,7 +7,9 @@ if rpm -q java-1.8.0-openjdk-headless && ( rpm -q java-11-openjdk-devel || rpm -
     for pkg in java-1.8.0-openjdk-devel \
            java-1.8.0-openjdk-headless \
            java-1.8.0-openjdk; do
-        rpm -q "$pkg" && rpm -e --nodeps "$pkg"
+        if rpm -q "$pkg"; then
+            rpm -e --nodeps "$pkg"
+        fi
     done
 fi
 
@@ -16,7 +18,9 @@ if rpm -q java-11-openj9-devel; then
     for pkg in java-11-openjdk-devel \
            java-11-openjdk-headless \
            java-11-openjdk; do
-        rpm -q "$pkg" && rpm -e --nodeps "$pkg"
+        if rpm -q "$pkg"; then
+            rpm -e --nodeps "$pkg"
+        fi
     done
 fi
 
