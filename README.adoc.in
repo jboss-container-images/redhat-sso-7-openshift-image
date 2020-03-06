@@ -1,6 +1,6 @@
 = Application Templates for Red Hat Single Sign-On 7.4 OpenShift container image
 
-This project contains OpenShift v3 application templates which support applications based on JBoss Middleware products.
+This project contains OpenShift v3 / v4 application templates which support applications based on JBoss Middleware products.
 Source can be found https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso74-dev[here].
 
 :icons: font

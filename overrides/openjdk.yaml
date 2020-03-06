@@ -9,7 +9,13 @@ labels:
 
 osbs:
       configuration:
-            container_file: ../container-openjdk.yaml
+            # Do not extract container into container_file entry, it spoils pipeline runs.
+            container:
+                compose:
+                  pulp_repos: true
+                platforms:
+                  only:
+                  - x86_64
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-7.4-openshift-rhel8

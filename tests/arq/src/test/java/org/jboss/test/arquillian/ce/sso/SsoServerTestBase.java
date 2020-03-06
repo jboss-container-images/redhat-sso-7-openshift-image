@@ -30,7 +30,10 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public abstract class SsoServerTestBase extends SsoTestBase {
@@ -60,15 +63,13 @@ public abstract class SsoServerTestBase extends SsoTestBase {
 
     protected void consoleRoute(String host) throws Exception {
         HttpClient client = HttpClientBuilder.untrustedConnectionClient();
-        String url = host + "auth/realms/master/protocol/openid-connect/auth?client_id=security-admin-console&redirect_uri=" + host + "auth/admin/master/console&response_mode=fragment&response_type=code";
+        String url = host + "auth/admin/master/console";
         url = url.replace(":443", "");
         url = url.replace(":80", "");
         HttpRequest request = HttpClientBuilder.doGET(url);
         HttpResponse response = client.execute(request, execOptions);
         String result = response.getResponseBodyAsString();
-        assertTrue(result.contains("Log in to rh-sso"));
-        assertTrue(result.contains("id=\"username\""));
-        assertTrue(result.contains("id=\"password\""));
+        assertThat(result, anyOf(containsString("Log in to rh-sso"), containsString("data-ng-show=\"auth.user\""), containsString("id=\"kc-login\"")));
     }
 
     @Test

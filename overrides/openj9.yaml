@@ -9,7 +9,21 @@ labels:
 
 osbs:
       configuration:
-            container_file: ../container-openj9.yaml
+            # Do not extract container into container_file entry, it spoils pipeline runs.
+            container:
+                compose:
+                  pulp_repos: true
+                  # include_unpublished_pulp_repos: true
+                  packages:
+                  - java-11-openj9
+                  - java-11-openj9-headless
+                  - java-11-openj9-devel
+                  signing_intent: release
+                  inherit: true
+                platforms:
+                  only:
+                  - s390x
+
       repository:
             name: containers/redhat-sso-7
             branch: jb-sso-7.4-openj9-openshift-rhel8
