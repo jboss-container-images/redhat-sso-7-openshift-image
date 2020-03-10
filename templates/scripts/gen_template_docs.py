@@ -20,10 +20,11 @@ from ptemplate.template import Template
 GIT_REPO = "https://github.com/jboss-container-images/redhat-sso-7-openshift-image.git"
 REPO_NAME = "redhat-sso-7-openshift-image/"
 TEMPLATE_DOCS = "docs/"
-template_dirs = [ 'templates' ]
+template_dirs = [ 'templates', 'templates/openj9' ]
 amq_ssl_desc = None
 
-LINKS =  { "redhat-sso74-openshift-rhel:1.0": "../../templates/sso74-openshift{outfilesuffix}[`redhat-sso-7/sso74-openshift`]" }
+LINKS =  { "redhat-sso74-openshift-rhel:1.0": "../../templates/sso74-openshift{outfilesuffix}[`redhat-sso-7/sso74-openshift`]",
+           "redhat-sso74-openj9-openshift-rhel:1.0": "../../templates/openj9/sso74-openj9-openshift{outfilesuffix}[`redhat-sso-7/sso74-openshift`]"}
 
 PARAMETER_VALUES = {"APPLICATION_DOMAIN": "secure-app.test.router.default.local", \
                    "SOURCE_REPOSITORY_URL": "https://github.com/jboss-openshift/openshift-examples.git", \
@@ -337,6 +338,8 @@ def generate_readme():
 
 # expects to be run from the root of the repository
 if __name__ == "__main__":
+
+    os.chdir("{}/../../".format(os.path.dirname(os.path.realpath(__file__))))
 
     # the user may specify a particular template to parse,
     if 1 < len(sys.argv):
