@@ -1,0 +1,69 @@
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "sso74-openj9-image-stream",
+        "annotations": {
+            "description": "ImageStream definition for Red Hat Single Sign-On 7.4 on OpenJ9.",
+            "openshift.io/provider-display-name": "Red Hat, Inc."
+        }
+    },
+    "items": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "redhat-sso74-openj9-openshift",
+                "annotations": {
+                    "description": "Red Hat Single Sign-On 7.4 on OpenJ9",
+                    "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "version": "7.4.0.GA"
+                }
+            },
+            "labels": {
+                "rhsso": "7.4.0.GA"
+            },
+            "spec": {
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": {
+                            "description": "Latest build of Red Hat Single Sign-On 7.4 on OpenJ9 image",
+                            "iconClass": "icon-sso",
+                            "tags": "sso,keycloak,redhat,hidden",
+                            "supports": "sso:7.4",
+                            "version": "latest",
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9"
+                        },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:1.0"
+                        }
+                    },
+                    {
+                        "name": "1.0",
+                        "annotations": {
+                            "description": "Red Hat Single Sign-On 7.4 on OpenJ9 image",
+                            "iconClass": "icon-sso",
+                            "tags": "sso,keycloak,redhat,hidden",
+                            "supports": "sso:7.4",
+                            "version": "1.0",
+                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9"
+                        },
+                        "referencePolicy": {
+                            "type": "Local"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:1.0"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
