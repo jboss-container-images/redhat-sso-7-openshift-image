@@ -44,7 +44,7 @@ import java.net.URL;
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
-public class Sso72ServerPostgresqlPersistentTest extends SsoServerTestBase {
+public class SsoServerPostgresqlPersistentTest extends SsoServerTestBase {
 
     @RouteURL("sso")
     private URL routeURL;

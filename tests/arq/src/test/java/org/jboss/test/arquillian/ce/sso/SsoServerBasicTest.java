@@ -43,7 +43,7 @@ import java.net.URL;
                 @TemplateParameter(name = "HTTPS_PASSWORD", value = "mykeystorepass")
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
-public class Sso72ServerBasicTest extends SsoServerTestBase {
+public class SsoServerBasicTest extends SsoServerTestBase {
     @RouteURL("sso")
     private URL routeURL;
 
@@ -60,7 +60,7 @@ public class Sso72ServerBasicTest extends SsoServerTestBase {
         return secureRouteURL;
     }
 
-    public Sso72ServerBasicTest() {
+    public SsoServerBasicTest() {
     }
 
 }

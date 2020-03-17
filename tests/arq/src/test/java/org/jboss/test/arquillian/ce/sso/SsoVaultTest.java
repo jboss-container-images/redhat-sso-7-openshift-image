@@ -60,7 +60,7 @@ import static org.hamcrest.Matchers.not;
         "  },\n" +
         "  \"type\": \"Opaque\"\n" +
         "}")
-public class Sso74VaultTest extends SsoTestBase {
+public class SsoVaultTest extends SsoTestBase {
 
     @RouteURL("sso")
     private URL routeURL;
