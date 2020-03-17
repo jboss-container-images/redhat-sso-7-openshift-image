@@ -23,18 +23,26 @@
 
 package org.jboss.test.arquillian.ce.sso;
 
+import org.arquillian.cube.openshift.api.OpenShiftHandle;
 import org.arquillian.cube.openshift.api.OpenShiftResource;
 import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.api.TemplateParameter;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-@Template(url = "classpath:templates/${template.prefix:sso}-postgresql.json",
-        labels = "application=sso,component=server",
+@Template(url = "classpath:templates/${template.prefix:sso}-https.json",
+        labels = "application=sso",
         parameters = {
                 @TemplateParameter(name = "IMAGE_STREAM_NAMESPACE", value = "${kubernetes.namespace:openshift}"),
                 @TemplateParameter(name = "SSO_ADMIN_USERNAME", value = "admin"),
@@ -43,14 +51,16 @@ import java.net.URL;
                 @TemplateParameter(name = "HTTPS_PASSWORD", value = "mykeystorepass")
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
-@OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
-public class Sso72ServerPostgresqlTest extends SsoServerTestBase {
+public class SsoServerLogTest extends SsoServerTestBase {
 
     @RouteURL("sso")
     private URL routeURL;
 
     @RouteURL("secure-sso")
     private URL secureRouteURL;
+
+    @ArquillianResource
+    OpenShiftHandle adapter;
 
     @Override
     protected URL getRouteURL() {
@@ -61,4 +71,20 @@ public class Sso72ServerPostgresqlTest extends SsoServerTestBase {
     protected URL getSecureRouteURL() {
         return secureRouteURL;
     }
+
+    @Test
+    @RunAsClient
+    public void testLogs() throws Exception {
+        try {
+            Map<String, String> labels = Collections.singletonMap("application", "sso");
+            String result = adapter.getLog(null, labels);
+
+            assertTrue(result.contains("Deployed \"keycloak-server.war\""));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+
 }

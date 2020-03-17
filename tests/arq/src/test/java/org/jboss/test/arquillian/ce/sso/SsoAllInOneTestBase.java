@@ -40,7 +40,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class SsoAllInOneTestBase extends SsoEapTestBase {
+public abstract class SsoAllInOneTestBase extends SsoEapTestBase {
 			
     public SsoAllInOneTestBase() {
     }
