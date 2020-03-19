@@ -13,7 +13,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "redhat-sso74-openj9-openshift",
+                "name": "sso74-openj9-openshift-rhel8",
                 "annotations": {
                     "description": "Red Hat Single Sign-On 7.4 on OpenJ9",
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9",
@@ -28,24 +28,13 @@
                 "tags": [
                     {
                         "name": "latest",
-                        "annotations": {
-                            "description": "Latest build of Red Hat Single Sign-On 7.4 on OpenJ9 image",
-                            "iconClass": "icon-sso",
-                            "tags": "sso,keycloak,redhat,hidden",
-                            "supports": "sso:7.4",
-                            "version": "latest",
-                            "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9"
-                        },
-                        "referencePolicy": {
-                            "type": "Local"
-                        },
                         "from": {
-                            "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:1.0"
+                            "kind": "ImageStreamTag",
+                            "name": "7.4"
                         }
                     },
                     {
-                        "name": "1.0",
+                        "name": "7.4",
                         "annotations": {
                             "description": "Red Hat Single Sign-On 7.4 on OpenJ9 image",
                             "iconClass": "icon-sso",
@@ -59,7 +48,7 @@
                         },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:1.0"
+                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:7.4"
                         }
                     }
                 ]
