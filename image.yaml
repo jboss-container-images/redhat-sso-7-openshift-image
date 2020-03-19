@@ -103,8 +103,6 @@ modules:
           - name: sso.config.launch.setup.74
           - name: sso.db.drivers
             version: '1.0'
-          - name: sso.datasource.overrides
-            version: '1.0'
           - name: sso.python
             version: '3'
 
@@ -113,8 +111,6 @@ modules:
           - name: openshift-passwd
           - name: keycloak-layer
 
-          # Workarounds for known bugs in RPMs to slim down the image
-          - name: bz-1797057
           - name: sso-rm-openjdk
             version: *jdk_version
 packages:

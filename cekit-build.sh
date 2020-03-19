@@ -4,8 +4,8 @@
 
 # pnc list-built-artifacts -q 'filename=like="%.zip"' BUILD_ID | ./get-artifacts.py > artifacts-override.yaml
 
-#JDK=openjdk
-JDK=openj9
+JDK=openjdk
+#JDK=openj9
 
 BUILDER=osbs
 #BUILDER=podman

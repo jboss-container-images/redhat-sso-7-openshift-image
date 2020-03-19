@@ -1,8 +1,4 @@
 source $JBOSS_HOME/bin/launch/datasource-common.sh
-# KEYCLOAK-10694 - Override the definitions of certain TX and XA datasource routines
-# from JBoss EAP 'os-eap-datasource' and 'os-eap7-launch' modules to replace request(s)
-# for MySQL driver with a request for the MariaDB driver in RHEL-8 UBI minimal
-source $JBOSS_HOME/bin/launch/datasource-common-overrides.sh
 
 function prepareEnv() {
   clearDatasourcesEnv
@@ -79,8 +75,6 @@ function generate_datasource() {
   local validate="${13}"
   local url="${14}"
 
-  # KEYCLOAK-10694 - Replace any request for MySQL DB driver with a request for the MariaDB one in RHEL-8 UBI minimal
-  driver=${driver//mysql/mariadb}
   generate_datasource_common "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${driver}" "${11}" "${12}" "${13}" "${14}"
 
   if [ -z "$service_name" ]; then

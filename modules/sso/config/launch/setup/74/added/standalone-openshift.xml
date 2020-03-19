@@ -134,9 +134,6 @@
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
-                    <driver name="mariadb" module="org.mariadb">
-                        <xa-datasource-class>org.mariadb.jdbc.MariaDbDataSource</xa-datasource-class>
-                    </driver>
                     <driver name="postgresql" module="org.postgresql">
                         <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
                     </driver>
