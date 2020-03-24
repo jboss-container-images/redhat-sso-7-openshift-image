@@ -32,4 +32,3 @@ modules:
             version: '3.5'
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
-          - name: os-eap-extensions

@@ -43,5 +43,6 @@ CONFIGURE_SCRIPTS=(
   $JBOSS_HOME/bin/launch/add-sso-realm.sh
   $JBOSS_HOME/bin/launch/keycloak-spi.sh
   $JBOSS_HOME/bin/launch/access_log_valve.sh
+  $JBOSS_HOME/bin/launch/configure_sso_cli_extensions.sh
   /opt/run-java/proxy-options
 )

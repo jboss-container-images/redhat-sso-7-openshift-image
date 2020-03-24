@@ -111,6 +111,10 @@ modules:
           - name: openshift-passwd
           - name: keycloak-layer
 
+          # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
+          - name: os-eap-extensions
+          - name: sso-cli-extensions
+
           - name: sso-rm-openjdk
             version: *jdk_version
 packages:
