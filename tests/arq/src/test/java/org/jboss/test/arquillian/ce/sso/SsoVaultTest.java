@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.not;
  * @author mhajas
  */
 @RunWith(Arquillian.class)
-@Template(url = "file://${user.dir}/../../templates/sso74-https.json",
+@Template(url = "classpath:templates/${template.prefix:sso}-https.json",
         labels = "application=sso",
         parameters = {
                 @TemplateParameter(name = "IMAGE_STREAM_NAMESPACE", value = "${kubernetes.namespace:openshift}"),
@@ -72,8 +72,7 @@ public class SsoVaultTest extends SsoTestBase {
     OpenShiftAssistant assistant;
 
     private static final String SSO_VAULT_DIR = "/etc/sso-vault-secret-volume";
-    private static final String DEPLOYMENT_CONFIG_NAME = "sso";
-    private static final Integer EXEC_TIMEOUT = 60;
+    private static final Integer EXEC_TIMEOUT = 120;
 
     @Override
     protected URL getRouteURL() {
@@ -137,7 +136,18 @@ public class SsoVaultTest extends SsoTestBase {
                         .endSpec()
                     .done();
 
-            waitForRHSSOToStart();
+            Containers.delay(120, 3000, () -> {
+                DeploymentConfigStatus status = assistant.getClient().deploymentConfigs().withName(DEPLOYMENT_CONFIG_NAME).get().getStatus();
+                Integer updatedReplicas = Optional.ofNullable(status.getUpdatedReplicas()).orElse(0);
+                Integer availableReplicas = Optional.ofNullable(status.getAvailableReplicas()).orElse(0);
+                Integer readyReplicas = Optional.ofNullable(status.getReadyReplicas()).orElse(0);
+
+                return updatedReplicas == 1 &&
+                        availableReplicas == 1 &&
+                        readyReplicas == 1;
+            });
+
+            initialStateAwait();
 
             exec(labels, EXEC_TIMEOUT,
                     allOf(containsString("\"outcome\" => \"success\""),
@@ -154,27 +164,6 @@ public class SsoVaultTest extends SsoTestBase {
                 .deploymentConfigs()
                 .withName(DEPLOYMENT_CONFIG_NAME)
                 .edit();
-    }
-
-    private void waitForReplicas(long startupTimeout, long checkPeriod, int expectedNumberOfReplicas) throws Exception {
-        Containers.delay(startupTimeout, checkPeriod, () -> {
-            DeploymentConfigStatus status = assistant.getClient().deploymentConfigs().withName(DEPLOYMENT_CONFIG_NAME).get().getStatus();
-            Integer updatedReplicas = Optional.ofNullable(status.getUpdatedReplicas()).orElse(0);
-            Integer availableReplicas = Optional.ofNullable(status.getAvailableReplicas()).orElse(0);
-            Integer readyReplicas = Optional.ofNullable(status.getReadyReplicas()).orElse(0);
-
-            return updatedReplicas == expectedNumberOfReplicas &&
-                    availableReplicas == expectedNumberOfReplicas &&
-                    readyReplicas == expectedNumberOfReplicas;
-        });
-    }
-
-    private void waitForRHSSOToStart() throws Exception {
-        // First wait for DeploymentConfig to be updated and pod to be spawned
-        waitForReplicas(120, 3000, 1);
-
-        // Then wait for RHSSO route to return status 200
-        ResourceUtil.awaitRoute(getRouteURL(), 200);
     }
 
     private void exec(Map<String, String> labels, long waitLimitInSeconds, Matcher<String> matcher, String... input) throws Exception {
