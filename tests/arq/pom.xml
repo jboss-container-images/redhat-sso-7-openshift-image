@@ -174,11 +174,30 @@
                         <arq.extension.openshift.routerHost>${router.hostIP}</arq.extension.openshift.routerHost>
                         <template.repository>jboss-openshift</template.repository>
                         <template.branch>master</template.branch>
-                        <!-- URL to the OpenShift image streams that are officially added to OCP. These image streams are added to every test project run on OpenShift -->
-                        <openshift.imageStreams>https://raw.githubusercontent.com/openshift/origin/v3.9.0/examples/image-streams/image-streams-rhel7.json</openshift.imageStreams>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>z-cluster</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/SsoEap*.java</exclude>
+                                <!-- Z-Cluster we are using doesn't have storage class configured so we need to skip this test for now -->
+                                <exclude>**/SsoServerPostgresqlPersistentTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

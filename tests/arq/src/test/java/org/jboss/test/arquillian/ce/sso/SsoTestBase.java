@@ -24,7 +24,10 @@
 package org.jboss.test.arquillian.ce.sso;
 
 import org.arquillian.cube.openshift.api.OpenShiftDynamicImageStreamResource;
-import org.arquillian.cube.openshift.api.OpenShiftResource;
+import org.arquillian.cube.openshift.impl.client.ResourceUtil;
+import org.arquillian.cube.openshift.impl.utils.Checker;
+import org.arquillian.cube.openshift.impl.utils.Containers;
+import org.junit.Before;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,7 +39,6 @@ import java.util.logging.Logger;
  * @author Filippe Spolti
  * @author Ales justin
  */
-@OpenShiftResource("${openshift.imageStreams}")
 @OpenShiftDynamicImageStreamResource(
   name = "${imageStream.sso.name:sso74-openshift-rhel8}",
   image = "${imageStream.sso.image:registry.access.redhat.com/sso-7/sso74-openshift-rhel8:7.4}",
@@ -44,10 +46,28 @@ import java.util.logging.Logger;
 )
 public abstract class SsoTestBase {
     protected final Logger log = Logger.getLogger(getClass().getName());
+    protected static final String DEPLOYMENT_CONFIG_NAME = "sso";
 
     protected abstract URL getRouteURL();
 
     protected abstract URL getSecureRouteURL();
+
+    protected URL getHealthCheckUrl() {
+        return getRouteURL();
+    }
+
+    @Before
+    public void initialStateAwait() throws Exception {
+        Containers.delay(300, 3000, initialStateChecker());
+    }
+
+    protected Checker initialStateChecker() {
+        return () -> {
+                log.info("Waiting for route: " + getHealthCheckUrl() + " to return 200");
+                ResourceUtil.awaitRoute(getHealthCheckUrl(), 200);
+                return true;
+            };
+    }
 
     public static void assertContains(String content, String... expecteds) {
         for (String expected : expecteds)

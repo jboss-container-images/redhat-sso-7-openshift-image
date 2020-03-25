@@ -28,6 +28,8 @@ import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,6 +39,15 @@ import static org.junit.Assert.assertTrue;
 public abstract class SsoEapSecureDeploymentsBase extends SsoTestBase {
     @ArquillianResource
     OpenShiftHandle adapter;
+
+    @Override
+    protected URL getHealthCheckUrl() {
+        try {
+            return new URL(super.getHealthCheckUrl() + "app-profile-jee");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     @RunAsClient

@@ -29,6 +29,9 @@ import org.jboss.arquillian.ce.httpclient.*;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap7-app-secret.json")
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
 @OpenShiftDynamicImageStreamResource(name = "${imageStream.eap71.name:jboss-eap71-openshift}", image = "${imageStream.eap71.image:registry.access.redhat.com/jboss-eap-7/eap71-openshift:1.3}", version = "${imageStream.eap71.version:1.3}")
@@ -44,6 +47,15 @@ public abstract class SsoEapTestBase extends SsoTestBase {
 
     protected String getSecureRoute() {
         return getSecureRouteURL().toString().replace(":443", "");
+    }
+
+    @Override
+    protected URL getHealthCheckUrl() {
+        try {
+            return new URL(getRoute() + "app-profile-jsp");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

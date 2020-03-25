@@ -34,27 +34,27 @@
         <property name="originServer">https://your-ose-instance.com:8443</property>
         -->
         <property name="namespace.prefix">test-sso</property>
-        <!-- The file containing the pod definition. Used to instantiate the JBoss instance. -->
-        <property name="definitionsFile">src/test/resources/testrunner-pod.json</property>
-        <!-- Ports to be proxied locally, <container>:<port> -->
-        <property name="proxiedContainerPorts">testrunner:9999,testrunner:9990,testrunner:8080</property>
-        <!-- Fetch the logs from Openshift and pods, and save them into target/surefire-reports -->
+<!--        &lt;!&ndash; The file containing the pod definition. Used to instantiate the JBoss instance. &ndash;&gt;-->
+<!--        <property name="definitionsFile">src/test/resources/testrunner-pod.json</property>-->
+<!--        &lt;!&ndash; Ports to be proxied locally, <container>:<port> &ndash;&gt;-->
+<!--        <property name="proxiedContainerPorts">testrunner:9999,testrunner:9990,testrunner:8080</property>-->
+<!--        &lt;!&ndash; Fetch the logs from Openshift and pods, and save them into target/surefire-reports &ndash;&gt;-->
         <property name="logs.copy">true</property>
     </extension>
 
-    <!--
-      class mode causes the test pod to be recreated for each test class. this
-      is required to pickup environment variables specific to the test
-      environment, e.g. service host, port, etc.  testrunner relates to the pod
-      name in testrunner-pod.json.
-    -->
-    <container qualifier="testrunner" mode="class" default="true">
-        <!-- Pod running remote tests. -->
-        <configuration>
-            <!-- For use with archillian-chameleon -->
-            <property name="username">admin</property>
-            <property name="password">Admin#70365</property>
-        </configuration>
-    </container>
+<!--    &lt;!&ndash;-->
+<!--      class mode causes the test pod to be recreated for each test class. this-->
+<!--      is required to pickup environment variables specific to the test-->
+<!--      environment, e.g. service host, port, etc.  testrunner relates to the pod-->
+<!--      name in testrunner-pod.json.-->
+<!--    &ndash;&gt;-->
+<!--    <container qualifier="testrunner" mode="class" default="true">-->
+<!--        &lt;!&ndash; Pod running remote tests. &ndash;&gt;-->
+<!--        <configuration>-->
+<!--            &lt;!&ndash; For use with archillian-chameleon &ndash;&gt;-->
+<!--            <property name="username">admin</property>-->
+<!--            <property name="password">Admin#70365</property>-->
+<!--        </configuration>-->
+<!--    </container>-->
 
 </arquillian>

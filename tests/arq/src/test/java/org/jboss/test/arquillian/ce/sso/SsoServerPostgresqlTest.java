@@ -23,6 +23,7 @@
 
 package org.jboss.test.arquillian.ce.sso;
 
+import org.arquillian.cube.openshift.api.OpenShiftDynamicImageStreamResource;
 import org.arquillian.cube.openshift.api.OpenShiftResource;
 import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.api.TemplateParameter;
@@ -44,6 +45,11 @@ import java.net.URL;
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
+@OpenShiftDynamicImageStreamResource(
+        name = "postgresql",
+        image = "${postgresql.image:registry.redhat.io/rhel8/postgresql-10}",
+        version = "10"
+)
 public class SsoServerPostgresqlTest extends SsoServerTestBase {
 
     @RouteURL("sso")

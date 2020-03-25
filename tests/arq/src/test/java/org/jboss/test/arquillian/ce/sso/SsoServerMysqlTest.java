@@ -28,6 +28,7 @@ import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.api.TemplateParameter;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
@@ -44,6 +45,7 @@ import java.net.URL;
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/eap-app-secret.json")
+@Ignore
 public class SsoServerMysqlTest extends SsoServerTestBase {
     @RouteURL("sso")
     private URL routeURL;
