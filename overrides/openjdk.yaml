@@ -1,6 +1,6 @@
 schema_version: 1
 
-name: "redhat-sso-7/sso74-openshift-rhel8"
+name: "rh-sso-7/sso74-openshift-rhel8"
 description: "Red Hat Single Sign-On 7.4 on OpenJDK OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
 labels:
