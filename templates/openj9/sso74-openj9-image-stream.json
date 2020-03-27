@@ -48,7 +48,7 @@
                         },
                         "from": {
                             "kind": "DockerImage",
-                            "name": "registry.redhat.io/redhat-sso-7/sso74-openj9-openshift-rhel8:7.4"
+                            "name": "registry.redhat.io/rh-sso-7/sso74-openj9-openshift-rhel8:7.4"
                         }
                     }
                 ]
