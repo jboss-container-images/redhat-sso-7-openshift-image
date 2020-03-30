@@ -32,3 +32,16 @@ modules:
             version: '3.5'
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
+
+execute:
+    - script: install-eap-one-offs.sh
+
+# All EAP one-offs artifacts must be prefixed with "eap-one-off-" prefix and suffixed with in ".zip".
+# Ensure that only one-offs for the INSTALLED version of EAP are present, and comment all of them
+# that are obsoleted.
+artifacts:
+      - md5: 1b6036cfcde2cf1dc05c2eb6eca228ff
+        name: jbeap-18807.zip
+        target: eap-one-off-jbeap-18807.zip
+        url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.0.CR2/jbeap-18807.zip
+
