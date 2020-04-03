@@ -78,6 +78,9 @@ modules:
             version: '1.0'
           - name: os-eap-s2i
             version: '1.0'
+          # KEYCLOAK-13574 Basic Jolokia module is a hard requirement for the CD Jolokia module
+          - name: jboss.container.jolokia.bash
+            version: '1.0'
           - name: jboss.eap.cd.jolokia
             version: '1.0'
           - name: jboss.eap.cd.openshift.modules
