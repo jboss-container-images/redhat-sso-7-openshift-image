@@ -59,7 +59,8 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_727_CR3
+                  # EAP_728_CR1 tag + CLOUD-3548 fix
+                  ref: a83cbd8b668894f741e7e1f15da2fe412b5e3932
           - name: sso73_modules
             path: modules
       install:
