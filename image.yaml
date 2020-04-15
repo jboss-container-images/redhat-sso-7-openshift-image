@@ -55,11 +55,12 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.39.0
+                  ref: 0.41.0
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_727_CR3
+                  # EAP_728_CR1 tag + CLOUD-3548 fix
+                  ref: a83cbd8b668894f741e7e1f15da2fe412b5e3932
           - name: sso73_modules
             path: modules
       install:
@@ -68,8 +69,13 @@ modules:
           # Common modules from the main CE cct_module repository
           - name: dynamic-resources
             version: '1.0'
-          - name: jboss.container.maven.35.bash
-            version: 3.5scl
+            # Install rh-maven35 from RHSCL
+          - name: jboss.container.maven
+            version: '7.0.3.5'
+            # Configure additional Maven variables (like MAVEN_ARGS_APPEND, MAVEN_LOCAL_REPO, MAVEN_SETTINGS_XML etc
+            # recognized by the image) by calling "jboss.container.maven.default" module from "jboss-maven" module
+          - name: jboss-maven
+            version: '1.0'
           - name: s2i-common
             version: '1.0'
           - name: java-alternatives
@@ -78,9 +84,9 @@ modules:
             version: '1.0'
           - name: os-eap-s2i
             version: '1.0'
-          # KEYCLOAK-13574 Basic Jolokia module is a hard requirement for the CD Jolokia module
-          - name: jboss.container.jolokia.bash
-            version: '1.0'
+            # KEYCLOAK-13574 Basic RHEL-7 legacy Jolokia module is a hard requirement for the CD Jolokia module
+          - name: jboss.container.jolokia
+            version: '7'
           - name: jboss.eap.cd.jolokia
             version: '1.0'
           - name: jboss.eap.cd.openshift.modules
@@ -98,8 +104,6 @@ modules:
           - name: jboss.eap.config.elytron
             version: '1.0'
           - name: os-eap-probes
-            version: '1.0'
-          - name: jboss-maven
             version: '1.0'
           - name: os-eap-hawkular
             version: '1.0'

@@ -18,11 +18,11 @@
                     "description": "Red Hat Single Sign-On 7.3",
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.3",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7.3.7.GA"
+                    "version": "7.3.8.GA"
                 }
             },
             "labels": {
-                "rhsso": "7.3.7.GA"
+                "rhsso": "7.3.8.GA"
             },
             "spec": {
                 "tags": [
