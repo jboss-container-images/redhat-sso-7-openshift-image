@@ -4,12 +4,12 @@
     generator or the input template (./*.in)
 ////
 
-= sso74-openj9-x509-https
+= sso74-ocp4-x509-https
 :toc:
 :toc-placement!:
 :toclevels: 5
 
-An example application based on RH-SSO 7.4 on OpenJ9 image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso74-dev/docs.
+An example application based on RH-SSO 7.4 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso74-dev/docs.
 
 toc::[]
 
@@ -166,7 +166,7 @@ for more information.
 |`JGROUPS_PING_PROTOCOL` | -- | openshift.DNS_PING
 |`OPENSHIFT_DNS_PING_SERVICE_NAME` | -- | `${APPLICATION_NAME}-ping`
 |`OPENSHIFT_DNS_PING_SERVICE_PORT` | -- | 8888
-|X509_CA_BUNDLE | -- | `/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
+|X509_CA_BUNDLE | -- | `/var/run/configmaps/service-ca/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
 |`JGROUPS_CLUSTER_PASSWORD` | The password for the JGroups cluster. | `${JGROUPS_CLUSTER_PASSWORD}`
 |`SSO_ADMIN_USERNAME` | RH-SSO Server administrator username | `${SSO_ADMIN_USERNAME}`
 |`SSO_ADMIN_PASSWORD` | RH-SSO Server admininistrator password | `${SSO_ADMIN_PASSWORD}`
