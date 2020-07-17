@@ -15,7 +15,7 @@ popd
 
 # Set this JDK as the alternative in use
 _arch="$(uname -i)"
-_v=`[[ $(uname -i) = s390x ]] && echo openj9 || echo openjdk`
+_v=`[[ ($(uname -i) = ppc64le) || ($(uname -i) = s390x) ]] && echo openj9 || echo openjdk`
 alternatives --set java java-1.8.0-${_v}.${_arch}
 alternatives --set javac java-1.8.0-${_v}.${_arch}
 alternatives --set java_sdk_${_v} java-1.8.0-${_v}.${_arch}

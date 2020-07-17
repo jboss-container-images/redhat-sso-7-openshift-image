@@ -23,6 +23,7 @@ osbs:
                 platforms:
                   only:
                   - s390x
+                  - ppc64le
 
       repository:
             name: containers/redhat-sso-7
