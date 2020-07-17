@@ -23,7 +23,7 @@ envs:
 
 packages:
   install:
-  - java-11-`[[ $(uname -i) = s390x ]] && echo openj9 || echo openjdk`-devel
+  - java-11-`[[ ($(uname -i) = ppc64le) || ($(uname -i) = s390x) ]] && echo openj9 || echo openjdk`-devel
 
 modules:
   install:
