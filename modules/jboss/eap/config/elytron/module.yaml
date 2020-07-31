@@ -1,0 +1,26 @@
+schema_version: 1
+name: jboss.eap.config.elytron
+version: '1.0'
+description: EAP Elytron configuration scripts
+execute:
+- script: configure.sh
+  user: '185'
+envs:
+    - name: "CONFIGURE_ELYTRON_SSL"
+      example: "true"
+      description: "Use Elytron to configure TLS and associated configuration elements."
+    - name: "HTTPS_PASSWORD"
+      example: "mypassword"
+      description: "Password for the HTTPS keystore."
+    - name: "HTTPS_KEYSTORE_DIR"
+      example: "/some/directory/path/"
+      description: "Path to directory containing keystore file. If leading directory separator is omitted, interpreted to be relative to jboss.server.config.dir."
+    - name: "HTTPS_KEYSTORE"
+      example: "mykeystore.jks"
+      description: "Name of the keystore containing the key to use for TLS."
+    - name: "HTTPS_KEYSTORE_TYPE"
+      example: "JKS"
+      description: "The underlying type of the keystore (JKS, JCEKS, etc.)"
+    - name: "SECDOMAIN_NAME"
+      example: "MySecurityDomain"
+      description: "The name of the Elytron security domain."

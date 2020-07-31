@@ -1,0 +1,44 @@
+schema_version: 1
+name: jboss.eap.config.jgroups
+version: '1.0'
+description: JBoss EAP jgroups configuration
+execute:
+- script: configure.sh
+  user: '185'
+envs:
+    - name: "JGROUPS_ENCRYPT_PROTOCOL"
+      example: "SYM_ENCRYPT"
+      description: The JGroups protocol to use for encryption of the cluster traffic. Can be one of `SYM_ENCRYPT` (the default), or `ASYM_ENCRYPT`. If set to `SYM_ENCRYPT`, the definition of the JGroups `AUTH` protocol is optional, and can be performed by setting the **JGROUPS_CLUSTER_PASSWORD** environment variable. If set to `ASYM_ENCRYPT`, the definition of the JGroups `AUTH` protocol is **required**, and must be performed by setting the **JGROUPS_CLUSTER_PASSWORD** variable. The definition of the JGroups JCEKS keystore is **not** **expected**, when using the `ASYM_ENCRYPT` encryption protocol. A warning will be issued in this case, if such a keystore is defined.
+    - name: "JGROUPS_ENCRYPT_KEYSTORE"
+      example: "mykeystore.jks"
+      description: "The JGroups keystore containing the key. If this does not begin with a directory separator (such as /) this is interpreted as a location relative to jboss.server.config.dir."
+    - name: "JGROUPS_ENCRYPT_PASSWORD"
+      example: "mypassword"
+      description: "The JGroups encryption password."
+    - name: "JGROUPS_ENCRYPT_KEYSTORE_TYPE"
+      example: "JKS"
+      description: "The keystore type (JKS, JCEKS, etc.)"
+    - name: "JGROUPS_ENCRYPT_KEYSTORE_DIR"
+      example: "/etc/secrets/"
+      description: "The location of the JGroups key file. If this is present and does not begin with a directory separator (such as /) this is interpreted as a location relative to jboss.server.config.dir."
+    - name: "JGROUPS_ENCRYPT_SECRET"
+      example: "eap-app-secret"
+      description: "The name of the secret containing the keystore file."
+    - name: "JGROUPS_CLUSTER_PASSWORD"
+      example: "some_cluster_password"
+      description: "The JGroups cluster shared secret."
+    - name: "JBOSS_HA_IP"
+      example: "0.0.0.0"
+      description: "Override the default HA bind address (default value is the result of 'hostname -i') with a specific address."
+    - name: JGROUPS_PING_PROTOCOL
+      example: "dns.DNS_PING"
+      description: "Protocol to discover other nodes in this cluster. Example values: dns.DNS_PING, kubernetes.KUBE_PING"
+    - name: "JGROUPS_JOIN_TIMEOUT"
+      example: 10000
+      description: "JGroups join timeout"
+    - name: "OPENSHIFT_KUBE_PING_NAMESPACE"
+      example: "myproject"
+      description: "(KUBE_PING only) Namespace for application cluster. See template documentation for additional setup requirements."
+    - name: "OPENSHIFT_KUBE_PING_LABELS"
+      example: "application=my-application-name"
+      description: "(KUBE_PING only) Selector labels to control cluster formation. Omitting this will permit all nodes in OPENSHIFT_KUBE_PING_NAMESPACE to join the cluster."

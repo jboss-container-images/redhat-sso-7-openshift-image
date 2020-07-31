@@ -1,0 +1,8 @@
+schema_version: 1
+name: jboss.eap.cd.logging
+version: '1.0'
+description: EAP CD os-eap-logging script package.
+execute:
+- script: configure.sh
+  user: '185'
+

@@ -1,0 +1,39 @@
+schema_version: 1
+name: os-eap7-ping
+version: '1.0'
+description: Legacy os-eap7-ping script package.
+
+execute:
+- script: configure.sh
+  user: '185'
+
+envs:
+- name: "JGROUPS_PING_PROTOCOL"
+  example: "openshift.DNS_PING"
+  description: "JGroups protocol to use for node discover.  Can be one of openshift.DNS_PING or openshift.KUBE_PING."
+- name: "OPENSHIFT_DNS_PING_SERVICE_NAME"
+  example: "eap-app-ping"
+  description: "Name of service exposing the ping port on the servers."
+- name: "OPENSHIFT_DNS_PING_SERVICE_PORT"
+  example: "8888"
+  description: "The port number for the ping port.  If not specified, an attempt will be made to discover the port number from the SRV records for the service, otherwise the default 8888 will be used."
+- name: "OPENSHIFT_KUBE_PING_NAMESPACE"
+  example: "myproject"
+  description: "Clustering project namespace."
+- name: "OPENSHIFT_KUBE_PING_LABELS"
+  example: "application=eap-app"
+  description: "Clustering labels selector."
+
+artifacts:
+- name: openshift-ping-common
+  target: openshift-ping-common-1.2.6.Final-redhat-1.jar
+  md5: 94f0bd57b1990b556890d99290bdd847
+- name: openshift-ping-dns
+  target: openshift-ping-dns-1.2.6.Final-redhat-1.jar
+  md5: 59925c951d904b7734c2d10dc41a6515
+- name: openshift-ping-kube
+  target: openshift-ping-kube-1.2.6.Final-redhat-1.jar
+  md5: 0e4dc6aa494395dddf0f645b38ef4e54
+- name: oauth
+  target: oauth-20100527.jar
+  md5: 91c7c70579f95b7ddee95b2143a49b41
