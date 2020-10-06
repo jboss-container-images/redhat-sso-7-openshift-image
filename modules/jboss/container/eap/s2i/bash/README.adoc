@@ -51,7 +51,7 @@ No additional RPM package repositories are required to install listed RPMs.
 
 The following modules will be installed with this module:
 
-link:../../../../../jboss/container/maven/s2i/bash/README.adoc[jboss.container.maven.s2i.bash]
+link:../../../../../jboss/container/maven/s2i/bash/README.adoc[jboss.container.maven.s2i]
 
 link:../../../../../jboss/container/util/logging/bash/README.adoc[jboss.container.util.logging.bash]
 
