@@ -83,7 +83,7 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.42.0
+                  ref: 0.39.0
 
           - name: sso-modules
             path: modules
