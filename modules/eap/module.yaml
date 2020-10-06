@@ -29,8 +29,8 @@ modules:
           - name: jboss.eap.config.elytron
           - name: os-eap-probes
             version: '3.0'
-          - name: jboss.container.maven
-            version: '7.0.3.5'
+          - name: jboss.container.maven.35.bash
+            version: '3.5'
           - name: os-eap-hawkular
           - name: os-eap-deployment-scanner
 
@@ -48,3 +48,4 @@ execute:
 #        name: jbeap-18807.zip
 #        target: eap-one-off-jbeap-18807.zip
 #        url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.0.CR2/jbeap-18807.zip
+
