@@ -29,4 +29,4 @@ def is_matching_artifact(a):
 for a in build_artifacts:
     b = is_matching_artifact(a)
     if b:
-        print("- target: %s\n  name: %s\n  md5: %s\n  url: %s" % (b[0], b[0], a['md5'], a['public_url']))
+        print("- target: %s\n  name: %s\n  md5: %s\n  url: %s" % (b[0], b[0], a['md5'], a['publicUrl']))
