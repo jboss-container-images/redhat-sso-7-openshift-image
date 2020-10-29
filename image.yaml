@@ -5,7 +5,7 @@ name: "rh-sso-7/sso74-openshift-rhel8"
 description: "Red Hat Single Sign-On 7.4 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
 version: "7.4"
-from: "ubi8-minimal:8-released"
+from: "registry.redhat.io/ubi8/ubi-minimal"
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso74-openshift-rhel8-container"
