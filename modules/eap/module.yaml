@@ -54,3 +54,7 @@ artifacts:
     target: eap-one-off-jbeap-20306.zip
     url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.3-patch-jbeap-20306/rh-sso-7.4.3-patch-jbeap-20306.zip
 
+  - md5: 6b24503f819547bfa26c7a90806a8a92
+    name: rh-sso-7.4.3-patch-jbeap-20229.zip
+    target: eap-one-off-jbeap-20229.zip
+    url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.3-patch-jbeap-20229/rh-sso-7.4.3-patch-jbeap-20229.zip
