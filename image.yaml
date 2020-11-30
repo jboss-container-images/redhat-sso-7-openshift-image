@@ -108,7 +108,6 @@ modules:
 
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
-          - name: openshift-passwd
           - name: keycloak-layer
 
           # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use

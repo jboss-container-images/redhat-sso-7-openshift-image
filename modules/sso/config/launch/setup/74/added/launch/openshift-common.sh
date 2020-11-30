@@ -26,7 +26,6 @@ IMPORT_REALM_FILE=$JBOSS_HOME/standalone/configuration/import-realm.json
 
 CONFIGURE_SCRIPTS=(
   $JBOSS_HOME/bin/launch/configure_extensions.sh
-  $JBOSS_HOME/bin/launch/passwd.sh
   $JBOSS_HOME/bin/launch/datasource.sh
   $JBOSS_HOME/bin/launch/resource-adapter.sh
   $JBOSS_HOME/bin/launch/admin.sh
