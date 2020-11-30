@@ -27,7 +27,8 @@ packages:
 
 modules:
   install:
-  - name: jboss.container.user
+  - name: sso.security.cve-2020-10695
+    version: '1.0'
 
 execute:
 - script: configure.sh
