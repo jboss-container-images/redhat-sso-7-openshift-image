@@ -18,11 +18,11 @@
                     "description": "Red Hat Single Sign-On 7.4 on OpenJ9",
                     "openshift.io/display-name": "Red Hat Single Sign-On 7.4 on OpenJ9",
                     "openshift.io/provider-display-name": "Red Hat, Inc.",
-                    "version": "7.4.3.GA"
+                    "version": "7.4.4.GA"
                 }
             },
             "labels": {
-                "rhsso": "7.4.3.GA"
+                "rhsso": "7.4.4.GA"
             },
             "spec": {
                 "tags": [
