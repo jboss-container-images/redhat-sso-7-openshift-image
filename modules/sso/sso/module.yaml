@@ -9,16 +9,16 @@ execute:
 ## the container in time to be processed by this module
 artifacts:
   - md5: a0000000000000000000000000000000
-    name: keycloak-eap6-adapter.zip
+    name: keycloak-eap6-adapter-dist.zip
   - md5: 0a000000000000000000000000000000
-    name: keycloak-server-overlay.zip
+    name: keycloak-server-overlay-dist.zip
   - md5: 00a00000000000000000000000000000
-    name: keycloak-fuse-adapter.zip
+    name: keycloak-fuse-adapter-dist.zip
   - md5: 000a0000000000000000000000000000
-    name: keycloak-saml-eap7-adapter.zip
+    name: keycloak-saml-eap7-adapter-dist.zip
   - md5: 0000a000000000000000000000000000
-    name: keycloak-js-adapter.zip
+    name: keycloak-js-adapter-dist.zip
   - md5: 00000a00000000000000000000000000
-    name: keycloak-eap7-adapter.zip
+    name: keycloak-eap7-adapter-dist.zip
   - md5: 000000a0000000000000000000000000
-    name: keycloak-saml-eap6-adapter.zip
+    name: keycloak-saml-eap6-adapter-dist.zip
