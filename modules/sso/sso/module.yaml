@@ -9,7 +9,7 @@ execute:
 ## the container in time to be processed by this module
 artifacts:
   - md5: a0000000000000000000000000000000
-    name: rh-sso-eap6-adapter.zip.zip
+    name: rh-sso-eap6-adapter.zip
   - md5: 0a000000000000000000000000000000
     name: rh-sso-server-overlay.zip
   - md5: 00a00000000000000000000000000000
