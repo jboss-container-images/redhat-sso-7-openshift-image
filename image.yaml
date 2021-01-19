@@ -12,7 +12,7 @@ labels:
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.4.4.GA"
+      value: &product_version "7.4.5.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
@@ -73,12 +73,12 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_734_CR2
+                  ref: EAP_735_CR1
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_734_CR2
+                  ref: EAP_735_CR1
 
           - name: cct_module
             git:
@@ -119,17 +119,6 @@ modules:
 packages:
       manager: microdnf
       content_sets_file: content_sets.yaml
-
-artifacts:
-     - name: jboss-eap-7.3.0.zip
-       target: jboss-eap-7.3.zip
-       md5: 3dba80cc1be17b00cb901441111886f3
-       url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/eap7/7.3.0/jboss-eap-7.3.0.zip
-
-     - name: jboss-eap-7.3.4.GA-CR2-patch
-       target: jboss-eap-7.3.4.GA-CR2-patch.zip
-       md5: c37fcbbf369647c1904dc061737e866c
-       url: http://$DOWNLOAD_SERVER/devel/candidates/jboss/eap/JBEAP-7.3.4.GA-CR2/jboss-eap-7.3.4.GA-CR2-patch.zip
 
 run:
       user: 185

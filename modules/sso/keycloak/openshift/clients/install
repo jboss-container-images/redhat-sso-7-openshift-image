@@ -25,9 +25,9 @@ declare -r SSO_ADAPTERS_BASE_DIR="/opt/rh/rh-sso/client"
 # !!! BUT DO NOT CHANGE EXISTING final adapter locations (hash keys)
 # since these are already exported to and used by other images !!!
 declare -rA SSO_ADAPTER_DIR_TO_ZIP=(
-  ["eap6"]="keycloak-eap6-adapter.zip,keycloak-saml-eap6-adapter.zip"
-  ["eap7"]="keycloak-eap7-adapter.zip,keycloak-saml-eap7-adapter.zip"
-  ["js"]="keycloak-js-adapter.zip"
+  ["eap6"]="rh-sso-eap6-adapter.zip,rh-sso-saml-eap6-adapter.zip"
+  ["eap7"]="rh-sso-eap7-adapter.zip,rh-sso-saml-eap7-adapter.zip"
+  ["js"]="rh-sso-js-adapter.zip"
 )
 
 for destination_leaf in "${!SSO_ADAPTER_DIR_TO_ZIP[@]}"; do

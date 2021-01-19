@@ -4,7 +4,7 @@ set -e
 
 SOURCES_DIR=/tmp/artifacts
 
-unzip -o $SOURCES_DIR/keycloak-server-overlay.zip -d $JBOSS_HOME
+unzip -o $SOURCES_DIR/rh-sso-server-overlay.zip -d $JBOSS_HOME
 
 pushd $JBOSS_HOME/bin
 ./jboss-cli.sh --file=keycloak-install.cli
