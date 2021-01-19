@@ -12,7 +12,7 @@ labels:
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.4.4.GA"
+      value: &product_version "7.4.5.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
@@ -73,12 +73,12 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_734_CR2
+                  ref: EAP_735_CR1
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_734_CR2
+                  ref: EAP_735_CR1
 
           - name: cct_module
             git:
