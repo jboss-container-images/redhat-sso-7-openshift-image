@@ -179,7 +179,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.20+| `${APPLICATION_NAME}`
+.22+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
@@ -200,6 +200,8 @@ for more information.
 |`SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}`
 |`SSO_SERVICE_USERNAME` | The username used to access the RH-SSO service. This is used by clients to create the appliction client(s) within the specified RH-SSO realm. | `${SSO_SERVICE_USERNAME}`
 |`SSO_SERVICE_PASSWORD` | The password for the RH-SSO service user. | `${SSO_SERVICE_PASSWORD}`
+|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
+|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 .6+| `${APPLICATION_NAME}-postgresql`
 |`POSTGRESQL_USER` | -- | `${DB_USERNAME}`
 |`POSTGRESQL_PASSWORD` | -- | `${DB_PASSWORD}`
