@@ -196,7 +196,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.32+| `${APPLICATION_NAME}`
+.34+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
@@ -229,6 +229,8 @@ for more information.
 |`SSO_TRUSTSTORE` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE}`
 |`SSO_TRUSTSTORE_DIR` | The name of the truststore file within the secret (e.g. truststore.jks) | `/etc/sso-secret-volume`
 |`SSO_TRUSTSTORE_PASSWORD` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE_PASSWORD}`
+|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
+|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 .6+| `${APPLICATION_NAME}-postgresql`
 |`POSTGRESQL_USER` | -- | `${DB_USERNAME}`
 |`POSTGRESQL_PASSWORD` | -- | `${DB_PASSWORD}`
