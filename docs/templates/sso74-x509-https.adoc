@@ -158,7 +158,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.14+| `${APPLICATION_NAME}`
+.16+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_MIN_POOL_SIZE` | Sets xa-pool/min-pool-size for the configured datasource. | `${DB_MIN_POOL_SIZE}`
 |`DB_MAX_POOL_SIZE` | Sets xa-pool/max-pool-size for the configured datasource. | `${DB_MAX_POOL_SIZE}`
@@ -173,6 +173,8 @@ for more information.
 |`SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}`
 |`SSO_SERVICE_USERNAME` | The username used to access the RH-SSO service. This is used by clients to create the appliction client(s) within the specified RH-SSO realm. | `${SSO_SERVICE_USERNAME}`
 |`SSO_SERVICE_PASSWORD` | The password for the RH-SSO service user. | `${SSO_SERVICE_PASSWORD}`
+|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
+|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 |=======================================================================
 
 
