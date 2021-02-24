@@ -4,6 +4,12 @@
 source ${JBOSS_HOME}/bin/launch/openshift-common.sh
 source $JBOSS_HOME/bin/launch/logging.sh
 
+STATISTICS_ARGS=""
+if [ "${STATISTICS_ENABLED^^}" = "TRUE" ]; then
+  STATISTICS_ARGS="-bmanagement 0.0.0.0 -Dwildfly.statistics-enabled=true"
+fi
+
+
 # TERM signal handler
 function clean_shutdown() {
   log_error "*** JBossAS wrapper process ($$) received TERM signal ***"
@@ -14,6 +20,7 @@ function clean_shutdown() {
 function runServer() {
   local instanceDir=$1
   local count=$2
+
   export NODE_NAME="${NODE_NAME:-node}-${count}"
 
   source $JBOSS_HOME/bin/launch/configure.sh
@@ -27,9 +34,9 @@ function runServer() {
   fi
 
   if [ -n "$SSO_IMPORT_FILE" ] && [ -f $SSO_IMPORT_FILE ]; then
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml -bmanagement 127.0.0.1 $JBOSS_HA_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS}  &
+    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS}  &
   else
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml -bmanagement 127.0.0.1 $JBOSS_HA_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
+    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
   fi
 
   PID=$!
@@ -82,9 +89,9 @@ else
   fi
 
   if [ -n "$SSO_IMPORT_FILE" ] && [ -f $SSO_IMPORT_FILE ]; then
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml -bmanagement 127.0.0.1 $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS} &
+    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS} &
   else
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml -bmanagement 127.0.0.1 $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
+    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
   fi
 
   PID=$!
