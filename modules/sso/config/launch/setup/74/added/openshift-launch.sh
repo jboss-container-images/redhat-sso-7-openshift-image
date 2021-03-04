@@ -51,21 +51,6 @@ function init_data_dir() {
   fi
 }
 
-# Runtime /etc/passwd file permissions safety check to prevent reintroduction
-# of CVE-2020-10695. !!! DO NOT REMOVE !!!
-ETC_PASSWD_PERMS=$(stat -c '%a' "/etc/passwd")
-if [ "${ETC_PASSWD_PERMS}" -gt "644" ]
-then
-  ERROR_MESSAGE=(
-    "Permissions '${ETC_PASSWD_PERMS}' for '/etc/passwd' are too open!"
-    "It is recommended the '/etc/passwd' file can only be modified by"
-    "root or users with sudo privileges and readable by all system users."
-    "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
-  )
-  for msg in "${ERROR_MESSAGE[@]}"; do log_error "${msg}"; done
-  exit 1
-fi
-
 if [ "${SPLIT_DATA^^}" = "TRUE" ]; then
   source /opt/partition/partitionPV.sh
 
