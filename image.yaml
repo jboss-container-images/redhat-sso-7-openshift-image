@@ -110,6 +110,9 @@ modules:
           - name: openshift-layer
           - name: keycloak-layer
 
+          # Various SSO image pre-launch checks to prevent regressions
+          - name: sso-pre-launch-checks
+
           # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
           - name: os-eap-extensions
           - name: sso-cli-extensions
@@ -131,6 +134,7 @@ artifacts:
        md5: 921892c5a2234ca2bd09d5fd5ad1aad8
        url: http://$DOWNLOAD_SERVER/devel/candidates/jboss/eap/JBEAP-7.3.5.GA-CR1/jboss-eap-7.3.5.GA-CR1-patch.zip
 run:
-      user: 185
       cmd:
           - "/opt/eap/bin/openshift-launch.sh"
+      user: 185
+      workdir: "/home/jboss"

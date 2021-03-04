@@ -1,0 +1,7 @@
+schema_version: 1
+name: sso-pre-launch-checks
+version: '1.0'
+description: Module to perform various RH-SSO image pre-launch checks to prevent regressions. Intended to contain pretty limited set of bootstrap tests to achieve certain aspects of the image meet security standards and provide functionality relied upon by 3rd party projects.
+execute:
+- script: configure.sh
+  user: '185'
