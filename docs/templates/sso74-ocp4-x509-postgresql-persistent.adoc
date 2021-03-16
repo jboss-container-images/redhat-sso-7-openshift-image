@@ -179,7 +179,7 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.20+| `${APPLICATION_NAME}`
+.22+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
 |`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
@@ -207,6 +207,8 @@ for more information.
 |`POSTGRESQL_MAX_CONNECTIONS` | The maximum number of client connections allowed. This also sets the maximum number of prepared transactions. | `${POSTGRESQL_MAX_CONNECTIONS}`
 |`POSTGRESQL_MAX_PREPARED_TRANSACTIONS` | -- | `${POSTGRESQL_MAX_CONNECTIONS}`
 |`POSTGRESQL_SHARED_BUFFERS` | Configures how much memory is dedicated to PostgreSQL for caching data. | `${POSTGRESQL_SHARED_BUFFERS}`
+|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
+|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 |=======================================================================
 
 
