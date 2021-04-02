@@ -31,6 +31,7 @@ function clearTxDatasourceEnv() {
     unset ${prefix}_TX_ISOLATION
     unset ${prefix}_MIN_POOL_SIZE
     unset ${prefix}_MAX_POOL_SIZE
+    unset ${prefix}_TX_TIMEOUT
   fi
 }
 
@@ -85,6 +86,10 @@ function inject_jdbc_store() {
                 <communication table-prefix=\"${prefix}\"/>\\
                 <state table-prefix=\"${prefix}\"/>\\
             </jdbc-store>"
+  if [ -n "${2}" ]; then
+    jdbcStore="<coordinator-environment default-timeout=\"${2}\"></coordinator-environment>\\
+            $jdbcStore"
+  fi
   sed -i "s|<!-- ##JDBC_STORE## -->|${jdbcStore}|" $CONFIG_FILE
 }
 
@@ -145,6 +150,9 @@ function inject_tx_datasource() {
     # Transaction isolation level environment variable name format: [NAME]_[DATABASE_TYPE]_TX_ISOLATION
     tx_isolation=$(find_env "${prefix}_TX_ISOLATION")
 
+    # Transaction timeout value environment variable name format: [NAME]_[DATABASE_TYPE]_TX_TIMEOUT
+    tx_timeout=$(find_env "${prefix}_TX_TIMEOUT")
+
     # min pool size environment variable name format: [NAME]_[DATABASE_TYPE]_MIN_POOL_SIZE
     min_pool_size=$(find_env "${prefix}_MIN_POOL_SIZE")
 
@@ -155,12 +163,12 @@ function inject_tx_datasource() {
       "MYSQL")
         driver="mysql"
         datasource="$(generate_tx_datasource ${service,,} $jndi $username $password $host $port $database $driver)\n"
-        inject_jdbc_store "${jndi}ObjectStore"
+        inject_jdbc_store "${jndi}ObjectStore" "$tx_timeout"
         ;;
       "POSTGRESQL")
         driver="postgresql"
         datasource="$(generate_tx_datasource ${service,,} $jndi $username $password $host $port $database $driver)\n"
-        inject_jdbc_store "${jndi}ObjectStore"
+        inject_jdbc_store "${jndi}ObjectStore" "$tx_timeout"
         ;;
       *)
         datasource=""
