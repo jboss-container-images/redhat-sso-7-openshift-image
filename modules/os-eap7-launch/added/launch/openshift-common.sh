@@ -12,7 +12,6 @@ LOGGING_FILE=$JBOSS_HOME/standalone/configuration/logging.properties
 CONFIGURE_SCRIPTS=(
   $JBOSS_HOME/bin/launch/backward-compatibility.sh
   $JBOSS_HOME/bin/launch/configure_extensions.sh
-  $JBOSS_HOME/bin/launch/passwd.sh
   $JBOSS_HOME/bin/launch/messaging.sh
   $JBOSS_HOME/bin/launch/datasource.sh
   $JBOSS_HOME/bin/launch/resource-adapter.sh
