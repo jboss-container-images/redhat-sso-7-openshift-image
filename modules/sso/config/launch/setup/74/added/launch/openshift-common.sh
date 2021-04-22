@@ -26,6 +26,10 @@ export IMPORT_REALM_FILE="${JBOSS_HOME}/standalone/configuration/import-realm.js
 
 export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/configure_extensions.sh"
+  # The nss_wrapper_passwd.sh module below can be removed altogether once Red Hat
+  # Single Sign-On 7 OpenShift container images don't need to support OpenShift v3.x.
+  # See comment in the module itself for further details.
+  "${JBOSS_HOME}/bin/launch/nss_wrapper_passwd.sh"
   "${JBOSS_HOME}/bin/launch/datasource.sh"
   "${JBOSS_HOME}/bin/launch/resource-adapter.sh"
   "${JBOSS_HOME}/bin/launch/admin.sh"
