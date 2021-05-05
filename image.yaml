@@ -122,6 +122,11 @@ modules:
 packages:
       manager: microdnf
       content_sets_file: content_sets.yaml
+      install:
+      # "find" executable is required by various CCT & SSO modules
+      - findutils
+      # "which" tool is handy for debugging issues / troubleshooting
+      - which
 
 run:
       cmd:
