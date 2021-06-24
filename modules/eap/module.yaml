@@ -42,9 +42,9 @@ execute:
 # that are obsoleted.
 # artifacts:
 #
-#      KEYCLOAK-13487 "jbeap-18807.zip" is obsolete in EAP-7.3.1 / RH-SSO 7.4.1, deprecate it
+#      KEYCLOAK-13487 "jbeap-18807.zip" is obsolete in EAP-7.3.1 / RH-SSO 7.5.1, deprecate it
 #
 #      - md5: 1b6036cfcde2cf1dc05c2eb6eca228ff
 #        name: jbeap-18807.zip
 #        target: eap-one-off-jbeap-18807.zip
-#        url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.0.CR2/jbeap-18807.zip
+#        url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.5.0.CR2/jbeap-18807.zip

@@ -4,10 +4,10 @@
     generator or the input template (./*.in)
 ////
 
-= Application Templates for Red Hat Single Sign-On 7.4 OpenShift container image
+= Application Templates for Red Hat Single Sign-On 7.5 OpenShift container image
 
 This project contains OpenShift v3 / v4 application templates which support applications based on JBoss Middleware products.
-Source can be found https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso74-cpaas-dev[here].
+Source can be found https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso75-cpaas-dev[here].
 
 :icons: font
 :toc: macro
@@ -18,23 +18,23 @@ toc::[levels=1]
 
 * link:./templates/openj9.adoc[openj9]
 * link:./templates/scripts.adoc[scripts]
-* link:./templates/sso74-https.adoc[sso74-https]
-* link:./templates/sso74-ocp4-x509-https.adoc[sso74-ocp4-x509-https]
-* link:./templates/sso74-ocp4-x509-postgresql-persistent.adoc[sso74-ocp4-x509-postgresql-persistent]
-* link:./templates/sso74-postgresql-persistent.adoc[sso74-postgresql-persistent]
-* link:./templates/sso74-postgresql.adoc[sso74-postgresql]
-* link:./templates/sso74-x509-https.adoc[sso74-x509-https]
-* link:./templates/sso74-x509-postgresql-persistent.adoc[sso74-x509-postgresql-persistent]
+* link:./templates/sso75-https.adoc[sso75-https]
+* link:./templates/sso75-ocp4-x509-https.adoc[sso75-ocp4-x509-https]
+* link:./templates/sso75-ocp4-x509-postgresql-persistent.adoc[sso75-ocp4-x509-postgresql-persistent]
+* link:./templates/sso75-postgresql-persistent.adoc[sso75-postgresql-persistent]
+* link:./templates/sso75-postgresql.adoc[sso75-postgresql]
+* link:./templates/sso75-x509-https.adoc[sso75-x509-https]
+* link:./templates/sso75-x509-postgresql-persistent.adoc[sso75-x509-postgresql-persistent]
 
 == templates/openj9
 
-* link:./templates/openj9/sso74-openj9-https.adoc[sso74-openj9-https]
-* link:./templates/openj9/sso74-openj9-ocp4-x509-https.adoc[sso74-openj9-ocp4-x509-https]
-* link:./templates/openj9/sso74-openj9-ocp4-x509-postgresql-persistent.adoc[sso74-openj9-ocp4-x509-postgresql-persistent]
-* link:./templates/openj9/sso74-openj9-postgresql-persistent.adoc[sso74-openj9-postgresql-persistent]
-* link:./templates/openj9/sso74-openj9-postgresql.adoc[sso74-openj9-postgresql]
-* link:./templates/openj9/sso74-openj9-x509-https.adoc[sso74-openj9-x509-https]
-* link:./templates/openj9/sso74-openj9-x509-postgresql-persistent.adoc[sso74-openj9-x509-postgresql-persistent]
+* link:./templates/openj9/sso75-openj9-https.adoc[sso75-openj9-https]
+* link:./templates/openj9/sso75-openj9-ocp4-x509-https.adoc[sso75-openj9-ocp4-x509-https]
+* link:./templates/openj9/sso75-openj9-ocp4-x509-postgresql-persistent.adoc[sso75-openj9-ocp4-x509-postgresql-persistent]
+* link:./templates/openj9/sso75-openj9-postgresql-persistent.adoc[sso75-openj9-postgresql-persistent]
+* link:./templates/openj9/sso75-openj9-postgresql.adoc[sso75-openj9-postgresql]
+* link:./templates/openj9/sso75-openj9-x509-https.adoc[sso75-openj9-x509-https]
+* link:./templates/openj9/sso75-openj9-x509-postgresql-persistent.adoc[sso75-openj9-x509-postgresql-persistent]
 
 ////
   the source for the release notes part of this page is in the file

@@ -1,28 +1,28 @@
 schema_version: 1
 
 ## Both name and description are overridden, see overrides/*
-name: "rh-sso-7/sso74-openshift-rhel8"
-description: "Red Hat Single Sign-On 7.4 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
+name: "rh-sso-7/sso75-openshift-rhel8"
+description: "Red Hat Single Sign-On 7.5 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
-version: "7.4"
+version: "7.5"
 from: "registry.redhat.io/ubi8/ubi-minimal"
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-7-sso74-openshift-rhel8-container"
+      value: "redhat-sso-7-sso75-openshift-rhel8-container"
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.4.7.GA"
+      value: &product_version "7.5.0.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
       value: "Platform for running Red Hat SSO"
     - name: "io.k8s.display-name"
-      value: "Red Hat SSO 7.4"
+      value: "Red Hat SSO 7.5"
     - name: "io.openshift.expose-services"
       value: "8080:http"
     - name: "io.openshift.tags"
-      value: "sso,sso74,keycloak"
+      value: "sso,sso75,keycloak"
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
 envs:
@@ -73,17 +73,17 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_737_CR1
+                  ref: EAP_740_CR1
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_737_CR1
+                  ref: EAP_740_CR1
 
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.39.3
+                  ref: 0.41.4
 
           - name: sso-modules
             path: modules
@@ -100,7 +100,7 @@ modules:
           - name: sso
           - name: keycloak.openshift.clients
             version: '1.0'
-          - name: sso.config.launch.setup.74
+          - name: sso.config.launch.setup.75
           - name: sso.db.drivers
             version: '1.0'
           - name: sso.python

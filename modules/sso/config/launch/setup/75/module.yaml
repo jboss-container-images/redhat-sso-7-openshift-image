@@ -1,0 +1,23 @@
+schema_version: 1
+name: sso.config.launch.setup.75
+version: '1.0'
+description: Module to define the configuration and the form of the launch script specific to the RH-SSO 7.5 version.
+
+modules:
+  install:
+  - name: os-eap-launch
+  - name: os-eap7-launch
+  - name: os-partition
+  - name: os-eap-migration
+
+packages:
+      install:
+          - openssl
+
+execute:
+- script: configure.sh
+
+run:
+      user: 185
+      cmd:
+          - "/opt/eap/bin/openshift-launch.sh"
