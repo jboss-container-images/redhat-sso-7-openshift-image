@@ -1,7 +1,7 @@
 schema_version: 1
 name: bz-1769831
 # Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1769831 per
-# https://github.com/rpm-software-management/microdnf/issues/50#issuecomment-559137747
+# https://github.com/rpm-software-management/microdnf/issues/50#issuecomment-559137757
 # See also https://github.com/cekit/cekit/issues/637
 version: '1.0'
 execute:

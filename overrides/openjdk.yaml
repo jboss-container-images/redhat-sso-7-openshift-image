@@ -1,11 +1,11 @@
 schema_version: 1
 
-name: "rh-sso-7/sso74-openshift-rhel8"
-description: "Red Hat Single Sign-On 7.4 on OpenJDK OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
+name: "rh-sso-7/sso75-openshift-rhel8"
+description: "Red Hat Single Sign-On 7.5 on OpenJDK OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
 labels:
     - name: "com.redhat.component"
-      value: "redhat-sso-7-sso74-openshift-rhel8-container"
+      value: "redhat-sso-7-sso75-openshift-rhel8-container"
 
 osbs:
       configuration:
@@ -18,5 +18,5 @@ osbs:
                   - x86_64
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-7.4-openshift-rhel8
-      koji_target: jb-sso-7.4-openshift-rhel8-containers-candidate
+            branch: jb-sso-7.5-openshift-rhel8
+      koji_target: jb-sso-7.5-openshift-rhel8-containers-candidate
