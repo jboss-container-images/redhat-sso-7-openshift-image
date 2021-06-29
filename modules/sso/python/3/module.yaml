@@ -1,9 +1,0 @@
-schema_version: 1
-name: sso.python
-version: '3'
-description: "Red Hat Single Sign-On module to install & configure Python 3, which is a requirement for the JBoss EAP 'os.eap.probes/2.0' module."
-execute:
-- script: configure.sh
-packages:
-      install:
-          - python36

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+. "${JBOSS_CONTAINER_WILDFLY_S2I_MODULE}/save-artifacts.sh"

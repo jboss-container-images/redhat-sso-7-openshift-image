@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+
+<tasks xmlns="urn:wildfly:wildfly-feature-pack-tasks:3.0">
+    <append-file src="bin/jolokia-conf.conf" target="bin/standalone.conf"/>
+    <delete path="bin/jolokia-conf.conf"/>
+</tasks>

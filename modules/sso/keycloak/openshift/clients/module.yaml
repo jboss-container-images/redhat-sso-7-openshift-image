@@ -4,7 +4,18 @@ version: '1.0'
 description: Package to add Red Hat Single Sign-On / Keycloak client adapters for JBoss EAP.
 execute:
 - script: install
-
-#artifacts:
-  # Set by the pipeline, consists of the adapter zips, renamed to
-  # keycloak-*-adapter.zip
+artifacts:
+    - name: keycloak-eap6-adapter.zip
+      path: /tmp/artifacts
+    - name: keycloak-server-overlay.zip
+      path: /tmp/artifacts
+    - name: keycloak-fuse-adapter.zip
+      path: /tmp/artifacts
+    - name: keycloak-saml-eap7-adapter.zip
+      path: /tmp/artifacts
+    - name: keycloak-js-adapter.zip
+      path: /tmp/artifacts
+    - name: keycloak-eap7-adapter.zip
+      path: /tmp/artifacts
+    - name: keycloak-saml-eap6-adapter.zip
+      path: /tmp/artifacts

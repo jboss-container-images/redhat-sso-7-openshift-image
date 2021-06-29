@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+
+<tasks xmlns="urn:wildfly:wildfly-feature-pack-tasks:2.0">
+    <!-- that is a workaround waiting for WF to upgrade to Galleon-plugins 4.2.5+ -->
+    <mkdir name="modules/system/layers/openshift"/>
+</tasks>
+

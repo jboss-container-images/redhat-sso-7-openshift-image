@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+
+<tasks xmlns="urn:wildfly:wildfly-feature-pack-tasks:3.0">
+    <append-file src="bin/mvn-conf.conf" target="bin/standalone.conf"/>
+    <delete path="bin/mvn-conf.conf"/>
+    <append-file match="export JBOSS_HOME" target="bin/add-user.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+    <append-file match="export JBOSS_HOME" target="bin/appclient.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+    <append-file match="export JBOSS_HOME" target="bin/jboss-cli.sh">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+    <append-file match="export JBOSS_HOME" target="bin/jdr.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+    <append-file match="export JBOSS_HOME" target="bin/vault.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+     <append-file match="export JBOSS_HOME" target="bin/wsconsume.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+     <append-file match="export JBOSS_HOME" target="bin/wsprovide.sh" ignore="true">
+        <line>if [ -n "$GALLEON_MAVEN_SETTINGS_XML" ]; then</line>
+        <line>  JAVA_OPTS="$JAVA_OPTS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"</line>
+        <line>fi</line>
+    </append-file>
+</tasks>

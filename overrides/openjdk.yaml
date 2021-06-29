@@ -13,10 +13,12 @@ osbs:
             container:
                 compose:
                   pulp_repos: true
+                  signing_intent: release
+                  inherit: true
                 platforms:
                   only:
                   - x86_64
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-7.5-openshift-rhel8
-      koji_target: jb-sso-7.5-openshift-rhel8-containers-candidate
+            branch: rh-sso-7.5-rhel-8
+      koji_target: rh-sso-7.5-rhel-8-containers-candidate

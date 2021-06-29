@@ -23,7 +23,7 @@ function runServer() {
 
   export NODE_NAME="${NODE_NAME:-node}-${count}"
 
-  source $JBOSS_HOME/bin/launch/configure.sh
+  source $JBOSS_HOME/bin/launch/configure-modules.sh
 
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 
@@ -58,7 +58,7 @@ if [ "${SPLIT_DATA^^}" = "TRUE" ]; then
 
   partitionPV "${DATA_DIR}" "${SPLIT_LOCK_TIMEOUT:-30}"
 else
-  source $JBOSS_HOME/bin/launch/configure.sh
+  source $JBOSS_HOME/bin/launch/configure-modules.sh
 
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 

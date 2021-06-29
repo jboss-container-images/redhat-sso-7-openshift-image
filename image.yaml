@@ -2,7 +2,7 @@ schema_version: 1
 
 ## Both name and description are overridden, see overrides/*
 name: "rh-sso-7/sso75-openshift-rhel8"
-description: "Red Hat Single Sign-On 7.5 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
+description: "Red Hat Single Sign-On 7.5 for OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
 version: "7.5"
 from: "registry.redhat.io/ubi8/ubi-minimal"
@@ -25,6 +25,7 @@ labels:
       value: "sso,sso75,keycloak"
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
+
 envs:
     - name: "JBOSS_PRODUCT"
       value: *product
@@ -66,45 +67,51 @@ envs:
     - name: "SCRIPT_DEBUG"
       description: "If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed."
       example: "true"
+
 ports:
     - value: 8443
+
 modules:
       repositories:
+          - name: cct_module
+            git:
+                  url: https://github.com/jboss-openshift/cct_module.git
+                  ref: 0.45.2
+
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_740_CR1
+                  ref: EAP_740_CR3
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_740_CR1
+                  ref: EAP_740_CR3
 
-          - name: cct_module
+          - name: wildfly-cekit-modules
             git:
-                  url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.41.4
+                  url: https://github.com/wildfly/wildfly-cekit-modules.git
+                  ref: 0.24.0
 
           - name: sso-modules
             path: modules
 
       install:
-          - name: bz-1769831
-            version: '1.0'
+          # Install JDK runtime
           - name: sso-jdk
             version: &jdk_version '11'
+           # Perform all actions required by Wildfly / JBoss EAP Galleon Maven build
+           # See 'used-eap-modules-list.txt' for overview of used JBoss EAP modules,
+           # and the order they need to be called in
           - name: eap
             version: '1.0'
 
-          # RH-SSO product specific modules from modules/ path in this repository
-          - name: sso
+          ## RH-SSO product specific modules from modules/ path in this repository
           - name: keycloak.openshift.clients
             version: '1.0'
           - name: sso.config.launch.setup.75
           - name: sso.db.drivers
             version: '1.0'
-          - name: sso.python
-            version: '3'
 
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
@@ -114,19 +121,17 @@ modules:
           - name: sso-pre-launch-checks
 
           # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
-          - name: os-eap-extensions
           - name: sso-cli-extensions
 
+          # Actions performed by the 'sso-rm-openjdk' module shouldn't be needed for RHEL-8 UBI Minimal
+          # derived images already. But it's kept & called here for any case, so RPMs belonging to
+          # counterpart JVM aren't left in the image by an accident
           - name: sso-rm-openjdk
             version: *jdk_version
+
 packages:
       manager: microdnf
       content_sets_file: content_sets.yaml
-      install:
-      # "find" executable is required by various CCT & SSO modules
-      - findutils
-      # "which" tool is handy for debugging issues / troubleshooting
-      - which
 
 run:
       cmd:
