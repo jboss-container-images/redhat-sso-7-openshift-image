@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature-group-spec name="tx-recovery" xmlns="urn:jboss:galleon:feature-group:1.0">
+    <packages>
+        <package name="layers.conf"/>
+        <package name="io.narayana.openshift-recovery"/>
+    </packages>
+    <feature spec="subsystem.transactions">
+        <param name="node-identifier" value="${jboss.node.name}"/>
+        <param name="recovery-listener" value="true"/>
+    </feature>
+</feature-group-spec>

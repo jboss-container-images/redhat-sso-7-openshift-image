@@ -9,6 +9,43 @@ fi
 export CONFIG_FILE="${JBOSS_HOME}/standalone/configuration/standalone-openshift.xml"
 export LOGGING_FILE="${JBOSS_HOME}/standalone/configuration/logging.properties"
 
+# Define various CLI_SCRIPT_* variables required by EAP configure scripts
+function createConfigExecutionContext() {
+  systime=$(date +%s)
+  # This is the cli file generated
+  export CLI_SCRIPT_FILE=/tmp/cli-script-$systime.cli
+  # The property file used to pass variables to jboss-cli.sh
+  export CLI_SCRIPT_PROPERTY_FILE=/tmp/cli-script-property-$systime.cli
+  # This is the cli process output file
+  export CLI_SCRIPT_OUTPUT_FILE=/tmp/cli-script-output-$systime.cli
+  # This is the file used to log errors by the launch scripts
+  export CONFIG_ERROR_FILE=/tmp/cli-script-error-$systime.cli
+  # This is the file used to log warnings by the launch scripts
+  export CONFIG_WARNING_FILE=/tmp/cli-warning-$systime.log
+
+  # Ensure we start with clean files
+  if [ -s "${CLI_SCRIPT_FILE}" ]; then
+    echo -n "" > "${CLI_SCRIPT_FILE}"
+  fi
+  if [ -s "${CONFIG_ERROR_FILE}" ]; then
+    echo -n "" > "${CONFIG_ERROR_FILE}"
+  fi
+  if [ -s "${CONFIG_WARNING_FILE}" ]; then
+    echo -n "" > "${CONFIG_WARNING_FILE}"
+  fi
+  if [ -s "${CLI_SCRIPT_PROPERTY_FILE}" ]; then
+    echo -n "" > "${CLI_SCRIPT_PROPERTY_FILE}"
+  fi
+  if [ -s "${CLI_SCRIPT_OUTPUT_FILE}" ]; then
+    echo -n "" > "${CLI_SCRIPT_OUTPUT_FILE}"
+  fi
+
+  echo "error_file=${CONFIG_ERROR_FILE}" > "${CLI_SCRIPT_PROPERTY_FILE}"
+  echo "warning_file=${CONFIG_WARNING_FILE}" >> "${CLI_SCRIPT_PROPERTY_FILE}"
+}
+
+createConfigExecutionContext
+
 #For backward compatibility
 ADMIN_USERNAME=${ADMIN_USERNAME:-${EAP_ADMIN_USERNAME:-$DEFAULT_ADMIN_USERNAME}}
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-$EAP_ADMIN_PASSWORD}
@@ -35,6 +72,8 @@ export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/admin.sh"
   "${JBOSS_HOME}/bin/launch/ha.sh"
   "${JBOSS_HOME}/bin/launch/openshift-x509.sh"
+  "${JBOSS_HOME}/bin/launch/elytron.sh"
+  # jgroups.sh requires elytron.sh as it uses some functions elytron.sh defines
   "${JBOSS_HOME}/bin/launch/jgroups.sh"
   "${JBOSS_HOME}/bin/launch/https.sh"
   "${JBOSS_HOME}/bin/launch/json_logging.sh"

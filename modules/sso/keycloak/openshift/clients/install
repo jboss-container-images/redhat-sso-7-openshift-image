@@ -25,12 +25,17 @@ declare -r SSO_ADAPTERS_BASE_DIR="/opt/rh/rh-sso/client"
 # !!! BUT DO NOT CHANGE EXISTING final adapter locations (hash keys)
 # since these are already exported to and used by other images !!!
 declare -rA SSO_ADAPTER_DIR_TO_ZIP=(
-  ["eap6"]="rh-sso-eap6-adapter.zip,rh-sso-saml-eap6-adapter.zip"
-  ["eap7"]="rh-sso-eap7-adapter.zip,rh-sso-saml-eap7-adapter.zip"
-  ["js"]="rh-sso-js-adapter.zip"
+  ["eap6"]="keycloak-eap6-adapter.zip,keycloak-saml-eap6-adapter.zip"
+  ["eap7"]="keycloak-eap7-adapter.zip,keycloak-saml-eap7-adapter.zip"
+  ["js"]="keycloak-js-adapter.zip"
 )
 
-for destination_leaf in "${!SSO_ADAPTER_DIR_TO_ZIP[@]}"; do
+for destination_leaf in "${!SSO_ADAPTER_DIR_TO_ZIP[@]}"
+do
+  # CIAM-535 / KEYCLOAK-18574: Rename any possible 'keycloak' prefixed
+  # artifacts with their 'rh-sso' counterparts
+  destination_leaf="${destination_leaf/keycloak/rh-sso}"
+
   destination="$SSO_ADAPTERS_BASE_DIR/$destination_leaf"
   mkdir -p "$destination"
   # Convert CSV to array

@@ -1,0 +1,538 @@
+schema_version: 1
+name: "setup.eap.modules"
+version: "1.0"
+description: "Performs setup of Red Hat JBoss Enterprise Application Platform
+EAP 7.4.0 modules used by Red Hat Single Sign-On for OpenShift images"
+execute:
+- script: configure.sh
+packages:
+  install:
+    - diffutils
+    - findutils
+    - hostname
+    - jolokia-jvm-agent
+    - maven
+    - prometheus-jmx-exporter
+    - python36
+    - python3-requests
+    # RH-SSO add-on:
+    # -------------
+    # Add 'which' & 'tree' RPM packages
+    # "which" tool is handy for debugging issues / troubleshooting
+    - which
+    # "tree" tool is handy to inspect directory structure when needed
+    - tree
+    # End of RH-SSO add-on
+    # --------------------
+ports:
+- value: 8080
+- value: 8787
+  expose: false
+- value: 8778
+artifacts:
+- name: eap-image-maven-repo
+  target: maven-repo.zip
+  md5: 244700ed92787ad537e360069d9ca9b1
+  url: http://$DOWNLOAD_SERVER/devel/candidates/jboss/eap/JBEAP-7.4.0.GA-CR3/jboss-eap-7.4.0.GA-CR3-image-builder-maven-repository.zip
+- name: txn-recovery-marker-jdbc-common
+  target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
+  md5: 305aa706018b1089e5b82528b601541f
+- name: txn-recovery-marker-jdbc-hibernate5
+  target: txn-recovery-marker-jdbc-hibernate5-1.1.4.Final-redhat-00001.jar
+  md5: 99f2a2e68fb92273b8016e2b199fbd91
+- name: keycloak-server-overlay.zip
+  md5: 487913da76566a0196d158aa6a7b0d99
+
+# The following three Wildfly Galleon plug-in related artifacts are required
+# for a successful OSBS build.
+#
+# DO NOT REMOVE them !!!
+#
+# But feel free to update their versions as appropriate (to match their
+# corresponding versions listed in the 'maven-repo.zip' archive above)
+#
+# Note: When updating their versions, be sure to update their versions
+#       accordingly in the 'modules/eap/setup/eap/modules/configure.sh'
+#       script too !!!
+#
+- name: wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
+  target: wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
+  md5: 3c9a5e92268506c90bce4b37fef83dab
+  url: https://repo.maven.apache.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2/wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
+- name: wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
+  target: wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
+  md5: 5cb783c122d2478f0bc82505ad93a054
+  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2/wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
+- name: wildfly-provisioning-parent-5.2.0.Alpha2.pom
+  target: wildfly-provisioning-parent-5.2.0.Alpha2.pom
+  md5: 03f4634dd62a4e62746a3837fbea608b
+  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.2.0.Alpha2/wildfly-provisioning-parent-5.2.0.Alpha2.pom
+labels:
+- name: "org.jboss.product"
+  value: "eap"
+- name: "org.jboss.product.version"
+  value: "7.4.0"
+- name: "org.jboss.product.eap.version"
+  value: "7.4.0"
+- name: "com.redhat.deployments-dir"
+  value: "/opt/eap/standalone/deployments"
+- name: "com.redhat.dev-mode"
+  value: "DEBUG:true"
+- name: "com.redhat.dev-mode.port"
+  value: "DEBUG_PORT:8787"
+- name: io.fabric8.s2i.version.maven
+  value: "3.6"
+- name: io.fabric8.s2i.version.jolokia
+  value: "1.6.2-redhat-00002"
+- name: "io.openshift.s2i.scripts-url"
+  value: "image:///usr/local/s2i"
+- name: io.openshift.s2i.destination
+  value: "/tmp"
+- name: org.jboss.container.deployments-dir
+  value: "/deployments"
+envs:
+- name: "WILDFLY_VERSION"
+  description: "Mandatory. WildFly server version."
+  value: "7.4.0.GA-redhat-00005"
+- name: "LAUNCH_JBOSS_IN_BACKGROUND"
+  value: "true"
+- name: "JBOSS_PRODUCT"
+  value: "eap"
+- name: "JBOSS_EAP_VERSION"
+  value: "7.4.0"
+- name: "PRODUCT_VERSION"
+  value: "7.4.0"
+- name: "EAP_FULL_GROUPID"
+  value: "org.jboss.eap"
+- name: "JBOSS_HOME"
+  value: "/opt/eap"
+- name: "DEBUG"
+  example: "true"
+- name: "DEBUG_PORT"
+  example: "8787"
+- name: SSO_FORCE_LEGACY_SECURITY
+  value: "true"
+- name: JBOSS_CONTAINER_MAVEN_36_MODULE
+  value: /opt/jboss/container/maven/36/
+- name: MAVEN_VERSION
+  value: "3.6"
+- name: JOLOKIA_VERSION
+  value: "1.6.2"
+- name: AB_JOLOKIA_PASSWORD_RANDOM
+  value: "true"
+- name: AB_JOLOKIA_AUTH_OPENSHIFT
+  value: "true"
+- name: AB_JOLOKIA_HTTPS
+  value: "true"
+- name: AB_JOLOKIA_OFF
+  example: "true"
+- name: AB_JOLOKIA_CONFIG
+  example: "/opt/jolokia/custom.properties"
+- name: AB_JOLOKIA_HOST
+  example: "127.0.0.1"
+- name: AB_JOLOKIA_PORT
+  example: "5432"
+- name: AB_JOLOKIA_USER
+  example: "myusername"
+- name: AB_JOLOKIA_PASSWORD
+  example: "mypassword"
+- name: AB_JOLOKIA_ID
+  example: "openjdk-app-1-xqlsj"
+- name: AB_JOLOKIA_DISCOVERY_ENABLED
+  example: "true"
+- name: AB_JOLOKIA_OPTS
+  example: "backlog=20"
+- name: JBOSS_CONTAINER_JOLOKIA_MODULE
+  value: /opt/jboss/container/jolokia
+- name: JBOSS_CONTAINER_PROMETHEUS_MODULE
+  value: /opt/jboss/container/prometheus
+- name: AB_PROMETHEUS_ENABLE
+  example: true
+- name: AB_PROMETHEUS_JMX_EXPORTER_PORT
+  example: 9799
+- name: AB_PROMETHEUS_JMX_EXPORTER_CONFIG
+  value: /opt/jboss/container/prometheus/etc/jmx-exporter-config.yaml
+- name: JAVA_OPTS
+  example: "-verbose:class"
+- name: JAVA_OPTS_APPEND
+  example: "-Dsome.property=foo"
+- name: JAVA_MAX_MEM_RATIO
+- name: JAVA_INITIAL_MEM_RATIO
+  example: "25"
+- name: JAVA_MAX_INITIAL_MEM
+  example: "4096"
+- name: JAVA_DIAGNOSTICS
+  example: "true"
+- name: JAVA_DEBUG
+  example: "true"
+- name: JAVA_DEBUG_PORT
+  example: "8787"
+- name: CONTAINER_CORE_LIMIT
+  example: "2"
+- name: CONTAINER_MAX_MEMORY
+  example: "1024"
+- name: GC_MIN_HEAP_FREE_RATIO
+  example: "20"
+- name: GC_MAX_HEAP_FREE_RATIO
+  example: "40"
+- name: GC_TIME_RATIO
+  example: "4"
+- name: GC_ADAPTIVE_SIZE_POLICY_WEIGHT
+  example: "90"
+- name: GC_METASPACE_SIZE
+  example: "20"
+- name: GC_MAX_METASPACE_SIZE
+  example: "100"
+- name: GC_CONTAINER_OPTIONS
+  example: -XX:+UseG1GC
+### JAVA_OPTIONS is deprecated
+- name: JAVA_OPTIONS
+  example: "-verbose:class"
+- name: https_proxy
+- name: JBOSS_CONTAINER_JAVA_PROXY_MODULE
+  value: /opt/jboss/container/java/proxy
+- name: JBOSS_CONTAINER_JAVA_JVM_MODULE
+  value: /opt/jboss/container/java/jvm
+- name: S2I_DESTINATION_DIR
+  description: ^
+    Root directory for S2I mount, as specified by the
+    **io.openshift.s2i.destination** label.  This should not be overridden by
+    end users.
+  example: /tmp
+- name: S2I_ARTIFACTS_DIR
+  description: ^
+    Location mount for artifacts persisted with **save-artifacts** script, which
+    are used with incremental builds.  This should not be overridden by end users.
+  example: "${S2I_DESTINATION_DIR}/artifacts}"
+- name: S2I_SOURCE_DIR
+  description: ^
+    Location of mount for source code to be built.  This should not be
+    overridden by end users.
+  example: "${S2I_DESTINATION_DIR}/src}"
+- name: S2I_SOURCE_CONFIGURATION_DIR
+  description: ^
+    Relative path to directory containing application configuration files to be
+    copied over to the product configuration directory, see
+    **S2I_TARGET_CONFIGURATION_DIR**.  Defaults to **configuration**.
+  example: configuration
+- name: S2I_TARGET_CONFIGURATION_DIR
+  description: ^
+    Absolute path to which files located in
+    $S2I_SOURCE_DIR/$S2I_SOURCE_CONFIGURATION_DIR are copied.
+  example: /opt/eap/standalone/configuration
+- name: S2I_SOURCE_DATA_DIR
+  description: ^
+    Relative path to directory containing application data files to be copied
+    over to the product data directory, see **S2I_TARGET_DATA_DIR**.  Defaults
+    to **data**.
+  example: data
+- name: S2I_TARGET_DATA_DIR
+  description: ^
+    Absolute path to which files located in
+    $S2I_SOURCE_DIR/$S2I_SOURCE_DATA_DIR are copied.
+  example: /opt/eap/standalone/data
+- name: S2I_SOURCE_DEPLOYMENTS_DIR
+  description: ^
+    Relative path to directory containing binary files to be copied over to the
+    product deployment directory, see **S2I_TARGET_DEPLOYMENTS_DIR**.  Defaults
+    to **deployments**.
+  example: deployments
+- name: S2I_SOURCE_DEPLOYMENTS_FILTER
+  description: ^
+    Space separated list of filters to be applied when copying deployments.
+    Defaults to ** * **
+  value: "*"
+  example: "*.jar *.war *.ear"
+- name: S2I_TARGET_DEPLOYMENTS_DIR
+  description: ^
+    Absolute path to which files located in
+    $S2I_SOURCE_DIR/$S2I_SOURCE_DEPLOYMENTS_DIR are copied. Additionally, this
+    is the directory to which build output is copied
+  example: /deployments
+- name: S2I_IMAGE_SOURCE_MOUNTS
+  description: ^
+    Comma separated list of relative paths in source directory which should be
+    included in the image.  List may include wildcards, which are expanded
+    using find.  By default, the contents of mounted directories are processed
+    similarly to source folders, where the contents of
+    $S2I_SOURCE_CONFIGURATION_DIR, $S2I_SOURCE_DATA_DIR, and
+    $S2I_SOURCE_DEPLOYMENTS_DIR are copied to their respective target
+    directories.  Alternatively, if an **install.sh** file is located in the
+    CUSTOM_INSTALL_DIRECTORIES.
+  example: extras/*
+- name: S2I_ENABLE_INCREMENTAL_BUILDS
+  description: ^
+    Do not remove intermediate build files so they can be saved for
+    use with future builds.  Defaults to true.
+  example: "true"
+- name: S2I_DELETE_SOURCE
+  description: ^
+    Delete source files at the end of build.  Defaults to true.
+  example: "false"
+# APP_DATADIR, DEPLOYMENTS_DIR, DATA_DIR, JAVA_DATA_DIR, and CUSTOM_INSTALL_DIRECTORIES are deprecated
+- name: APP_DATADIR
+- name: DEPLOYMENTS_DIR
+- name: DATA_DIR
+- name: JAVA_DATA_DIR
+- name: CUSTOM_INSTALL_DIRECTORIES
+- name: JBOSS_CONTAINER_S2I_CORE_MODULE
+  value: /opt/jboss/container/s2i/core/
+- name: MAVEN_ARGS
+  example: "-e -Popenshift -DskipTests -Dcom.redhat.xpaas.repo.redhatga -Dfabric8.skip=true"
+- name: MAVEN_ARGS_APPEND
+  example: "-X -am -pl"
+- name: MAVEN_CLEAR_REPO
+- name: MAVEN_MIRROR_URL
+  example: "http://10.0.0.1:8080/repository/internal/"
+- name: MAVEN_MIRRORS
+  example: "dev-one,qe-two"
+- name: prefix_MAVEN_MIRROR_ID
+  example: "internal-mirror"
+- name: prefix_MAVEN_MIRROR_OF
+- name: prefix_MAVEN_MIRROR_URL
+  example: "http://10.0.0.1:8080/repository/internal"
+- name: MAVEN_SETTINGS_XML
+  example: /home/jboss/.m2/settings.xml
+- name: MAVEN_LOCAL_REPO
+  example: /home/jboss/.m2/repository
+- name: "MAVEN_REPOS"
+  example: "dev-one,qe-two"
+- name: "prefix_MAVEN_REPO_ID"
+  example: "my-repo-id"
+- name: "prefix_MAVEN_REPO_NAME"
+  example: "my-repo-name"
+- name: "prefix_MAVEN_REPO_LAYOUT"
+  example: "default"
+- name: "prefix_MAVEN_REPO_RELEASES_ENABLED"
+  example: "true"
+- name: "prefix_MAVEN_REPO_RELEASES_UPDATE_POLICY"
+  example: "always"
+- name: "prefix_MAVEN_REPO_RELEASES_CHECKSUM_POLICY"
+  example: "warn"
+- name: "prefix_MAVEN_REPO_SNAPSHOTS_ENABLED"
+  example: "true"
+- name: "prefix_MAVEN_REPO_SNAPSHOTS_UPDATE_POLICY"
+  example: "always"
+- name: "prefix_MAVEN_REPO_SNAPSHOTS_CHECKSUM_POLICY"
+  example: "warn"
+- name: "prefix_MAVEN_REPO_USERNAME"
+  example: "mavenUser"
+- name: "prefix_MAVEN_REPO_PASSWORD"
+  example: "maven1!"
+- name: "prefix_MAVEN_REPO_PRIVATE_KEY"
+  example: "${user.home}/.ssh/id_dsa"
+- name: "prefix_MAVEN_REPO_PASSPHRASE"
+  example: "maven1!"
+- name: "prefix_MAVEN_REPO_FILE_PERMISSIONS"
+  example: "664"
+- name: "prefix_MAVEN_REPO_DIRECTORY_PERMISSIONS"
+  example: "775"
+- name: "prefix_MAVEN_REPO_URL"
+  example: "http://repo.example.com:8080/maven2/"
+- name: "prefix_MAVEN_REPO_PROTOCOL"
+  example: "http"
+- name: "prefix_MAVEN_REPO_HOST"
+  example: "repo.example.com"
+- name: "prefix_MAVEN_REPO_PORT"
+  example: "8080"
+- name: "prefix_MAVEN_REPO_PATH"
+  example: "/maven2/"
+- name: "prefix_MAVEN_REPO_SERVICE"
+  example: "buscentr-myapp"
+# MAVE_REPO_LOCAL is deprecated
+- name: MAVEN_REPO_LOCAL
+  description: ^
+    **DEPRECATED, use MAVEN_LOCAL_REPO** Directory to use as the local Maven repository.
+  example: /home/jboss/.m2
+- name: JBOSS_CONTAINER_MAVEN_DEFAULT_MODULE
+  value: /opt/jboss/container/maven/default/
+- name: JBOSS_CONTAINER_UTIL_LOGGING_MODULE
+  value: /opt/jboss/container/util/logging/
+- name: LOGGING_SCRIPT_DEBUG
+  example: true
+- name: MAVEN_S2I_ARTIFACT_DIRS
+  description: ^
+    Relative paths of source directories to scan for build output, which will
+    be copied to $DEPLOY_DIR.  Defaults to **target**
+  example: target
+- name: MAVEN_S2I_GOALS
+  description: >
+    Space separated list of goals to be executed with maven build, e.g.
+    mvn $MAVEN_S2I_GOALS.  Defaults to **package**
+  example: package install
+- name: JBOSS_CONTAINER_MAVEN_S2I_MODULE
+  value: /opt/jboss/container/maven/s2i
+# ARTIFACT_DIR is deprecated
+- name: ARTIFACT_DIR
+- name: JBOSS_CONTAINER_WILDFLY_S2I_MODULE
+  value: /opt/jboss/container/wildfly/s2i
+- name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_PROVISION
+  value: /opt/jboss/container/wildfly/s2i/galleon/provisioning/generic_provisioning
+- name: GALLEON_DEFINITIONS
+- name: S2I_SOURCE_DEPLOYMENTS_FILTER
+  value: "*.war *.ear *.rar *.jar"
+- name: WILDFLY_S2I_OUTPUT_DIR
+  value: "/s2i-output"
+- name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_DIR
+  value: "/opt/jboss/container/wildfly/s2i/galleon"
+- name: GALLEON_DIR
+- name: GALLEON_PROVISION_FEATURE_PACKS
+- name: GALLEON_CUSTOM_FEATURE_PACKS_MAVEN_REPO
+- name: GALLEON_LOCAL_MAVEN_REPO
+  value: "/opt/jboss/container/wildfly/s2i/galleon/galleon-m2-repository"
+- name: TMP_GALLEON_LOCAL_MAVEN_REPO
+  value: "/opt/jboss/container/wildfly/s2i/galleon/tmp-galleon-m2-repository"
+- name: GALLEON_MAVEN_SETTINGS_XML
+  value: "/opt/jboss/container/wildfly/s2i/galleon/settings.xml"
+- name: GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
+  value: /opt/jboss/container/wildfly/s2i/galleon/build-image-settings.xml
+- name: GALLEON_MAVEN_REPO_HOOK_SCRIPT
+- name: GALLEON_S2I_FP_GROUP_ID
+- name: GALLEON_S2I_FP_ARTIFACT_ID
+- name: GALLEON_VERSION
+  value: "4.2.8.Final"
+- name: GALLEON_WILDFLY_VERSION
+  value: "5.2.0.Alpha2"
+- name: GALLEON_S2I_PRODUCER_NAME
+- name: S2I_FP_VERSION
+- name: GALLEON_PROVISION_SERVER
+- name: GALLEON_PROVISION_LAYERS
+- name: GALLEON_DEFAULT_FAT_SERVER
+- name: GALLEON_PROVISION_DEFAULT_FAT_SERVER
+- name: S2I_COPY_SERVER
+  value: "true"
+- name: S2I_FP_VERSION
+  value: "23.0.0.Final"
+- name: GALLEON_DEFINITIONS
+  value: /opt/jboss/container/eap/galleon/definitions
+- name: GALLEON_MAVEN_REPO_HOOK_SCRIPT
+  value: /opt/jboss/container/eap/galleon/patching.sh
+- name: GALLEON_DEFAULT_SERVER
+  description: "Mandatory. Absolute path to directory that contains galleon default server provisioning.xml file."
+  value: /opt/jboss/container/eap/galleon/definitions/slim-default-server
+- name: GALLEON_DEFAULT_FAT_SERVER
+  value: /opt/jboss/container/eap/galleon/definitions/fat-default-server
+- name: JBOSS_CONTAINER_EAP_GALLEON_FP_PACKAGES
+  value: /opt/jboss/container/eap/galleon/eap-s2i-galleon-pack/src/main/resources/packages
+- name: WILDFLY_DIST_MAVEN_LOCATION
+  description: "Mandatory.URL to maven wildfly dist artifact."
+  value: "https://repository.jboss.org/nexus/content/groups/public/org/wildfly/wildfly-dist"
+- name: OFFLINER_URLS
+  description: "Mandatory. One or more URL to maven repositories used by offliner to retrieve maven artifacts. Format \"--url <maven repo url> [--url <maven repo url>]"
+  value: "--url https://repo1.maven.org/maven2/ --url https://repository.jboss.org/nexus/content/groups/public/ --url https://maven.repository.redhat.com/ga/"
+- name: GALLEON_FP_PATH
+  description: "Mandatory. Absolute path to galleon feature-pack maven project."
+  value: "/opt/jboss/container/eap/galleon/eap-s2i-galleon-pack"
+- name: GALLEON_FP_COMMON_PKG_NAME
+  description: "Optional. Name of galleon package that contains common content."
+  value: "eap.s2i.common"
+# The active profiles are jboss-community-repository and securecentral
+- name: GALLEON_BUILD_FP_MAVEN_ARGS_APPEND
+  description: "Optional. Maven arguments to use when building galleon feature-pack."
+  value: &mvnArgs "-Dcom.redhat.xpaas.repo.jbossorg"
+- name: GALLEON_PROVISON_FP_MAVEN_ARGS_APPEND
+  description: "Optional. Maven arguments to use when provisioning the default server."
+  value: *mvnArgs
+- name: GALLEON_S2I_FP_GROUP_ID
+  value: org.jboss.eap.galleon.s2i
+- name: GALLEON_S2I_FP_ARTIFACT_ID
+  value: eap-s2i-galleon-pack
+- name: GALLEON_S2I_PRODUCER_NAME
+  value: eap-s2i
+- name: DELETE_BUILD_ARTIFACTS
+  value: "true"
+- name: "DISABLE_BOOT_SCRIPT_INVOKER"
+  example: "true"
+- name: "BOOT_SCRIPT_INVOKER_TIMEOUT"
+  example: "30"
+- name: "JBOSS_MODULES_SYSTEM_PKGS_APPEND"
+  example: "org.jboss.byteman"
+- name: "JBOSS_MODULES_SYSTEM_PKGS"
+  value: "jdk.nashorn.api,com.sun.crypto.provider"
+- name: "SECDOMAIN_NAME"
+  example: "myDomain"
+- name: "SECDOMAIN_USERS_PROPERTIES"
+  example: "users.properties"
+- name: "SECDOMAIN_ROLES_PROPERTIES"
+  example: "roles.properties"
+- name: "SECDOMAIN_LOGIN_MODULE"
+  example: "UsersRoles"
+- name: "SECDOMAIN_PASSWORD_STACKING"
+  example: "true"
+- name: "STATEFULSET_HEADLESS_SERVICE_NAME"
+  example: "tx-server-headless"
+- name: "PROBE_DISABLE_BOOT_ERRORS_CHECK"
+  example: "true"
+- name: OFFLINER_VERSION
+  value: "1.6"
+- name: DEBUG_GALLEON_FP_SRC
+  description: "By default the feature-pack sources are deleted. Set this variable to true to keep it in the image (mainly for debug purpose)."
+- name: JBOSS_CONTAINER_MAVEN_35_MODULE
+  value: /opt/jboss/container/maven/35/
+- name: JBOSS_CONTAINER_MAVEN_36_MODULE
+  value: /opt/jboss/container/maven/36/
+- name: CONFIG_ADJUSTMENT_MODE
+  value: "xml_cli"
+- name: "RESOURCE_ADAPTERS"
+  description: "Comma-separated list of resource adapter env variable prefixes. These prefixes are then appended to all env variables for that resource adapter."
+  example: "AMQ_RA,TEST_RA"
+- name: "{PREFIX}_ID"
+  description: "The identifier of the resource adapter as specified in the server configuration file."
+  example: "activemq-rar"
+- name: "{PREFIX}_ARCHIVE"
+  description: "The resource adapter archive."
+  example: "activemq-rar.rar"
+- name: "{PREFIX}_MODULE_SLOT"
+  description: "The slot subdirectory, which contains the module.xml configuration file and any required JAR files. Defaults to 'main'"
+  example: "slot-one"
+- name: "{PREFIX}_MODULE_ID"
+  description: "The JBoss Module ID where the object factory Java class can be loaded from."
+  example: "org.jboss.resource-adapter.file"
+- name: "{PREFIX}_CONNECTION_CLASS"
+  description: "The fully qualified class name of a managed connection factory or admin object."
+  example: "org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
+- name: "{PREFIX}_CONNECTION_JNDI"
+  description: "The JNDI name for the connection factory."
+  example: "java:/ConnectionFactory"
+- name: "{PREFIX}_PROPERTY_{property_name}"
+  description: "These variables are used to add config-property entries to the resource adapter. The {property_name} defines the name of the property to add and the value will be the value configured on this environment variable."
+  example: "For example, if your resource adapter with prefix 'TEST_RA' accepts a config-property named AllowParentPaths and you want to set it as 'true', then your environment variable will be TEST_RA_PROPERTY_AllowParentPaths=true "
+- name: "{PREFIX}_POOL_MAX_SIZE"
+  description: "The maximum number of connections for a pool. No more connections will be created in each sub-pool."
+  example: "5"
+- name: "{PREFIX}_POOL_MIN_SIZE"
+  description: "The minimum number of connections for a pool."
+  example: "1"
+- name: "{PREFIX}_POOL_PREFILL"
+  description: "Specifies if the pool should be prefilled. Changing this value requires a server restart."
+  example: "false"
+- name: "{PREFIX}_POOL_FLUSH_STRATEGY"
+  description: "How the pool should be flushed in case of an error. Valid values are: FailingConnectionOnly (default), IdleConnections, and EntirePool."
+  example: "EntirePool"
+- name: "{PREFIX}_POOL_IS_SAME_RM_OVERRIDE"
+  description: "Using this attribute, you can unconditionally set whether javax.transaction.xa.XAResource.isSameRM(XAResource) returns true or false."
+  example: "true"
+- name: "{PREFIX}_RECOVERY_USERNAME"
+  description: "The user name used for recovery."
+  example: "jboss"
+- name: "{PREFIX}_RECOVERY_PASSWORD"
+  description: "The password used for recovery."
+  example: "P@ssw0rd"
+- name: "{PREFIX}_POOL_XA"
+  description: "Boolean value to define if a xa-pool will be used to configure the resource adapter connection-definitions instead of a non-xa pool. By default non-xa pool is used"
+  example: "true"
+- name: "{PREFIX}_TRACKING"
+  description: "Boolean value to define if the resource adapter track connection handles across transaction boundaries."
+  example: "true"
+- name: "{PREFIX}_TRANSACTION_SUPPORT"
+  description: "Specifies the transaction support level of the resource adapter. Allowed values 'NoTransaction','LocalTransaction' or 'XATransaction'"
+  example: "XATransaction"
+- name: "{PREFIX}_ADMIN_OBJECTS"
+  description: "Comma-separated list of admin object env variable prefixes. These prefixes are then appended to all env variables related to admin objects."
+  example: "queue,topic"
+- name: "${PREFIX}_ADMIN_OBJECT_${ADMIN_OBJECT_PREFIX}_CLASS_NAME"
+  description: "Specifies the fully qualified class name of an administration object."
+  example: "org.apache.activemq.command.ActiveMQQueue"
+- name: "${PREFIX}_ADMIN_OBJECT_${ADMIN_OBJECT_PREFIX}_PHYSICAL_NAME"
+  description: "Name of the management resource created for this admin object"
+  example: "org.apache.activemq.command.ActiveMQQueue"

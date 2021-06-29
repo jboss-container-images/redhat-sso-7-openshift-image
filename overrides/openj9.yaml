@@ -14,10 +14,10 @@ osbs:
                 compose:
                   pulp_repos: true
                   # include_unpublished_pulp_repos: true
-                  packages:
-                  - java-11-openj9
-                  - java-11-openj9-headless
-                  - java-11-openj9-devel
+                  # packages:
+                  # - java-11-openj9
+                  # - java-11-openj9-headless
+                  # - java-11-openj9-devel
                   signing_intent: release
                   inherit: true
                 platforms:
@@ -27,5 +27,5 @@ osbs:
 
       repository:
             name: containers/redhat-sso-7
-            branch: jb-sso-7.5-openj9-openshift-rhel8
-      koji_target: jb-sso-7.5-openj9-openshift-rhel8-containers-candidate
+            branch: rh-sso-7.5-openj9-rhel-8
+      koji_target: rh-sso-7.5-openj9-rhel-8-containers-candidate

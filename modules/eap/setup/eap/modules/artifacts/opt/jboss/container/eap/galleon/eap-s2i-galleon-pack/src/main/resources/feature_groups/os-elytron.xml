@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature-group-spec name="os-elytron" xmlns="urn:jboss:galleon:feature-group:1.0">
+    <!-- elytron -->
+    <feature spec="subsystem.elytron.http-authentication-factory">
+        <param name="http-authentication-factory" value="application-http-authentication"/>
+        <param name="http-server-mechanism-factory" value="global"/>
+        <param name="security-domain" value="ApplicationDomain"/>
+        <param name="mechanism-configurations" value="[{mechanism-name=BASIC,mechanism-realm-configurations=[{realm-name=ApplicationRealm}]},{mechanism-name=FORM}]"/>
+    </feature>
+</feature-group-spec>

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<layer-spec xmlns="urn:jboss:galleon:layer-spec:1.0" name="amq6-rar">
+    <packages>
+        <package name="eap.s2i.amq6.rar"/>
+    </packages>
+</layer-spec>
+

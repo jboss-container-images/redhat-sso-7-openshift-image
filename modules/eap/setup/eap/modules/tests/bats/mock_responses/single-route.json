@@ -1,0 +1,60 @@
+{
+    "kind": "RouteList",
+    "apiVersion": "route.openshift.io/v1",
+    "metadata": {
+        "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes",
+        "resourceVersion": "1633112"
+    },
+    "items": [
+        {
+            "metadata": {
+                "name": "eap-app",
+                "namespace": "bsig-cloud",
+                "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes/eap-app",
+                "uid": "eb9ed521-6d0a-11e9-8682-080027e8c7bc",
+                "resourceVersion": "1194535",
+                "creationTimestamp": "2019-05-02T18:48:48Z",
+                "labels": {
+                    "app": "eap72-basic-s2i",
+                    "application": "eap-app",
+                    "template": "eap72-basic-s2i",
+                    "xpaas": "1.0.0"
+                },
+                "annotations": {
+                    "description": "Route for application's https service.",
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "eap-app-bsig-cloud.192.168.99.100.nip.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "eap-app",
+                    "weight": 100
+                },
+                "tls": {
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "eap-app-bsig-cloud.192.168.99.100.nip.io",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2019-05-02T18:48:48Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,8 +1,0 @@
-schema_version: 1
-name: os-eap-datasource
-version: '1.0'
-description: Datasource configuration module for EAP. This version does not support any bundled database drivers.
-execute:
-- script: configure.sh
-  user: '185'
-

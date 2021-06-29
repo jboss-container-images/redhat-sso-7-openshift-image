@@ -1,0 +1,11 @@
+#!/bin/sh
+
+WILDFLY_S2I_SOURCE_MODULES_DIR="${EAP_S2I_SOURCE_MODULES_DIR:-modules}"
+WILDFLY_S2I_TARGET_MODULES_DIR="${EAP_S2I_TARGET_MODULES_DIR:-${JBOSS_HOME}/modules}"
+
+# Notice that the value of this variable must be aligned with the value configured in launch-config.sh
+export WILDFLY_SERVER_CONFIGURATION=standalone-openshift.xml
+export CONFIG_ADJUSTMENT_MODE="xml_cli"
+
+. "${JBOSS_CONTAINER_WILDFLY_S2I_MODULE}/assemble.sh"
+
