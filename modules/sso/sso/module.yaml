@@ -4,21 +4,21 @@ version: '1.0'
 execute:
     - script: install
 
-## MD5 sums do not matter since they are overridden by the pipeline.
-## However the artifacts need to be present here to be copied into
-## the container in time to be processed by this module
+# KEYCLOAK-18648 - Enroll 'rh-sso-7/sso75-openshift-rhel8' image's general
+# artifacts using CEKit's path based artifact construct to avoid the need to
+# specify the frequently changing MD5 sums
 artifacts:
-  - md5: a0000000000000000000000000000000
-    name: rh-sso-eap6-adapter.zip
-  - md5: 0a000000000000000000000000000000
-    name: rh-sso-server-overlay.zip
-  - md5: 00a00000000000000000000000000000
-    name: rh-sso-fuse-adapter.zip
-  - md5: 000a0000000000000000000000000000
-    name: rh-sso-saml-eap7-adapter.zip
-  - md5: 0000a000000000000000000000000000
-    name: rh-sso-js-adapter.zip
-  - md5: 00000a00000000000000000000000000
-    name: rh-sso-eap7-adapter.zip
-  - md5: 000000a0000000000000000000000000
-    name: rh-sso-saml-eap6-adapter.zip
+    - name: rh-sso-eap6-adapter.zip
+      path: /tmp/artifacts
+    - name: rh-sso-server-overlay.zip
+      path: /tmp/artifacts
+    - name: rh-sso-fuse-adapter.zip
+      path: /tmp/artifacts
+    - name: rh-sso-saml-eap7-adapter.zip
+      path: /tmp/artifacts
+    - name: rh-sso-js-adapter.zip
+      path: /tmp/artifacts
+    - name: rh-sso-eap7-adapter.zip
+      path: /tmp/artifacts
+    - name: rh-sso-saml-eap6-adapter.zip
+      path: /tmp/artifacts
