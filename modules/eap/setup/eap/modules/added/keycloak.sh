@@ -724,14 +724,44 @@ function configure_subsystem() {
   deployments=
   redirect_path=
 
- # We need it to be retrieved prior to iterate the web deployments, needed by CLI
- if [ -n "$token" ]; then
+  # We need it to be retrieved prior to iterate the web deployments, needed by CLI
+  if [ -n "$token" ]; then
+    ### CIAM-690 -- Start of RH-SSO add-on:
+    ### -----------------------------------
+    ### Add support for RH-SSO 7.5
+
+    realm_signing_key_certificate="xx"
     # SSO Server 7.0
-    realm_certificate=$($CURL -H "Accept: application/json" -H "Authorization: Bearer ${token}" ${sso_service}/admin/realms/${SSO_REALM} | grep -Po '(?<="certificate":")[^"]*')
-    if [ -z "$realm_certificate" ]; then
-      #SSO Server 7.1
-      realm_certificate=$($CURL -H "Accept: application/json" -H "Authorization: Bearer ${token}" ${sso_service}/admin/realms/${SSO_REALM}/keys | grep -Po '(?<="certificate":")[^"]*')
+    realm_certificate_url="${sso_service}/admin/realms/${SSO_REALM}"
+    response=$(${CURL} -H "Accept: application/json" -H "Authorization: Bearer ${token}" "${realm_certificate_url}")
+    if ! grep -q '"certificate":' <<< "${response}"; then
+      # SSO Server 7.1+
+      realm_certificate_url="${sso_service}/admin/realms/${SSO_REALM}/keys"
+      response=$(${CURL} -H "Accept: application/json" -H "Authorization: Bearer ${token}" "${realm_certificate_url}")
+      if ! grep -q '"certificate":' <<< "${response}"; then
+        echo "Failed to retrieve signing key PEM certificate of the ${SSO_REALM}"
+        exit 1
+      else
+        # SSO Server 7.1 up to 7.4
+        if ! grep -q '"use":"SIG"' <<< "${response}"; then
+          realm_signing_key_certificate=$(grep -Po '(?<="certificate":")[^"]*' <<< "${response}")
+        # SSO Server 7.5+
+        else
+          realm_signing_key_certificate=$(grep -Po '(?<="certificate":")[^"]*(?=","use":"SIG")' <<< "${response}")
+        fi
+      fi
+    # SSO Server 7.0
+    else
+      realm_signing_key_certificate=$(grep -Po '(?<="certificate":")[^"]*' <<< "${response}")
     fi
+
+    if [ "x${realm_signing_key_certificate}x" == "xx" ]; then
+      echo "Failed to retrieve signing key PEM certificate of the ${SSO_REALM}"
+      exit 1
+    fi
+
+    ### CIAM-690 -- End of RH-SSO add-on
+    ### --------------------------------
   fi
 
   for f in $files
@@ -822,7 +852,7 @@ function configure_subsystem() {
             entity_id=${module_name}
           fi
           if [ $auth_method == ${SAML} ]; then
-            if [ -n "$realm_certificate" ]; then
+            if [ -n "$realm_signing_key_certificate" ]; then
               validate_signature=true
               if [ -n "$SSO_SAML_VALIDATE_SIGNATURE" ]; then
                 validate_signature="$SSO_SAML_VALIDATE_SIGNATURE"
@@ -839,9 +869,9 @@ function configure_subsystem() {
               SingleLogoutService={validateRequestSignature=${validate_signature},validateResponseSignature=${validate_signature},signRequest=true,\
               signResponse=true,requestBinding=POST,responseBinding=POST, postBindingUrl=${SSO_URL}/realms/${SSO_REALM}/protocol/saml,\
               redirectBindingUrl=${SSO_URL}/realms/${SSO_REALM}/protocol/saml})"
-              if [ -n "$realm_certificate" ]; then
+              if [ -n "$realm_signing_key_certificate" ]; then
                 cli="$cli
-                  /subsystem=keycloak-saml/secure-deployment=${f}/SP=${entity_id}/IDP=idp/Key=Key:add(signing=true,CertificatePem=\"${realm_certificate}\")"
+                  /subsystem=keycloak-saml/secure-deployment=${f}/SP=${entity_id}/IDP=idp/Key=Key:add(signing=true,CertificatePem=\"${realm_signing_key_certificate}\")"
               fi
               if [ -n "$SSO_SAML_KEYSTORE" ] && [ -n "$SSO_SAML_KEYSTORE_DIR" ]; then
                 cli="$cli
@@ -929,8 +959,8 @@ function configure_subsystem() {
 
   subsystem=$(echo "${subsystem}" | sed "s|##KEYCLOAK_DEPLOYMENT_SUBSYSTEM##|${deployments}|" )
 
-  if [ -n "$realm_certificate" ]; then
-    keys="<Keys><Key signing=\"true\" ><CertificatePem>${realm_certificate}</CertificatePem></Key></Keys>"
+  if [ -n "$realm_signing_key_certificate" ]; then
+    keys="<Keys><Key signing=\"true\" ><CertificatePem>${realm_signing_key_certificate}</CertificatePem></Key></Keys>"
     subsystem=$(echo "${subsystem}" | sed "s|<!-- ##KEYCLOAK_REALM_CERTIFICATE## -->|${keys}|g")
 
     validate_signature=true
