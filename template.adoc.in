@@ -215,7 +215,7 @@ For DNS_PING to work, the following steps must be taken:
 [source,yaml]
 ----
 kind: Service
-apiVersion: v1
+apiVersion: core/v1
 spec:
     clusterIP: None
     ports:
