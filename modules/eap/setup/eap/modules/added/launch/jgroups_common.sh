@@ -6,7 +6,14 @@ configure_protocol_cli_helper() {
   local stack=${params[0]}
   local protocol=${params[1]}
   local result
-  IFS= read -rd '' result <<- EOF
+
+  ### CIAM-696: Start of RH-SSO add-on:
+  ### ---------------------------------
+  ### Replace bash "read -r -d '' variable <<- Here String" constructs with
+  ### "variable=$(cat <<- Here String)" form since the former doesn't work
+  ### correctly in combination with "set -e" directive being simultaneously set
+  ### on container modules scripts
+  IFS= result=$(cat <<- EOF
 
     if (outcome == success) of /subsystem=jgroups/stack="${stack}"/protocol="${protocol}":read-resource
         echo Cannot configure jgroups '${protocol}' protocol under '${stack}' stack. This protocol is already configured. >> \${error_file}
@@ -16,6 +23,9 @@ configure_protocol_cli_helper() {
     if (outcome != success) of /subsystem=jgroups/stack="${stack}"/protocol="${protocol}":read-resource
         batch
 EOF
+  )
+  ### End of RH-SSO add-on for CIAM-696
+
   # removes the latest new line added by read builtin command
   result=$(echo -n "${result}")
 
@@ -25,12 +35,14 @@ EOF
             ${params[j]}"
   done
 
-  IFS= read -r -d '' result <<- EOF
+  ### CIAM-696: Start of RH-SSO add-on
+  IFS= result=$(cat <<- EOF
         ${result}
        run-batch
     end-if
 EOF
-
+  )
+  ### End of RH-SSO add-on for CIAM-696
 
   echo "${result}"
 }

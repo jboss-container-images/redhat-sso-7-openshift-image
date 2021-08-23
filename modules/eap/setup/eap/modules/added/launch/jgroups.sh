@@ -33,12 +33,17 @@ create_jgroups_elytron_encrypt() {
     declare jg_encrypt_protocol="${1}" jg_encrypt_keystore="${2}" jg_encrypt_key_alias="${3}" jg_encrypt_password="${4}"
     local encrypt
 
-    read -r -d '' encrypt <<- EOF
+    ### CIAM-696: Start of RH-SSO add-on:
+    encrypt=$(cat <<- EOF
     <encrypt-protocol type="${jg_encrypt_protocol}" key-store="${jg_encrypt_keystore}" key-alias="${jg_encrypt_key_alias}">
        <key-credential-reference clear-text="${jg_encrypt_password}"/>
     </encrypt-protocol>
 
 EOF
+    )
+    ### Escape all newlines in the string
+    encrypt="${encrypt//$'\n'/\\n}"
+    ### End of RH-SSO add-on for CIAM-696
 
     echo "${encrypt}"
 }
@@ -88,7 +93,9 @@ create_jgroups_encrypt_asym() {
     # TODO: make these properties configurable, this is currently just falling back on defaults.
     declare sym_keylength="${1:-}" sym_algorithm="${2:-}" asym_keylength="${3:-}" asym_algorithm="${4:-}" change_key_on_leave="${5:-}"
     local jgroups_encrypt
-    read -r -d '' jgroups_encrypt <<- EOF
+
+    ### CIAM-696: Start of RH-SSO add-on:
+    jgroups_encrypt=$(cat <<- EOF
       <protocol type="ASYM_ENCRYPT">
           <property name="sym_keylength">${sym_keylength:-128}</property>
           <property name="sym_algorithm">${sym_algorithm:-AES/ECB/PKCS5Padding}</property>
@@ -97,6 +104,11 @@ create_jgroups_encrypt_asym() {
           <property name="change_key_on_leave">${change_key_on_leave:-true}</property>
       </protocol>
 EOF
+    )
+    ### Escape all newlines in the string
+    jgroups_encrypt="${jgroups_encrypt//$'\n'/\\n}"
+    ### End of RH-SSO add-on for CIAM-696
+
     echo "${jgroups_encrypt}"
 }
 
@@ -148,7 +160,9 @@ create_jgroups_elytron_legacy() {
     declare jg_encrypt_keystore="$1" jg_encrypt_password="$2" jg_encrypt_name="$3" jg_encrypt_keystore_dir="$4"
     # compatibility with old marker, only used if new marker is not present
     local legacy_encrypt
-    read -r -d '' legacy_encrypt <<- EOF
+
+    ### CIAM-696: Start of RH-SSO add-on:
+    legacy_encrypt=$(cat <<- EOF
       <protocol type="SYM_ENCRYPT">
         <property name="provider">SunJCE</property>
         <property name="sym_algorithm">AES</property>
@@ -158,6 +172,10 @@ create_jgroups_elytron_legacy() {
         <property name="alias">${jg_encrypt_name}</property>
       </protocol>
 EOF
+    )
+    ### Escape all newlines in the string
+    legacy_encrypt="${legacy_encrypt//$'\n'/\\n}"
+    ### End of RH-SSO add-on for CIAM-696
 
     echo "${legacy_encrypt}"
 }
@@ -385,12 +403,18 @@ configure_jgroups_encryption() {
 create_jgroups_encrypt_elytron_asym() {
   declare jg_encrypt_keystore="$1" jg_encrypt_key_alias="$2" jg_encrypt_password="$3" jg_encrypt_entire_message="$4"
   local encrypt
-  read -r -d '' encrypt <<- EOF
+
+  ### CIAM-696: Start of RH-SSO add-on:
+  encrypt=$(cat <<- EOF
   <encrypt-protocol type="ASYM_ENCRYPT" key-alias="${jg_encrypt_key_alias}" keystore="${jg_encrypt_keystore}">
     <key-credential-reference clear-text="${jg_encrypt_password}"/>
     <property name="encrypt_entire_message">"${jg_encrypt_entire_message}"</property>
   </encrypt-protocol>
 EOF
+  )
+  ### Escape all newlines in the string
+  encrypt="${encrypt//$'\n'/\\n}"
+  ### End of RH-SSO add-on for CIAM-696
 
   echo "${encrypt}"
 }

@@ -17,11 +17,11 @@ packages:
     - python3-requests
     # RH-SSO add-on:
     # -------------
-    # Add 'which' & 'tree' RPM packages
-    # "which" tool is handy for debugging issues / troubleshooting
+    # Add 'which', 'tree' & 'vim-minimal' RPM packages, which are handy for
+    # issue debugging / troubleshooting purposes
     - which
-    # "tree" tool is handy to inspect directory structure when needed
     - tree
+    - vim-minimal
     # End of RH-SSO add-on
     # --------------------
 ports:

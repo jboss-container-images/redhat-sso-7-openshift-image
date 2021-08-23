@@ -56,13 +56,16 @@ function consoleHandlerName() {
   declare name="$1"
   local result=""
 
-  read -r -d '' result <<EOF
+  ### CIAM-696: Start of RH-SSO add-on:
+  result=$(cat <<EOF
     if (outcome != success) of /subsystem=logging/console-handler=CONSOLE:read-resource
       /subsystem=logging/console-handler=CONSOLE:add(named-formatter=${name})
     else
       /subsystem=logging/console-handler=CONSOLE:write-attribute(name=named-formatter, value=${name})
     end-if
 EOF
+  )
+  ### End of RH-SSO add-on for CIAM-696
 
   echo "$result"
 }
