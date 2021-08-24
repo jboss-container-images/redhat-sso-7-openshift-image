@@ -17,11 +17,10 @@ packages:
     - python3-requests
     # RH-SSO add-on:
     # -------------
-    # Add 'which', 'tree' & 'vim-minimal' RPM packages, which are handy for
+    # Add 'which' & 'tree' RPM packages, which are handy for
     # issue debugging / troubleshooting purposes
     - which
     - tree
-    - vim-minimal
     # End of RH-SSO add-on
     # --------------------
 ports:
@@ -34,14 +33,16 @@ artifacts:
   target: maven-repo.zip
   md5: 244700ed92787ad537e360069d9ca9b1
   url: http://$DOWNLOAD_SERVER/devel/candidates/jboss/eap/JBEAP-7.4.0.GA-CR3/jboss-eap-7.4.0.GA-CR3-image-builder-maven-repository.zip
+# CIAM-711: Update RH-SSO server overlay to 'RH-SSO 7.5.0.CR4' build
+- name: keycloak-server-overlay.zip
+  md5: 4150d09f7bf5d524b4173f8850a06617
+# List remaining (particular RH-SSO build independent) artifacts below
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
   md5: 305aa706018b1089e5b82528b601541f
 - name: txn-recovery-marker-jdbc-hibernate5
   target: txn-recovery-marker-jdbc-hibernate5-1.1.4.Final-redhat-00001.jar
   md5: 99f2a2e68fb92273b8016e2b199fbd91
-- name: keycloak-server-overlay.zip
-  md5: 487913da76566a0196d158aa6a7b0d99
 
 # The following three Wildfly Galleon plug-in related artifacts are required
 # for a successful OSBS build.
