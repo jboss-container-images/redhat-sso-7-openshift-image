@@ -42,7 +42,7 @@ function generate_datasource() {
   local url="${14}"
   local jdbc_append="${15}"
 
-  generate_datasource_common "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${driver}" "${11}" "${12}" "${13}" "${14}" "${15}"
+  generate_datasource_common "${pool_name}" "${jndi_name}" "${username}" "${password}" "${host}" "${port}" "${databasename}" "${checker}" "${sorter}" "${driver}" "${service_name}" "${jta}" "${validate}" "${url}" "${jdbc_append}"
 
   if [ -z "$service_name" ]; then
     service_name="ExampleDS"
