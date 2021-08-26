@@ -50,7 +50,7 @@ import static org.hamcrest.Matchers.not;
         })
 @OpenShiftResource("https://raw.githubusercontent.com/${template.repository:jboss-openshift}/application-templates/${template.branch:master}/secrets/sso-app-secret.json")
 @OpenShiftResource("{\n" +
-        "  \"apiVersion\": \"v1\",\n" +
+        "  \"apiVersion\": \"core/v1\",\n" +
         "  \"data\": {\n" +
         "    \"master_smtp__password\": \"bXlTTVRQUHNzd2Q=\"\n" +
         "  },\n" +
