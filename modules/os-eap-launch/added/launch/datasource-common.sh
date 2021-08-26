@@ -192,6 +192,7 @@ function generate_datasource_common() {
   local url="${14//&/\\&}"
   # CLOUD-3198 In addition to that, we also need to escape ';'
   url="${url//;/\\;}"
+  local jdbc_append="${15}"
 
   if [ -n "$driver" ]; then
     ds=$(generate_external_datasource)
@@ -313,6 +314,19 @@ function generate_external_datasource() {
              <valid-connection-checker class-name=\"${checker}\"></valid-connection-checker>
              <exception-sorter class-name=\"${sorter}\"></exception-sorter>
            </validation>"
+  fi
+
+  if [ -n "$jdbc_append" ]; then
+        OIFS=$IFS
+        IFS='='
+        for db_prop in $(echo $jdbc_append); do
+          read -a strarr <<< "$dbprop"
+          prop_name="${strarr[0]}"
+          prop_value="${strarr[1]}"
+          ds="$ds
+                <connection-property name=\"${prop_name}\">${prop_value}</connection-property>"
+        done
+        IFS=$OIFS
   fi
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
@@ -449,6 +463,7 @@ function inject_datasource() {
   local sorter
   local url
   local service_name
+  local jdbc_append
 
   host=$(find_env "${service}_SERVICE_HOST")
 
@@ -497,6 +512,8 @@ function inject_datasource() {
 
   url=$(find_env "${prefix}_URL")
 
+  jdbc_append=$(find_env "${prefix}_JDBC_APPEND")
+
   case "$db" in
     "MYSQL")
       map_properties "jdbc:mysql" "${prefix}_XA_CONNECTION_PROPERTY_ServerName" "${prefix}_XA_CONNECTION_PROPERTY_Port" "${prefix}_XA_CONNECTION_PROPERTY_DatabaseName"
@@ -537,7 +554,7 @@ function inject_datasource() {
   if [ -z "$driver" ]; then
     log_warning "DRIVER not set for datasource ${service_name}. Datasource will not be configured."
   else
-    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url")
+    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url" "$jdbc_append")
 
     if [ -n "$datasource" ]; then
       sed -i "s|<!-- ##DATASOURCES## -->|${datasource}\n<!-- ##DATASOURCES## -->|" $CONFIG_FILE
