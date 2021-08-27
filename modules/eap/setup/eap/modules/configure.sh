@@ -1057,3 +1057,36 @@ for dir in ${JBOSS_HOME} $DEPLOYMENTS_DIR; do
     chmod -R g+rwX $dir
 done
 ### End of: 'jboss.container.eap.final-setup' module
+
+### CIAM-743 -- Start of RH-SSO add-on
+
+# Explicitly add "org.keycloak.keycloak-model-infinispan" module as a
+# dependency to the Wildfly's "org.wildfly.clustering.infinispan.spi"
+# module
+
+# Path to 'module.xml' file of "org.wildfly.clustering.infinispan.spi" module
+readonly wildflyClusteringInfinispanSpiModuleXml="${JBOSS_HOME}/modules/system/layers/base/org/wildfly/clustering/infinispan/spi/main/module.xml"
+
+# Respect the existing indentation of the underlying "module.xml" file
+readonly fourSpaces="    "
+
+# Form of "org.keycloak.keycloak-model-infinispan" dependency to be appended
+# right before the end of </dependencies> section of the "module.xml" file of
+# "org.wildfly.clustering.infinispan.spi" module
+keycloakModelInfinispanDependency=$(cat <<- EOF
+${fourSpaces}${fourSpaces}<!--
+${fourSpaces}${fourSpaces}  ~ CIAM-743: Explicitly add "org.keycloak.keycloak-model-infinispan" module as
+${fourSpaces}${fourSpaces}  ~ a dependency to the Wildfly's "org.wildfly.clustering.infinispan.spi" module
+${fourSpaces}${fourSpaces}  -->
+${fourSpaces}${fourSpaces}<module name="org.keycloak.keycloak-model-infinispan" export="true" services="import"/>
+EOF
+)
+
+# Escape all newlines in the value of 'keycloakModelInfinispanDependency'
+keycloakModelInfinispanDependency="${keycloakModelInfinispanDependency//$'\n'/\\n}"
+
+# Actually append the new "org.keycloak.keycloak-model-infinispan" dependency line
+sed -i "s|${fourSpaces}</dependencies>|${keycloakModelInfinispanDependency}\n${fourSpaces}</dependencies>|" \
+    "${wildflyClusteringInfinispanSpiModuleXml}"
+
+### CIAM-743 -- End of RH-SSO add-on
