@@ -322,7 +322,7 @@ function generate_external_datasource() {
       prop_name=$(cut -d '=' -f 1 <<< "$conn_properties")
       prop_value=$(cut -d '=' -f 2 <<< "$conn_properties")
       ds="$ds
-            <connection-property name=\"${prop_name}\">${prop_value}</connection-property>"
+            <xa-datasource-property name=\"${prop_name}\">${prop_value}</xa-datasource-property>"
   fi
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
