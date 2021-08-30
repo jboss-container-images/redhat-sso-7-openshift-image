@@ -38,6 +38,7 @@ function clearDatasourceEnv() {
   unset ${prefix}_URL
   unset ${prefix}_BACKGROUND_VALIDATION
   unset ${prefix}_BACKGROUND_VALIDATION_MILLIS
+  unset ${prefix}_CONN_PROPERTY
 
   for xa_prop in $(compgen -v | grep -s "${prefix}_XA_CONNECTION_PROPERTY_"); do
     unset ${xa_prop}
@@ -166,6 +167,7 @@ function inject_external_datasources() {
 # $12 - datasource jta
 # $13 - validate
 # $14 - url
+# $15 - conn_property
 function generate_datasource_common() {
   local pool_name="${1}"
   local jndi_name="${2}"
@@ -184,6 +186,7 @@ function generate_datasource_common() {
   local url="${14//&/\\&}"
   # CLOUD-3198 In addition to that, we also need to escape ';'
   url="${url//;/\\;}"
+  local conn_properties="${15}"
 
   if [ -n "$driver" ]; then
     ds=$(generate_external_datasource)
@@ -305,6 +308,13 @@ function generate_external_datasource() {
              <valid-connection-checker class-name=\"${checker}\"></valid-connection-checker>
              <exception-sorter class-name=\"${sorter}\"></exception-sorter>
            </validation>"
+  fi
+
+  if [ -n "$conn_properties" ]; then
+      prop_name=$(cut -d '=' -f 1 <<< "$conn_properties")
+      prop_value=$(cut -d '=' -f 2 <<< "$conn_properties")
+      ds="$ds
+            <connection-property name=\"${prop_name}\">${prop_value}</connection-property>"
   fi
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
@@ -441,6 +451,7 @@ function inject_datasource() {
   local sorter
   local url
   local service_name
+  local conn_properties
 
   host=$(find_env "${service}_SERVICE_HOST")
 
@@ -497,6 +508,7 @@ function inject_datasource() {
   else
     validate="false"
   fi
+  conn_properties=$(find_env "${prefix}_CONN_PROPERTY")
 
   service_name=$prefix
 
@@ -508,7 +520,7 @@ function inject_datasource() {
   if [ -z "$driver" ]; then
     log_warning "DRIVER not set for datasource ${service_name}. Datasource will not be configured."
   else
-    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url")
+    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url" "$conn_properties")
 
     if [ -n "$datasource" ]; then
       sed -i "s|<!-- ##DATASOURCES## -->|${datasource}\n<!-- ##DATASOURCES## -->|" $CONFIG_FILE
