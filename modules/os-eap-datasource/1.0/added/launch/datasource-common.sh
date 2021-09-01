@@ -311,10 +311,14 @@ function generate_external_datasource() {
   fi
 
   if [ -n "$conn_properties" ]; then
-      prop_name=$(cut -d '=' -f 1 <<< "$conn_properties")
-      prop_value=$(cut -d '=' -f 2 <<< "$conn_properties")
+    properties_array=$(echo $conn_properties | tr ";")
+
+    for element in $properties_array; do
+      prop_name=$(cut -d '=' -f 1 <<< "$element")
+      prop_value=$(cut -d '=' -f 2 <<< "$element")
       ds="$ds
             <xa-datasource-property name=\"${prop_name}\">${prop_value}</xa-datasource-property>"
+    done
   fi
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
