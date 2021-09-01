@@ -311,7 +311,7 @@ function generate_external_datasource() {
   fi
 
   if [ -n "$conn_properties" ]; then
-    properties_array=$(echo $conn_properties | tr ";")
+    properties_array=$(echo $conn_properties | tr ";" "\n")
 
     for element in $properties_array; do
       prop_name=$(cut -d '=' -f 1 <<< "$element")
