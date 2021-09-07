@@ -309,9 +309,8 @@ function generate_external_datasource() {
              <exception-sorter class-name=\"${sorter}\"></exception-sorter>
            </validation>"
   fi
-
   if [ -n "$conn_properties" ]; then
-    properties_array=$(echo $conn_properties | tr ';' '\n' )
+    properties_array=($(tr ';' '\n' <<< "${conn_properties}"))
 
     for element in $properties_array; do
       prop_name=$(cut -d '=' -f 1 <<< "$element")
