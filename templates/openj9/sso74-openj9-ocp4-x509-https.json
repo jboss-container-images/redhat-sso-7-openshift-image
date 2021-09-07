@@ -116,7 +116,7 @@
     "objects": [
         {
             "kind": "ConfigMap",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "metadata": {
                 "annotations": {
                     "description": "ConfigMap providing service ca bundle.",
@@ -130,7 +130,7 @@
         },
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "ports": [
                     {
@@ -155,7 +155,7 @@
         },
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "clusterIP": "None",
                 "ports": [
