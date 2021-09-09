@@ -270,7 +270,7 @@
     "objects": [
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "ports": [
                     {
@@ -295,7 +295,7 @@
         },
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "ports": [
                     {
@@ -320,7 +320,7 @@
         },
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "ports": [
                     {
@@ -344,7 +344,7 @@
         },
         {
             "kind": "Service",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "spec": {
                 "clusterIP": "None",
                 "ports": [
@@ -804,7 +804,7 @@
         },
         {
             "kind": "PersistentVolumeClaim",
-            "apiVersion": "core/v1",
+            "apiVersion": "v1",
             "metadata": {
                 "name": "${APPLICATION_NAME}-postgresql-claim",
                 "labels": {
