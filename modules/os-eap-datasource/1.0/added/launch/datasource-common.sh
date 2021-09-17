@@ -166,7 +166,6 @@ function inject_external_datasources() {
 # $12 - datasource jta
 # $13 - validate
 # $14 - url
-# $15 - conn_property
 function generate_datasource_common() {
   local pool_name="${1}"
   local jndi_name="${2}"
@@ -508,7 +507,7 @@ function inject_datasource() {
   if [ -z "$driver" ]; then
     log_warning "DRIVER not set for datasource ${service_name}. Datasource will not be configured."
   else
-    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url" )
+    datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url")
 
     if [ -n "$datasource" ]; then
       sed -i "s|<!-- ##DATASOURCES## -->|${datasource}\n<!-- ##DATASOURCES## -->|" $CONFIG_FILE
