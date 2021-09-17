@@ -72,7 +72,9 @@ function generate_tx_datasource() {
                       <security>
                           <user-name>${3}</user-name>
                           <password>${4}</password>
-                      </security>
+                      </security>"
+      ds="$ds
+                      ${SSLMODE_ENV_VAR}
                   </datasource>"
   echo $ds | sed ':a;N;$!ba;s|\n|\\n|g'
 }
