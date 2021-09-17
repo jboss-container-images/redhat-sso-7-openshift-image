@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "annotations": {
             "iconClass" : "icon-sso",
@@ -168,7 +168,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "id": "${APPLICATION_NAME}-https",
             "metadata": {
                 "name": "${APPLICATION_NAME}",
@@ -190,7 +190,7 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
