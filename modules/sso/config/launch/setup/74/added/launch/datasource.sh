@@ -74,9 +74,8 @@ function generate_datasource() {
   local jta="${12}"
   local validate="${13}"
   local url="${14}"
-  local conn_properties="${15}"
 
-  generate_datasource_common "${pool_name}" "${jndi_name}" "${username}" "${password}" "${host}" "${port}" "${databasename}" "${checker}" "${sorter}" "${driver}" "${service_name}" "${jta}" "${validate}" "${url}" "${conn_properties}"
+  generate_datasource_common "${pool_name}" "${jndi_name}" "${username}" "${password}" "${host}" "${port}" "${databasename}" "${checker}" "${sorter}" "${driver}" "${service_name}" "${jta}" "${validate}" "${url}"
 
   if [ -z "$service_name" ]; then
     service_name="ExampleDS"
