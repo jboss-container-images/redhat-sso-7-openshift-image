@@ -73,8 +73,19 @@ function generate_tx_datasource() {
                           <user-name>${3}</user-name>
                           <password>${4}</password>
                       </security>"
+
+      # Adding the properties in DB_XA_CONNECTION_PROPERTY_* as connection properties in lowercase
+      # e.g. DB_XA_CONNECTION_PROPERTY_sslMode=verify-ca --> sslmode=verify-ca
+      local xa_props=$(compgen -v | grep -s "${prefix}_XA_CONNECTION_PROPERTY_")
+      for xa_prop in $(echo $xa_props); do
+        prop_name=$(echo "${xa_prop}" | sed -e "s/${prefix}_XA_CONNECTION_PROPERTY_//g" | tr '[:upper:]' '[:lower:]')
+        prop_val=$(find_env $xa_prop)
+        if [ ! -z ${prop_val} ]; then
+          ds="$ds <connection-property name=\"${prop_name}\">${prop_val}</connection-property>"
+        fi
+      done
+
       ds="$ds
-                      ${SSLMODE_ENV_VAR}
                   </datasource>"
   echo $ds | sed ':a;N;$!ba;s|\n|\\n|g'
 }
