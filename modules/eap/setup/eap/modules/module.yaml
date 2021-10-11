@@ -29,13 +29,6 @@ ports:
   expose: false
 - value: 8778
 artifacts:
-- name: eap-image-maven-repo
-  target: maven-repo.zip
-  md5: 244700ed92787ad537e360069d9ca9b1
-  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/eap7/7.4.0/jboss-eap-7.4.0-image-builder-maven-repository.zip
-# CIAM-711: Update RH-SSO server overlay to 'RH-SSO 7.5.0.CR4' build
-- name: keycloak-server-overlay.zip
-  md5: 4150d09f7bf5d524b4173f8850a06617
 # List remaining (particular RH-SSO build independent) artifacts below
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
