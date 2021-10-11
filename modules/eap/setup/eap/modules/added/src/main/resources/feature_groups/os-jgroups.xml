@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature-group-spec name="os-jgroups" xmlns="urn:jboss:galleon:feature-group:1.0">
+    <feature-group name="jgroups">
+        <exclude spec="subsystem.jgroups.channel"/>
+        <feature spec="subsystem.jgroups.channel">
+            <param name="channel" value="ee"/>
+            <param name="stack" value="tcp"/>
+            <unset param="cluster"/>
+        </feature>
+        <feature spec="subsystem.jgroups.stack.protocol.FD_SOCK">
+            <param name="stack" value="udp"/>
+            <unset param="socket-binding"/>
+        </feature>
+        <feature spec="subsystem.jgroups.stack.protocol.FD_SOCK">
+            <param name="stack" value="tcp"/>
+            <unset param="socket-binding"/>
+        </feature>
+        <exclude feature-id="subsystem.jgroups.stack.protocol:stack=udp,protocol=PING"/>
+        <exclude feature-id="subsystem.jgroups.stack.protocol.MPING:stack=tcp"/>
+    </feature-group>
+    <!-- interfaces -->
+    <!-- required by jgroups-->
+    <feature spec="interface">
+        <param name="interface" value="private"/>
+        <param name="inet-address" value="${jboss.bind.address.private:127.0.0.1}"/>
+    </feature>
+</feature-group-spec>

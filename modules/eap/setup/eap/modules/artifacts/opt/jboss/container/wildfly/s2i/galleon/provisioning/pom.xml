@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.jboss.galleon.s2i</groupId>
+    <artifactId>galleon-s2i-parent</artifactId>
+    <version>1.0.0.Final</version>
+    <packaging>pom</packaging>
+    <name>Provision servers with Galleon during S2I</name>
+  
+    <description>Provision servers with Galleon during S2I</description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <properties>
+        <s2i.producer.name>${env.GALLEON_S2I_PRODUCER_NAME}</s2i.producer.name>
+        <s2i.fp.groupid>${env.GALLEON_S2I_FP_GROUP_ID}</s2i.fp.groupid>
+        <s2i.fp.artifactid>${env.GALLEON_S2I_FP_ARTIFACT_ID}</s2i.fp.artifactid>
+        <version.org.wildfly>${env.WILDFLY_VERSION}</version.org.wildfly>
+        <version.s2i.fp>${env.S2I_FP_VERSION}</version.s2i.fp>
+        <version.org.jboss.galleon>${env.GALLEON_VERSION}</version.org.jboss.galleon>
+    </properties>
+    <modules>
+        <module>generic_layers</module>
+        <module>generic_provisioning</module>
+        <module>jboss-s2i-universe</module>
+        <module>jboss-s2i-producer</module>
+    </modules>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jboss.galleon</groupId>
+                    <artifactId>galleon-maven-plugin</artifactId>
+                    <version>${version.org.jboss.galleon}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

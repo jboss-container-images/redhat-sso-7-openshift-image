@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature-group-spec name="os-jgroups-all" xmlns="urn:jboss:galleon:feature-group:1.0">
+    <feature-group name="os-jgroups"/>
+    <feature spec="socket-binding-group">
+        <param name="socket-binding-group" value="standard-sockets" />
+        <feature-group name="jgroups-sockets">
+            <exclude feature-id="socket-binding-group.socket-binding:name=standard-sockets,socket-binding=jgroups-udp-fd"/>
+            <exclude feature-id="socket-binding-group.socket-binding:name=standard-sockets,socket-binding=jgroups-tcp-fd"/>
+        </feature-group>
+    </feature>
+</feature-group-spec>

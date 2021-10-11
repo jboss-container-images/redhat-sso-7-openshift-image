@@ -1,0 +1,115 @@
+{
+    "kind": "RouteList",
+    "apiVersion": "route.openshift.io/v1",
+    "metadata": {
+        "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes",
+        "resourceVersion": "1633753"
+    },
+    "items": [
+        {
+            "metadata": {
+                "name": "bc-authoring-rhpamcentr",
+                "namespace": "bsig-cloud",
+                "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes/bc-authoring-rhpamcentr",
+                "uid": "d81990d6-6d27-11e9-b294-080027e8c7bc",
+                "resourceVersion": "1241102",
+                "creationTimestamp": "2019-05-02T22:15:50Z",
+                "labels": {
+                    "app": "rhpam74-authoring",
+                    "application": "bc-authoring",
+                    "rhpam": "1.0",
+                    "service": "bc-authoring-rhpamcentr",
+                    "template": "rhpam74-authoring"
+                },
+                "annotations": {
+                    "description": "Route for Business Central's http service.",
+                    "haproxy.router.openshift.io/timeout": "60s",
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "bc-authoring-rhpamcentr-bsig-cloud.192.168.99.100.nip.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "bc-authoring-rhpamcentr",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "http"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "bc-authoring-rhpamcentr-bsig-cloud.192.168.99.100.nip.io",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2019-05-02T22:15:51Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "metadata": {
+                "name": "secure-bc-authoring-rhpamcentr",
+                "namespace": "bsig-cloud",
+                "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes/secure-bc-authoring-rhpamcentr",
+                "uid": "d8347fb0-6d27-11e9-b294-080027e8c7bc",
+                "resourceVersion": "1241107",
+                "creationTimestamp": "2019-05-02T22:15:50Z",
+                "labels": {
+                    "app": "rhpam74-authoring",
+                    "application": "bc-authoring",
+                    "rhpam": "1.0",
+                    "service": "bc-authoring-rhpamcentr",
+                    "template": "rhpam74-authoring"
+                },
+                "annotations": {
+                    "description": "Route for Business Central's https service.",
+                    "haproxy.router.openshift.io/timeout": "60s",
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "secure-bc-authoring-rhpamcentr-bsig-cloud.192.168.99.100.nip.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "bc-authoring-rhpamcentr",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "https"
+                },
+                "tls": {
+                    "termination": "passthrough"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "secure-bc-authoring-rhpamcentr-bsig-cloud.192.168.99.100.nip.io",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2019-05-02T22:15:51Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

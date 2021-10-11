@@ -1,45 +1,60 @@
 schema_version: 1
 name: eap
-description: "Installs base EAP to the image"
+description: "Installs base EAP to the image."
+
+# NOTE:
+#   The former listing of all specific EAP modules to be included into the RH-SSO
+#   images was replaced with a single 'setup.eap.modules' CEKit module (therefore
+#   one new layer in the resulting built container image).
+#
+#   This single module combines / concatenates the functionality of all necessary
+#   EAP modules, listed in the 'used-eap-modules-list.txt' in this directory, and
+#   respects the internal dependencies between those modules. IOW the prerequisite
+#   EAP modules are listed before the modules, which depend on them.
+#
+#   This approach was chosen to avoid / overcome the 'max depth exceeded' OSBS
+#   container build system error message, which got triggered previously by
+#   performing an OSBS build, listing the necessary specific EAP modules
+#   one-by-one. Due to the high number of EAP modules, needed to be included,
+#   there were too many layers in the intermediary image, and the OSBS build
+#   failed as a whole.
+#
+# IMPORTANT:
+#   Do not change this approach!
+#
+#   If you need to add / list additional EAP module, not present yet, append the
+#   list of artifacts, environment variables, labels (basically all the
+#   information listed in 'module.yaml' file of the new module, you want to add)
+#   at the appropriate section of 'module.yaml' file of the existing
+#   'setup.eap.modules' module (for example append the labels from the new module
+#   at the end of 'labels' section of 'setup.eap.modules' module, so the labels
+#   from the new module are known to 'setup.eap.modules' module too.
+#
+#   Moreover, copy the body of the configure script of that new module at the
+#   appropriate place of the existing 'configure.sh' script. For each of the
+#   already included configuration scripts, the 'configure.sh' script contains
+#   the starting and ending comments, so the order in which the modules need
+#   to be included, is preserved and respected.
+
 version: '1.0'
 
 modules:
       install:
-          ### Image :: Standalone ####
-          - name: eap-73-latest
-
-          ### Image :: OpenShift ####
-          # Order of the modules installation below matters!!! DO NOT CHANGE it unless
-          # you first verified the image with changed order still works correctly
-          # Common modules from the main CE cct_module repository
-          - name: dynamic-resources
-          - name: jboss.container.eap.s2i.bash
-          - name: jboss.container.java.jvm.bash
-          - name: jboss.container.jolokia.bash
-          - name: jboss.container.wildfly.standalone-conf.java
-          - name: jboss.container.wildfly.standalone-conf.jolokia
-          - name: os-eap7-ping
-          - name: jboss.container.java.jvm.bash
-          - name: os-eap-launch
-          - name: os-eap7-launch
-          - name: os-eap-datasource
-            version: '1.0'
-          - name: jboss.eap.cd.logging
-          - name: jboss.eap.config.jgroups
-          - name: jboss.eap.config.elytron
-          - name: os-eap-probes
-            version: '3.0'
-          - name: jboss.container.maven.35.bash
-            version: '3.5'
-          - name: os-eap-hawkular
-          - name: os-eap-deployment-scanner
+          - name: setup.eap.modules
+            version: "1.0"
 
 execute:
     - script: install-eap-one-offs.sh
 
+# Important:
+# ----------
+#
 # All EAP one-offs artifacts must be prefixed with "eap-one-off-" prefix and suffixed with in ".zip".
 # Ensure that only one-offs for the INSTALLED version of EAP are present, and comment all of them
 # that are obsoleted.
+#
+# For an example of proper / intended usage, see the "jbeap-18807.zip" example below.
+#
 # artifacts:
 #
 #      KEYCLOAK-13487 "jbeap-18807.zip" is obsolete in EAP-7.3.1 / RH-SSO 7.5.1, deprecate it

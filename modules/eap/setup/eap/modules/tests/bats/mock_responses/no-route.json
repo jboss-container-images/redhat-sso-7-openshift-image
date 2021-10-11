@@ -1,0 +1,9 @@
+{
+    "kind": "RouteList",
+    "apiVersion": "route.openshift.io/v1",
+    "metadata": {
+        "selfLink": "/apis/route.openshift.io/v1/namespaces/bsig-cloud/routes",
+        "resourceVersion": "1633866"
+    },
+    "items": []
+}

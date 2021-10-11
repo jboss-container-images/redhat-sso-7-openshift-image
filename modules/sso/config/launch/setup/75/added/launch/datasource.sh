@@ -10,6 +10,12 @@ function configure() {
   DB_JNDI="java:jboss/datasources/KeycloakDS"
   DB_POOL="KeycloakDS"
 
+  # KEYCLOAK-18574 The 'datasource-common.sh' implementation from
+  # 'wildfly-cekit-modules.jboss.container.wildfly.launch.datasources'
+  # module added required flag to indicate the default datasource to be created
+  # Set that flag to true
+  export ENABLE_GENERATE_DEFAULT_DATASOURCE="true"
+
   # KEYCLOAK-10858 - if DB_SERVICE_PREFIX_MAPPING variable was provided to the pod,
   # derive XA connection properties & DB driver information from it to avoid WFLYJCA0069 error
   if [ -n "${DB_SERVICE_PREFIX_MAPPING}" ]; then
