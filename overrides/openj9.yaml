@@ -15,9 +15,7 @@ osbs:
                   pulp_repos: true
                   # include_unpublished_pulp_repos: true
                   packages:
-                  - java-11-openj9
-                  - java-11-openj9-headless
-                  - java-11-openj9-devel
+                  - ibm-semeru-open-11-jdk
                   signing_intent: release
                   inherit: true
                 platforms:
