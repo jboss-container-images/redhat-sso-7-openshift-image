@@ -14,8 +14,6 @@ osbs:
                 compose:
                   pulp_repos: true
                   # include_unpublished_pulp_repos: true
-                  packages:
-                  - ibm-semeru-open-11-jdk
                   signing_intent: release
                   inherit: true
                 platforms:
