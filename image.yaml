@@ -25,7 +25,6 @@ labels:
       value: "sso,sso75,keycloak"
     - name: "io.openshift.s2i.scripts-url"
       value: "image:///usr/local/s2i"
-
 envs:
     - name: "JBOSS_PRODUCT"
       value: *product
@@ -67,10 +66,8 @@ envs:
     - name: "SCRIPT_DEBUG"
       description: "If set to true, ensurses that the bash scripts are executed with the -x option, printing the commands and their arguments as they are executed."
       example: "true"
-
 ports:
     - value: 8443
-
 modules:
       repositories:
           - name: cct_module
@@ -97,6 +94,8 @@ modules:
             path: modules
 
       install:
+          - name: sso.security.cve-2020-10695
+            version: '1.0'
           # Install JDK runtime
           - name: sso-jdk
             version: &jdk_version '11'
@@ -132,6 +131,9 @@ modules:
 packages:
       manager: microdnf
       content_sets_file: content_sets.yaml
+      install:
+      - which
+      - unzip
 
 run:
       cmd:
