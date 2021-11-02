@@ -91,6 +91,8 @@ modules:
       install:
           - name: bz-1769831
             version: '1.0'
+          - name: sso.security.cve-2020-10695
+            version: '1.0'
           - name: sso-jdk
             version: &jdk_version '11'
           - name: eap
@@ -127,6 +129,7 @@ packages:
       - findutils
       # "which" tool is handy for debugging issues / troubleshooting
       - which
+      - unzip
 
 run:
       cmd:
