@@ -12,10 +12,6 @@ labels:
   value: *jdk_version
 
 envs:
-- name: "JAVA_HOME"
-  value: "/usr/lib/jvm/java-11"
-- name: "JAVA_VENDOR"
-  value: "openjdk"
 - name: "JAVA_VERSION"
   value: *jdk_version
 - name: JBOSS_CONTAINER_OPENJDK_JDK_MODULE
@@ -23,12 +19,8 @@ envs:
 
 packages:
   install:
-  - java-11-`[[ ($(uname -i) = ppc64le) || ($(uname -i) = s390x) ]] && echo openj9 || echo openjdk`-devel
-
-modules:
-  install:
-  - name: sso.security.cve-2020-10695
-    version: '1.0'
+    - "`[[ ($(uname -i) = ppc64le) || ($(uname -i) = s390x) ]] && echo ibm-semeru-open-11-jdk || echo java-11-openjdk-devel`"
+    - unzip
 
 execute:
 - script: configure.sh
