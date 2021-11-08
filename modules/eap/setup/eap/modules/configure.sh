@@ -387,6 +387,33 @@ pushd ${ARTIFACTS_DIR}
 cp -pr * /
 popd
 
+# CIAM-1269 / SSOSUP-84 correction
+#
+# Since there can be only one <localRepository> element in the currently used
+# Maven settings.xml file, if the user requested custom Maven local repository
+# location via optional MAVEN_REPO_LOCAL or MAVEN_LOCAL_REPO image environment
+# variables, use that directory location for Galleon local repository too.
+# Otherwise set it to the default GALLEON_LOCAL_MAVEN_REPO environment variable
+# value, which is always set
+#
+GALLEON_LOCAL_MAVEN_REPO="${MAVEN_LOCAL_REPO:-${MAVEN_REPO_LOCAL:-${GALLEON_LOCAL_MAVEN_REPO}}}"
+local_repo_xml="\n\
+  <localRepository>${GALLEON_LOCAL_MAVEN_REPO}</localRepository>"
+
+# Similarly, if the user requested custom location of the user settings.xml
+# file via optional MAVEN_SETTINGS_XML image environment variable, use that
+# location instead of the default "${HOME}/.m2/settings.xml" one
+settings_xml="${MAVEN_SETTINGS_XML:-${HOME}/.m2/settings.xml}"
+
+# Finally set the <localRepository> element in settings.xml to point to chosen
+# directory to:
+# 1) Prevent needed artifact downloads by each container startup in online mode
+# 2) Make the previously downloaded artifacts available at container startup in
+#    offline mode too
+#
+sed -i "s|<!-- ### configured local repository ### -->|${local_repo_xml}|" "${settings_xml}"
+# EOF CIAM-1269 / SSOSUP-84 correction
+
 # Construct the settings in use by galleon at provisioning and startup.
 cp $HOME/.m2/settings.xml "$GALLEON_MAVEN_SETTINGS_XML"
 local_repo_xml="\n\
@@ -1030,6 +1057,11 @@ if [ ! -d "$GALLEON_LOCAL_MAVEN_REPO" ]; then
 fi
 
 rm -rf $TMP_GALLEON_LOCAL_MAVEN_REPO
+
+# CIAM-1269 / SSOSUP-84 correction
+# Make the 'jboss' user owner of the artifacts present in the local Galleon repository
+chown -R jboss:root "${GALLEON_LOCAL_MAVEN_REPO}"
+# EOF CIAM-1269 / SSOSUP-84 correction
 
 if [ ! -d $SERVER_DIR ]; then
   echo "Error, no server provisioned in $SERVER_DIR"
