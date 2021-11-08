@@ -277,14 +277,16 @@
 
   </profiles>
   <activeProfiles>
-    <activeProfile>securecentral</activeProfile>
-    <!-- Start of RH-SSO add-on:
-         =======================
-         Explicitly activate the 'jboss-eap-repository' since at the very least the 'earlyaccess' repo is
-         required for the 'org.aesh:aesh-extensions:1.8.0.redhat-00001' artifact to be resolved properly.
+    <!-- CIAM-535 / KEYCLOAK-18574 correction
+      ~
+      ~  Explicitly activate the 'jboss-eap-repository' since at the very least
+      ~  the 'earlyaccess' repo is required to download the Galleon dependencies
+      ~  in the case these dependencies weren't published to external 3rd party
+      ~  Maven repositories yet
     -->
     <activeProfile>jboss-eap-repository</activeProfile>
-    <!-- End of RH-SSO add-on -->
+    <!-- EOF CIAM-535 / KEYCLOAK-18574 correction -->
+    <activeProfile>securecentral</activeProfile>
     <!-- ### active profiles ### -->
   </activeProfiles>
 </settings>
