@@ -1,6 +1,9 @@
 #!/bin/sh
-set -u
-set -e
+set -eu
+
+# Import RH-SSO global variables & functions to image build-time
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
 
 ## Work around OpenJDK being installed as dependency. https://bugzilla.redhat.com/show_bug.cgi?id=1762827 and similar
 if rpm -q ibm-semeru-open-11-jdk || rpm -q java-11-openj9-devel; then
@@ -12,4 +15,3 @@ if rpm -q ibm-semeru-open-11-jdk || rpm -q java-11-openj9-devel; then
         fi
     done
 fi
-

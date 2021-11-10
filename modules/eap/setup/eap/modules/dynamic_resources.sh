@@ -42,10 +42,14 @@ adjust_java_heap_settings() {
     local initial_heap=$(echo "${java_options}" | grep -Eo "\-Xms[^ ]* ")
 
     if [ -n "$max_heap" ]; then
-        JAVA_OPTS=$(echo $JAVA_OPTS | sed -e "s/-Xmx[^ ]*/${max_heap} /")
+        # CIAM-1394 correction
+        JAVA_OPTS=$(echo $JAVA_OPTS | sed -e "s${AUS}-Xmx[^ ]*${AUS}${max_heap} ${AUS}")
+        # EOF CIAM-1394 correction
     fi
     if [ -n "$initial_heap" ]; then
-        JAVA_OPTS=$(echo $JAVA_OPTS | sed -e "s/-Xms[^ ]* /${initial_heap} /")
+        # CIAM-1394 correction
+        JAVA_OPTS=$(echo $JAVA_OPTS | sed -e "s${AUS}-Xms[^ ]* ${AUS}${initial_heap} ${AUS}")
+        # EOF CIAM-1394 correction
     fi
 }
 
@@ -78,7 +82,9 @@ adjust_java_options() {
     for option in $java_options; do
         if [[ ${option} == "-Xmx"* ]]; then
             if [[ "$options" == *"-Xmx"* ]]; then
-                options=$(echo $options | sed -e "s/-Xmx[^ ]*/${option}/")
+                # CIAM-1394 correction
+                options=$(echo $options | sed -e "s${AUS}-Xmx[^ ]*${AUS}${option}${AUS}")
+                # EOF CIAM-1394 correction
             else
                 options="${options} ${option}"
             fi
@@ -87,7 +93,9 @@ adjust_java_options() {
             fi
         elif [[ ${option} == "-Xms"* ]]; then
             if [[ "$options" == *"-Xms"* ]]; then
-                options=$(echo $options | sed -e "s/-Xms[^ ]*/${option}/")
+                # CIAM-1394 correction
+                options=$(echo $options | sed -e "s${AUS}-Xms[^ ]*${AUS}${option}${AUS}")
+                # EOF CIAM-1394 correction
             else
                 options="${options} ${option}"
             fi

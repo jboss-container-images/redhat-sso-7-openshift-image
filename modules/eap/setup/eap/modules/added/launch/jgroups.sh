@@ -387,13 +387,17 @@ configure_jgroups_encryption() {
   esac
 
   if [ "${key_store_conf_mode}" = "xml" ]; then
-    sed -i "s|<!-- ##ELYTRON_KEY_STORE## -->|${key_store}<!-- ##ELYTRON_KEY_STORE## -->|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##ELYTRON_KEY_STORE## -->${AUS}${key_store}<!-- ##ELYTRON_KEY_STORE## -->${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   elif [ "${key_store_conf_mode}" = "cli" ]; then
     echo "${key_store}" >> ${CLI_SCRIPT_FILE}
   fi
 
   if [ "${encrypt_conf_mode}" = "xml" ]; then
-    sed -i "s|<!-- ##JGROUPS_ENCRYPT## -->|${jgroups_encrypt}|g" "$CONFIG_FILE"
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JGROUPS_ENCRYPT## -->${AUS}${jgroups_encrypt}${AUS}g" "$CONFIG_FILE"
+    # EOF CIAM-1394 correction
   elif [ "${encrypt_conf_mode}" = "cli" ]; then
     echo "${jgroups_encrypt}" >> ${CLI_SCRIPT_FILE}
   fi

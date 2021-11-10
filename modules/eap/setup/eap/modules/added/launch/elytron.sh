@@ -69,9 +69,13 @@ insert_elytron_tls() {
          </tls>\n"
     # check for new config tag, use that if it's present, note we remove the <!-- ##ELYTRON_TLS## --> on first substitution
     if [ "true" = $(has_elytron_tls "${CONFIG_FILE}") ]; then
-        sed -i "s|<!-- ##ELYTRON_TLS## -->|${elytron_tls}|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##ELYTRON_TLS## -->${AUS}${elytron_tls}${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
         # remove the legacy tag, if it's present
-        sed -i "s|<!-- ##TLS## -->||" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##TLS## -->${AUS}${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
     fi
 }
 
@@ -289,14 +293,18 @@ configure_https() {
           # insert the new config element, only if it hasn't been added already
           insert_elytron_tls_config_if_needed "${CONFIG_FILE}"
           # insert the individual config blocks we leave the replacement tags around in case something else (e.g. jgoups might need to add a keystore etc)
-          sed -i "s|<!-- ##ELYTRON_KEY_STORE## -->|${elytron_key_store}<!-- ##ELYTRON_KEY_STORE## -->|" $CONFIG_FILE
-          sed -i "s|<!-- ##ELYTRON_KEY_MANAGER## -->|${elytron_key_manager}<!-- ##ELYTRON_KEY_MANAGER## -->|" $CONFIG_FILE
-          sed -i "s|<!-- ##ELYTRON_SERVER_SSL_CONTEXT## -->|${elytron_server_ssl_context}<!-- ##ELYTRON_SERVER_SSL_CONTEXT## -->|" $CONFIG_FILE
+          # CIAM-1394 correction
+          sed -i "s${AUS}<!-- ##ELYTRON_KEY_STORE## -->${AUS}${elytron_key_store}<!-- ##ELYTRON_KEY_STORE## -->${AUS}" $CONFIG_FILE
+          sed -i "s${AUS}<!-- ##ELYTRON_KEY_MANAGER## -->${AUS}${elytron_key_manager}<!-- ##ELYTRON_KEY_MANAGER## -->${AUS}" $CONFIG_FILE
+          sed -i "s${AUS}<!-- ##ELYTRON_SERVER_SSL_CONTEXT## -->${AUS}${elytron_server_ssl_context}<!-- ##ELYTRON_SERVER_SSL_CONTEXT## -->${AUS}" $CONFIG_FILE
+          # EOF CIAM-1394 correction
       else # legacy config
           legacy_elytron_tls=$(elytron_legacy_config "${elytron_key_store}" "${elytron_key_manager}" "${elytron_server_ssl_context}")
       fi
       # will be empty unless only the old marker is present.
-      sed -i "s|<!-- ##TLS## -->|${legacy_elytron_tls}|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##TLS## -->${AUS}${legacy_elytron_tls}${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
     elif [ ${use_tls_cli} -eq 1 ]; then
       create_elytron_keystore_cli "LocalhostKeyStore" "${HTTPS_KEYSTORE}" "${HTTPS_PASSWORD}" "${HTTPS_KEYSTORE_TYPE}" "${HTTPS_KEYSTORE_DIR}"
       create_elytron_keymanager_cli "LocalhostKeyManager" "LocalhostKeyStore" "${key_password}"
@@ -307,7 +315,9 @@ configure_https() {
     getConfigurationMode "<!-- ##HTTPS_CONNECTOR## -->" "elytron_https_connector_conf_mode"
     if [ "${elytron_https_connector_conf_mode}" = "xml" ]; then
       local elytron_https_connector=$(create_elytron_https_connector "https" "https" "LocalhostSslContext" "true")
-      sed -i "s|<!-- ##HTTPS_CONNECTOR## -->|${elytron_https_connector}|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##HTTPS_CONNECTOR## -->${AUS}${elytron_https_connector}${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
     elif [ "${elytron_https_connector_conf_mode}" = "cli" ]; then
       create_elytron_https_connector_cli "https" "https" "LocalhostSslContext" "true"
     fi
@@ -381,8 +391,10 @@ configure_elytron_integration() {
           </security-realms>\n\
     </elytron-integration>"
 
-    sed -i "s|<!-- ##ELYTRON_INTEGRATION## -->|${elytron_integration}|" $CONFIG_FILE
-    sed -i "s|<!-- ##INTEGRATION_ELYTRON_REALM## -->|${elytron_realm}<!-- ##INTEGRATION_ELYTRON_REALM## -->|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##ELYTRON_INTEGRATION## -->${AUS}${elytron_integration}${AUS}" $CONFIG_FILE
+    sed -i "s${AUS}<!-- ##INTEGRATION_ELYTRON_REALM## -->${AUS}${elytron_realm}<!-- ##INTEGRATION_ELYTRON_REALM## -->${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   elif [ "${configureMode}" = "cli" ]; then
 
      cat << EOF >> ${CLI_SCRIPT_FILE}
@@ -403,7 +415,9 @@ configure_elytron_security_domain() {
                       <realm name=\"${SECDOMAIN_NAME}\"/>\n\
                   </security-domain>"
 
-    sed -i "s|<!-- ##ELYTRON_SECURITY_DOMAIN## -->|${elytron_security_domain}<!-- ##ELYTRON_SECURITY_DOMAIN## -->|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##ELYTRON_SECURITY_DOMAIN## -->${AUS}${elytron_security_domain}<!-- ##ELYTRON_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
   elif [ "${configureMode}" = "cli" ]; then
 
@@ -428,7 +442,9 @@ configure_http_authentication_factory() {
                       </mechanism-configuration>\n\
                   </http-authentication-factory>"
 
-      sed -i "s|<!-- ##HTTP_AUTHENTICATION_FACTORY## -->|${http_authentication_factory}<!-- ##HTTP_AUTHENTICATION_FACTORY## -->|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##HTTP_AUTHENTICATION_FACTORY## -->${AUS}${http_authentication_factory}<!-- ##HTTP_AUTHENTICATION_FACTORY## -->${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
 
   elif [ "${configureMode}" = "cli" ]; then
 
@@ -450,8 +466,10 @@ configure_http_application_security_domains() {
                 <!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->\
             </application-security-domains>"
 
-    sed -i "s|<!-- ##HTTP_APPLICATION_SECURITY_DOMAINS## -->|${http_application_security_domains}|" $CONFIG_FILE
-    sed -i "s|<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->|${application_security_domain}<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##HTTP_APPLICATION_SECURITY_DOMAINS## -->${AUS}${http_application_security_domains}${AUS}" $CONFIG_FILE
+    sed -i "s${AUS}<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->${AUS}${application_security_domain}<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
   elif [ "${configureMode}" = "cli" ]; then
 
@@ -473,8 +491,10 @@ configure_ejb_application_security_domains() {
                 <!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->\
             </application-security-domains>"
 
-    sed -i "s|<!-- ##EJB_APPLICATION_SECURITY_DOMAINS## -->|${ejb_application_security_domains}|" $CONFIG_FILE
-    sed -i "s|<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->|${application_security_domain}<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##EJB_APPLICATION_SECURITY_DOMAINS## -->${AUS}${ejb_application_security_domains}${AUS}" $CONFIG_FILE
+    sed -i "s${AUS}<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->${AUS}${application_security_domain}<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
   elif [ "${configureMode}" = "cli" ]; then
 

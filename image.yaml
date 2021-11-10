@@ -94,6 +94,14 @@ modules:
             path: modules
 
       install:
+          # Define RH-SSO global variables & functions required by subsequent image modules.
+          #
+          # IMPORTANT: This module needs to be included (sourced) in each of the following
+          #            modules using "sed -e" or "sed -i" expressions, where the regex pattern
+          #            or the replacement value is dynamic (coming from env var supplied to the
+          #            container image at runtime). See CIAM-1394 JIRA for details
+          - name: sso.rcfile
+            version: '1.0'
           - name: sso.security.cve-2020-10695
             version: '1.0'
           # Install JDK runtime
