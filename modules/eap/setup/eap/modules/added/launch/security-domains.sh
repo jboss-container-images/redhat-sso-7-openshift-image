@@ -55,7 +55,9 @@ configure_security_domains() {
             </authentication>\n\
         </security-domain>\n"
 
-      sed -i "s|<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->|${domains}<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->|" "$CONFIG_FILE"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->${AUS}${domains}<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->${AUS}" "$CONFIG_FILE"
+      # EOF CIAM-1394 correction
 
     elif [ "${confMode}" = "cli" ]; then
 

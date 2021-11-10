@@ -24,7 +24,9 @@ function configure_login_modules() {
         getConfigurationMode "<!-- ##OTHER_LOGIN_MODULES## -->" "confMode"
 
         if [ "${confMode}" = "xml" ]; then
-          sed -i "s|<!-- ##OTHER_LOGIN_MODULES## -->|${login_modules}<!-- ##OTHER_LOGIN_MODULES## -->|" "$CONFIG_FILE"
+          # CIAM-1394 correction
+          sed -i "s${AUS}<!-- ##OTHER_LOGIN_MODULES## -->${AUS}${login_modules}<!-- ##OTHER_LOGIN_MODULES## -->${AUS}" "$CONFIG_FILE"
+          # EOF CIAM-1394 correction
         elif [ "${confMode}" = "cli" ]; then
           configure_login_module_cli "${login_module_code}" "${login_module_flag}" "${login_module_module}"
         fi

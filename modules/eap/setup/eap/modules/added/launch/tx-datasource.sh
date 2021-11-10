@@ -70,7 +70,9 @@ function inject_jdbc_store() {
               <communication table-prefix=\"${prefix}\"/>\\
               <state table-prefix=\"${prefix}\"/>\\
           </jdbc-store>"
-    sed -i "s|<!-- ##JDBC_STORE## -->|${jdbcStore}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JDBC_STORE## -->${AUS}${jdbcStore}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   elif [ "${dsConfMode}" = "cli" ]; then
     local subsystem_addr="/subsystem=transactions"
     # Since we have variables indicating that we should use a JDBC store in the Tx subsystem, we
@@ -208,7 +210,9 @@ function inject_tx_datasource() {
       if [ "${dsConfMode}" = "xml" ]; then
         # Only do this replacement if we are replacing an xml marker
         datasource_adjusted="$(echo ${datasource} | sed ':a;N;$!ba;s|\n|\\n|g')"
-        sed -i "s|<!-- ##DATASOURCES## -->|${datasource_adjusted}<!-- ##DATASOURCES## -->|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource_adjusted}<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
       elif [ "${dsConfMode}" = "cli" ]; then
         # If using cli, return the raw string, preserving line breaks
         echo "${datasource}" >> "${CLI_SCRIPT_FILE}"

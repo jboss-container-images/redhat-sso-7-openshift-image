@@ -109,7 +109,9 @@ function inject_internal_datasources() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
-        sed -i "s|<!-- ##DATASOURCES## -->|${datasource}<!-- ##DATASOURCES## -->|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
       elif [ "${dsConfMode}" = "cli" ]; then
         echo "${datasource}" >> ${CLI_SCRIPT_FILE}
       fi
@@ -198,9 +200,11 @@ function writeEEDefaultDatasourceXml() {
     defaultDatasource=""
   fi
   # new format replacement : datasource="##DEFAULT_DATASOURCE##"
-  sed -i "s|datasource=\"##DEFAULT_DATASOURCE##\"|${defaultDatasource}|" $CONFIG_FILE
+  # CIAM-1394 correction
+  sed -i "s${AUS}datasource=\"##DEFAULT_DATASOURCE##\"${AUS}${defaultDatasource}${AUS}" $CONFIG_FILE
   # old format (for compat)
-  sed -i "s|<!-- ##DEFAULT_DATASOURCE## -->|${defaultDatasource}|" $CONFIG_FILE
+  sed -i "s${AUS}<!-- ##DEFAULT_DATASOURCE## -->${AUS}${defaultDatasource}${AUS}" $CONFIG_FILE
+  # EOF CIAM-1394 correction
 }
 
 function writeEEDefaultDatasourceCli() {
@@ -416,7 +420,9 @@ function inject_connection_properties_to_datasource_xml() {
 
   if [ "${failed}" != "true" ]; then
     for property in "${conn_props[@]}"; do
-      prop_name=$(sed -e "s/${conn_prop_env_var}//g" <<< "${property}")
+      # CIAM-1394 correction
+      prop_name=$(sed -e "s${AUS}${conn_prop_env_var}${AUS}${AUS}g" <<< "${property}")
+      # EOF CIAM-1394 correction
       prop_value=$(find_env "${property}")
       if [ ! -z "${prop_value}" ]; then
           ds="${ds}
@@ -588,7 +594,9 @@ function generate_external_datasource_cli() {
     else
       if [ "${failed}" != "true" ]; then
         for property in "${conn_props[@]}"; do
-          prop_name=$(sed -e "s/${conn_prop_env_var}//g" <<< "${property}")
+          # CIAM-1394 correction
+          prop_name=$(sed -e "s${AUS}${conn_prop_env_var}${AUS}${AUS}g" <<< "${property}")
+          # EOF CIAM-1394 correction
           prop_value=$(find_env "${property}")
           if [ ! -z "${prop_value}" ]; then
             ds_tmp_connection_properties["${prop_name}"]="${prop_value}"
@@ -758,7 +766,9 @@ function inject_default_timer_service() {
                       <file-data-store name=\"default-file-store\" path=\"timer-service-data\" relative-to=\"jboss.server.data.dir\"/>\
                   </data-stores>\
               </timer-service>"
-    sed -i "s|<!-- ##TIMER_SERVICE## -->|${timerservice}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so write here that we found a match
     touch "${TIMER_SERVICE_DATA_STORE_FILE}"
@@ -805,7 +815,9 @@ function inject_timer_service() {
                     <database-data-store name=\"${datastore_name}\" datasource-jndi-name=\"${jndi_name}\" database=\"${databasename}\" partition=\"${pool_name}_part\" refresh-interval=\"${refresh_interval}\"/>
                   </data-stores>\
               </timer-service>"
-    sed -i "s|<!-- ##TIMER_SERVICE## -->|${timerservice}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so write here that we found a match
     touch "${TIMER_SERVICE_DATA_STORE_FILE}"
@@ -1047,7 +1059,9 @@ function inject_datasource() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
-        sed -i "s|<!-- ##DATASOURCES## -->|${datasource}\n<!-- ##DATASOURCES## -->|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}\n<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
       elif [ "${dsConfMode}" = "cli" ]; then
         echo "${datasource}" >> ${CLI_SCRIPT_FILE}
       fi
@@ -1073,7 +1087,9 @@ function inject_default_job_repository() {
   getConfigurationMode "<!-- ##DEFAULT_JOB_REPOSITORY## -->" "dsConfMode"
   if [ "${dsConfMode}" = "xml" ]; then
     local defaultjobrepo="     <default-job-repository name=\"${1}\"/>"
-    sed -i "s|<!-- ##DEFAULT_JOB_REPOSITORY## -->|${defaultjobrepo%$'\n'}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##DEFAULT_JOB_REPOSITORY## -->${AUS}${defaultjobrepo%$'\n'}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so create it to indicate we found a match
     touch "${DEFAULT_JOB_REPOSITORY_FILE}"
@@ -1115,7 +1131,9 @@ function inject_job_repository() {
       </job-repository>\
       <!-- ##JOB_REPOSITORY## -->"
 
-    sed -i "s|<!-- ##JOB_REPOSITORY## -->|${jobrepo%$'\n'}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JOB_REPOSITORY## -->${AUS}${jobrepo%$'\n'}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so create it to indicate we found a match
     touch "${DEFAULT_JOB_REPOSITORY_FILE}"

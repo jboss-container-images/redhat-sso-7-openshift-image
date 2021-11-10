@@ -12,7 +12,9 @@ function galleon_patch_generic_config() {
        fi
      done
      if [ -n "$layers" ]; then
-       sed -i "s|<!-- ##GALLEON_LAYERS## -->|${layers}|" $GALLEON_GENERIC_LAYERS_DEFINITION/config.xml
+       # CIAM-1394 correction
+       sed -i "s${AUS}<!-- ##GALLEON_LAYERS## -->${AUS}${layers}${AUS}" $GALLEON_GENERIC_LAYERS_DEFINITION/config.xml
+       # EOF CIAM-1394 correction
      fi
    fi
    if [ -n "$GALLEON_PROVISION_FEATURE_PACKS" ]; then
@@ -22,7 +24,9 @@ function galleon_patch_generic_config() {
        featurepacks="$featurepacks<location>$fp</location></feature-pack>"
      done
      if [ -n "$featurepacks" ]; then
-       sed -i "s|<!-- ##GALLEON_FEATURE_PACKS## -->|${featurepacks}|" $GALLEON_GENERIC_LAYERS_DEFINITION/pom.xml
+       # CIAM-1394 correction
+       sed -i "s${AUS}<!-- ##GALLEON_FEATURE_PACKS## -->${AUS}${featurepacks}${AUS}" $GALLEON_GENERIC_LAYERS_DEFINITION/pom.xml
+       # EOF CIAM-1394 correction
      fi
    fi
 }

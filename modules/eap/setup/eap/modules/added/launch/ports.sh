@@ -20,7 +20,9 @@ function configure_port_offset() {
     getConfigurationMode "port-offset=\"0\"" "mode"
 
     if [ "${mode}" = "xml" ]; then
-      sed -i "s|port-offset=\"0\"|port-offset=\"${PORT_OFFSET}\"|g" "$CONFIG_FILE"
+      # CIAM-1394 correction
+      sed -i "s${AUS}port-offset=\"0\"${AUS}port-offset=\"${PORT_OFFSET}\"${AUS}g" "$CONFIG_FILE"
+      # EOF CIAM-1394 correction
     elif [ "${mode}" = "cli" ]; then
 
       local cli="
