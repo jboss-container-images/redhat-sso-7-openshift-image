@@ -914,12 +914,11 @@ if [ ! -z "$GALLEON_FP_COMMON_PKG_NAME" ]; then
 fi
 rm -rf $JBOSS_HOME/*
 
-# Start of RH-SSO add-on:
-# -----------------------
+# CIAM-1436 correction
 # Ensure 'wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar', 'wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom', and
 # 'wildfly-provisioning-parent-5.2.0.Alpha2.pom' artifacts are installed to expected location prior launching
-# the following mvn command
-#
+# the build Galleon s2i feature-pack maven command below
+
 declare -ar EXPECTED_WILDFLY_ARTIFACTS=(
   "wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar"
   "wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom"
@@ -935,22 +934,26 @@ do
   fi
 done
 
-# Copy the expected Wildfly artifacts (required by the following call to mvn) from /tmp/artifacts
-# to their respective locations, they are expected at by the mvn tool
+# Install JAR & POM files of 'wildfly-galleon-maven-plugin-5.2.0.Alpha2' dependency
+mvn install:install-file                                                          \
+  -Dfile="/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar"           \
+  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                            \
+  -DpomFile="/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom"        \
+  --settings "${GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML}"
 
-# Deal with 'wildfly-galleon-maven-plugin' artifacts
-mkdir -p "${TMP_GALLEON_LOCAL_MAVEN_REPO}/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2"
-cp "/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar" \
-   "/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom" \
-   "${TMP_GALLEON_LOCAL_MAVEN_REPO}/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2"
+# Install POM file of 'wildfly-provisioning-parent-5.2.0.Alpha2.pom' dependency
+#
+# Note: The '-Dfile' argument in the following command is actually ignored, due
+#       to using the '-Dpackaging=pom' argument, so the corresponding JAR file
+#       of 'wildfly-provisioning-parent' isn't needed.
+mvn install:install-file                                                      \
+  -Dfile="/tmp/artifacts/wildfly-provisioning-parent-5.2.0.Alpha2.pom"        \
+  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                        \
+  -Dpackaging=pom                                                             \
+  -DpomFile="/tmp/artifacts/wildfly-provisioning-parent-5.2.0.Alpha2.pom"     \
+  --settings "${GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML}"
 
-# Deal with 'wildfly-provisioning-parent' artifact
-mkdir -p "${TMP_GALLEON_LOCAL_MAVEN_REPO}/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.2.0.Alpha2"
-cp "/tmp/artifacts/wildfly-provisioning-parent-5.2.0.Alpha2.pom" \
-   "${TMP_GALLEON_LOCAL_MAVEN_REPO}/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.2.0.Alpha2"
-
-# --------------------
-# End of RH-SSO add-on
+# EOF CIAM-1436 correction
 
 # Build Galleon s2i feature-pack and install it in local maven repository
 mvn -f $GALLEON_FP_PATH/pom.xml install \
