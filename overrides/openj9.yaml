@@ -3,6 +3,14 @@ schema_version: 1
 name: "rh-sso-7/sso74-openj9-openshift-rhel8"
 description: "Red Hat Single Sign-On 7.4 on OpenJ9 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
+envs:
+    - name: "JAVA_SECURITY_FILE"
+      value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/conf/security/java.security"
+    - name: "JAVA_HOME"
+      value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/"
+    - name: "OPENJ9_JAVA_OPTIONS"
+      value: "-Xjit:{java/lang/invoke/AsTypeHandle.invokeExact_thunkArchetype*}(dontInline={java/lang/invoke/VirtualHandle.invokeExact_thunkArchetype*})"
+
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso74-openj9-openshift-rhel8-container"
