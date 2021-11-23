@@ -139,8 +139,8 @@ artifacts:
 
      - name: jboss-eap-7.3.10-patch
        target: jboss-eap-7.3.10-patch.zip
-       md5: 8b1f61e043be8fa861331cc9824a7a8b
-       url: http://$DOWNLOAD_SERVER/devel/candidates/JBEAP/JBEAP-7.3.10.GA-CR1/jboss-eap-7.3.10.GA-CR1-patch.zip
+       md5: 04b1dd4df9a979c47610be53a971992e
+       url: http://$DOWNLOAD_SERVER/devel/candidates/JBEAP/JBEAP-7.3.10.GA-CR2/jboss-eap-7.3.10.GA-CR2-patch.zip
 
 run:
       cmd:
