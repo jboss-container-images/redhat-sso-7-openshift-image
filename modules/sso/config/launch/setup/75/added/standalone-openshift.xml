@@ -346,6 +346,7 @@
                 </mechanism-provider-filtering-sasl-server-factory>
                 <provider-sasl-server-factory name="global"/>
             </sasl>
+            <!-- ##ELYTRON_TLS## -->
             <tls>
                 <key-stores>
                     <key-store name="applicationKS">
