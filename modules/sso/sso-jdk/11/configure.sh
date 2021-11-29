@@ -2,6 +2,10 @@
 # Configure module
 set -e
 
+# Import RH-SSO global variables & functions to image build-time
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 SCRIPT_DIR=$(dirname $0)
 ARTIFACTS_DIR=${SCRIPT_DIR}/artifacts
 
@@ -33,7 +37,9 @@ fi
 # Update securerandom.source for quicker starts (must be done after removing jdk 11, or it will hit the wrong files)
 SECURERANDOM=securerandom.source
 if grep -q "^$SECURERANDOM=.*" $JAVA_SECURITY_FILE; then
-    sed -i "s|^$SECURERANDOM=.*|$SECURERANDOM=file:/dev/urandom|" $JAVA_SECURITY_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}^$SECURERANDOM=.*${AUS}$SECURERANDOM=file:/dev/urandom${AUS}" $JAVA_SECURITY_FILE
+    # EOF CIAM-1394 correction
 else
     echo $SECURERANDOM=file:/dev/urandom >> $JAVA_SECURITY_FILE
 fi

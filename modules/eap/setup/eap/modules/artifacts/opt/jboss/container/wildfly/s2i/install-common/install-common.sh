@@ -104,7 +104,9 @@ function configure_drivers(){
 
       if [ -n "$drivers" ] ; then
         if [ "${configMode}" = "xml" ]; then
-          sed -i "s|<!-- ##DRIVERS## -->|${drivers}<!-- ##DRIVERS## -->|" $CONFIG_FILE
+          # CIAM-1394 correction
+          sed -i "s${AUS}<!-- ##DRIVERS## -->${AUS}${drivers}<!-- ##DRIVERS## -->${AUS}" $CONFIG_FILE
+          # EOF CIAM-1394 correction
         elif [ "${configMode}" = "cli" ]; then
           if [ "${CONFIG_ADJUSTMENT_MODE,,}" = "cli" ]; then
             # CLI execution to add current driver(s)

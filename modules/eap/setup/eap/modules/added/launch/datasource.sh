@@ -37,7 +37,9 @@ function configureEnv() {
   # TODO - I don't think this is being used any more? The real action seems to be in tx-datasource.sh
   if [ -n "$JDBC_STORE_JNDI_NAME" ]; then
     local jdbcStore="<jdbc-store datasource-jndi-name=\"${JDBC_STORE_JNDI_NAME}\"/>"
-    sed -i "s|<!-- ##JDBC_STORE## -->|${jdbcStore}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JDBC_STORE## -->${AUS}${jdbcStore}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   fi
 
 }

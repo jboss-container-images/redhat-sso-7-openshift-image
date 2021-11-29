@@ -151,7 +151,9 @@ function _add_maven_proxy() {
   xml="$xml\
        </proxy>"
     local sub="<!-- ### configured http proxy ### -->"
-    sed -i "s^${sub}^${xml}^" "$settings"
+    # CIAM-1394 correction
+    sed -i "s${AUS}${sub}${AUS}${xml}${AUS}" "$settings"
+    # EOF CIAM-1394 correction
   fi
 }
 
@@ -231,7 +233,9 @@ function _add_maven_mirror() {
     </mirror>\n\
     <!-- ### configured mirrors ### -->"
 
-  sed -i "s|<!-- ### configured mirrors ### -->|$xml|" "${settings}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### configured mirrors ### -->${AUS}$xml${AUS}" "${settings}"
+  # EOF CIAM-1394 correction
 
 }
 
@@ -241,7 +245,9 @@ function add_maven_repos() {
   # set the local repository
   local local_repo_xml="\n\
   <localRepository>${MAVEN_LOCAL_REPO}</localRepository>"
-  sed -i "s|<!-- ### configured local repository ### -->|${local_repo_xml}|" "${settings}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### configured local repository ### -->${AUS}${local_repo_xml}${AUS}" "${settings}"
+  # EOF CIAM-1394 correction
 
   # single remote repository scenario: respect fully qualified url if specified, otherwise find and use service
   local single_repo_url="${MAVEN_REPO_URL}"
@@ -344,13 +350,17 @@ function _add_maven_repo_profile() {
     </repositories>\n\
   </profile>\n\
   <!-- ### configured profiles ### -->"
-  sed -i "s|<!-- ### configured profiles ### -->|${xml}|" "${settings}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### configured profiles ### -->${AUS}${xml}${AUS}" "${settings}"
+  # EOF CIAM-1394 correction
 
   # activate the configured profile
   xml="\n\
     <activeProfile>${profile_id}</activeProfile>\n\
     <!-- ### active profiles ### -->"
-  sed -i "s|<!-- ### active profiles ### -->|${xml}|" "${settings}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### active profiles ### -->${AUS}${xml}${AUS}" "${settings}"
+  # EOF CIAM-1394 correction
 }
 
 # private
@@ -390,7 +400,9 @@ function _add_maven_repo_server() {
   xml="${xml}\n\
     </server>\n\
     <!-- ### configured servers ### -->"
-  sed -i "s|<!-- ### configured servers ### -->|${xml}|" "${settings}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### configured servers ### -->${AUS}${xml}${AUS}" "${settings}"
+  # EOF CIAM-1394 correction
 }
 
 # private

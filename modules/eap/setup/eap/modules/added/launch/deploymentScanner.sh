@@ -8,7 +8,9 @@ function configure_deployment_scanner() {
   local auto_deploy_exploded
   local explicitly_set=false
   if [[ -n "$JAVA_OPTS_APPEND" ]] && [[ $JAVA_OPTS_APPEND == *"Xdebug"* ]]; then
-    sed -i "s|##AUTO_DEPLOY_EXPLODED##|true|" "$CONFIG_FILE"
+    # CIAM-1394 correction
+    sed -i "s${AUS}##AUTO_DEPLOY_EXPLODED##${AUS}true${AUS}" "$CONFIG_FILE"
+    # EOF CIAM-1394 correction
     auto_deploy_exploded=true
   elif [ -n "$AUTO_DEPLOY_EXPLODED" ] || [ -n "$OPENSHIFT_AUTO_DEPLOY_EXPLODED" ]; then
     auto_deploy_exploded="${AUTO_DEPLOY_EXPLODED:-${OPENSHIFT_AUTO_DEPLOY_EXPLODED}}"
@@ -22,7 +24,9 @@ function configure_deployment_scanner() {
   getConfigurationMode "##AUTO_DEPLOY_EXPLODED##" "configure_mode"
 
   if [ "${configure_mode}" = "xml" ]; then
-    sed -i "s|##AUTO_DEPLOY_EXPLODED##|${auto_deploy_exploded}|" "$CONFIG_FILE"
+    # CIAM-1394 correction
+    sed -i "s${AUS}##AUTO_DEPLOY_EXPLODED##${AUS}${auto_deploy_exploded}${AUS}" "$CONFIG_FILE"
+    # EOF CIAM-1394 correction
   elif [ "${configure_mode}" = "cli" ] && [ "${explicitly_set}" = "true" ]; then
     # We only do this if the variable was explicitly set. Otherwise we assume the user has provided their own configuration
 

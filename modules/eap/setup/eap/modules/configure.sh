@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Import RH-SSO global variables & functions to image build-time
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 ### Start of: 'jboss-eap-7-image/modules/eap-74-galleon/7.4.0' module
 # Configure module
 
@@ -387,7 +391,9 @@ popd
 cp $HOME/.m2/settings.xml "$GALLEON_MAVEN_SETTINGS_XML"
 local_repo_xml="\n\
   <localRepository>${GALLEON_LOCAL_MAVEN_REPO}</localRepository>"
-sed -i "s|<!-- ### configured local repository ### -->|${local_repo_xml}|" "$GALLEON_MAVEN_SETTINGS_XML"
+# CIAM-1394 correction
+sed -i "s${AUS}<!-- ### configured local repository ### -->${AUS}${local_repo_xml}${AUS}" "$GALLEON_MAVEN_SETTINGS_XML"
+# EOF CIAM-1394 correction
 chown jboss:root $GALLEON_MAVEN_SETTINGS_XML
 chmod ug+rwX $GALLEON_MAVEN_SETTINGS_XML
 
@@ -396,7 +402,9 @@ if [ ! -f "$GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML" ]; then
   cp $HOME/.m2/settings.xml "$GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML"
   local_repo_xml="\n\
     <localRepository>${TMP_GALLEON_LOCAL_MAVEN_REPO}</localRepository>"
-  sed -i "s|<!-- ### configured local repository ### -->|${local_repo_xml}|" "$GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ### configured local repository ### -->${AUS}${local_repo_xml}${AUS}" "$GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML"
+  # EOF CIAM-1394 correction
   chown jboss:root $GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
   chmod ug+rwX $GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
 fi
@@ -436,7 +444,9 @@ galleon_profile="<profile>\n\
       </pluginRepositories>\n\
     </profile>\n\
 "
-sed -i "s|<\!-- ### configured profiles ### -->|$galleon_profile <\!-- ### configured profiles ### -->|" $HOME/.m2/settings.xml
+# CIAM-1394 correction
+sed -i "s${AUS}<\!-- ### configured profiles ### -->${AUS}$galleon_profile <\!-- ### configured profiles ### -->${AUS}" $HOME/.m2/settings.xml
+# EOF CIAM-1394 correction
 ### End of: 'wildfly-cekit-modules/jboss/container/wildfly/s2i/bash' module
 
 ### Start of: 'jboss-eap-modules/jboss/container/eap/s2i/galleon' module
@@ -1088,8 +1098,10 @@ EOF
 # Escape all newlines in the value of 'keycloakModelInfinispanDependency'
 keycloakModelInfinispanDependency="${keycloakModelInfinispanDependency//$'\n'/\\n}"
 
+# CIAM-1394 correction
 # Actually append the new "org.keycloak.keycloak-model-infinispan" dependency line
-sed -i "s|${fourSpaces}</dependencies>|${keycloakModelInfinispanDependency}\n${fourSpaces}</dependencies>|" \
+sed -i "s${AUS}${fourSpaces}</dependencies>${AUS}${keycloakModelInfinispanDependency}\n${fourSpaces}</dependencies>${AUS}" \
     "${wildflyClusteringInfinispanSpiModuleXml}"
+# EOF CIAM-1394 correction
 
 ### CIAM-743 -- End of RH-SSO add-on

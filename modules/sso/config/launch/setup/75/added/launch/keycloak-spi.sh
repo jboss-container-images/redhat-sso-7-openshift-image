@@ -22,7 +22,9 @@ function add_truststore() {
 
     local truststore="<spi name=\"truststore\"><provider name=\"file\" enabled=\"true\"><properties><property name=\"file\" value=\"${SSO_TRUSTSTORE_DIR}/${SSO_TRUSTSTORE}\"/><property name=\"password\" value=\"${SSO_TRUSTSTORE_PASSWORD}\"/><property name=\"hostname-verification-policy\" value=\"WILDCARD\"/><property name=\"disabled\" value=\"false\"/></properties></provider></spi>"
 
-    sed -i "s|<!-- ##SSO_TRUSTSTORE## -->|${truststore}|" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##SSO_TRUSTSTORE## -->${AUS}${truststore}${AUS}" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
 
   fi
 }
@@ -32,7 +34,9 @@ function add_vault() {
   if [ -n "$SSO_VAULT_DIR" ]; then
 
     local vault="<spi name=\"vault\"><default-provider>files-plaintext</default-provider><provider name=\"files-plaintext\" enabled=\"true\"><properties><property name=\"dir\" value=\"${SSO_VAULT_DIR}\"/></properties></provider></spi>"
-    sed -i "s|<!-- ##SSO_VAULT_CONFIG## -->|${vault}|" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##SSO_VAULT_CONFIG## -->${AUS}${vault}${AUS}" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
   fi
 }
 
@@ -47,7 +51,9 @@ function set_server_hostname_spi_to_default() {
     fi
     local -r hostname_spi="<spi name=\"hostname\"><default-provider>default</default-provider><provider name=\"default\" enabled=\"true\"><properties>${properties}</properties></provider></spi>"
 
-    sed -i "s|<!-- ##SSO_SERVER_HOSTNAME_SPI## -->|${hostname_spi}|" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##SSO_SERVER_HOSTNAME_SPI## -->${AUS}${hostname_spi}${AUS}" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
 
   fi
 }
@@ -65,7 +71,9 @@ function set_server_hostname_spi_to_fixed() {
     local -r requested_hostname="$1"
     local -r hostname_spi="<spi name=\"hostname\"><default-provider>fixed</default-provider><provider name=\"fixed\" enabled=\"true\"><properties><property name=\"hostname\" value=\"${requested_hostname}\"/><property name=\"httpPort\" value=\"-1\"/><property name=\"httpsPort\" value=\"-1\"/><property name=\"alwaysHttps\" value=\"false\"/></properties></provider></spi>"
 
-    sed -i "s|<!-- ##SSO_SERVER_HOSTNAME_SPI## -->|${hostname_spi}|" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##SSO_SERVER_HOSTNAME_SPI## -->${AUS}${hostname_spi}${AUS}" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
 
   fi
 }

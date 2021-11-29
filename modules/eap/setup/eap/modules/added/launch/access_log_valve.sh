@@ -46,7 +46,9 @@ function configure_access_log_valve() {
     if [ "${mode}" == "xml" ]; then
       local pattern=$(getPattern "add-xml")
       local valve="<access-log use-server-log=\"true\" pattern=\"${pattern}\"/>"
-      sed -i "s|<!-- ##ACCESS_LOG_VALVE## -->|${valve}|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##ACCESS_LOG_VALVE## -->${AUS}${valve}${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
     else
             # A lot of XPath here since we need to do more advanced stuff than CLI allows us to...
 
@@ -184,7 +186,9 @@ function configure_access_log_handler() {
     getConfigurationMode "<!-- ##ACCESS_LOG_HANDLER## -->" "mode"
 
     if [ "${mode}" = "xml" ]; then
-      sed -i "s|<!-- ##ACCESS_LOG_HANDLER## -->|<logger category=\"${log_category}\"><level name=\"TRACE\"/></logger>|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##ACCESS_LOG_HANDLER## -->${AUS}<logger category=\"${log_category}\"><level name=\"TRACE\"/></logger>${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
     elif [ "${mode}" = "cli" ]; then
 
       if [ -z "${ENABLE_ACCESS_LOG_TRACE}" ] || [ "${ENABLE_ACCESS_LOG_TRACE^^}" != "TRUE" ]; then
