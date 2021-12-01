@@ -49,10 +49,16 @@ function clearDatasourceEnv() {
   unset ${prefix}_BACKGROUND_VALIDATION
   unset ${prefix}_BACKGROUND_VALIDATION_MILLIS
 
-  for xa_prop in $(compgen -v | grep -s "${prefix}_XA_CONNECTION_PROPERTY_"); do
-    unset ${xa_prop}
+### Start of RH-SSO add-on -- KEYCLOAK-15633:
+### -----------------------------------------
+### Remove / undefine also "${prefix}_CONNECTION_PROPERTY_*" env vars when
+### removing / undefining "${prefix}_XA_CONNECTION_PROPERTY_*" env vars
+  for property in $(compgen -v | grep -oPs "${prefix}(|_XA)_CONNECTION_PROPERTY_"); do
+    unset "${property}"
   done
 }
+### End of RH-SSO add-on
+### --------------------
 
 function clearDatasourcesEnv() {
   IFS=',' read -a db_backends <<< $DB_SERVICE_PREFIX_MAPPING
@@ -103,7 +109,9 @@ function inject_internal_datasources() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
-        sed -i "s|<!-- ##DATASOURCES## -->|${datasource}<!-- ##DATASOURCES## -->|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
       elif [ "${dsConfMode}" = "cli" ]; then
         echo "${datasource}" >> ${CLI_SCRIPT_FILE}
       fi
@@ -192,9 +200,11 @@ function writeEEDefaultDatasourceXml() {
     defaultDatasource=""
   fi
   # new format replacement : datasource="##DEFAULT_DATASOURCE##"
-  sed -i "s|datasource=\"##DEFAULT_DATASOURCE##\"|${defaultDatasource}|" $CONFIG_FILE
+  # CIAM-1394 correction
+  sed -i "s${AUS}datasource=\"##DEFAULT_DATASOURCE##\"${AUS}${defaultDatasource}${AUS}" $CONFIG_FILE
   # old format (for compat)
-  sed -i "s|<!-- ##DEFAULT_DATASOURCE## -->|${defaultDatasource}|" $CONFIG_FILE
+  sed -i "s${AUS}<!-- ##DEFAULT_DATASOURCE## -->${AUS}${defaultDatasource}${AUS}" $CONFIG_FILE
+  # EOF CIAM-1394 correction
 }
 
 function writeEEDefaultDatasourceCli() {
@@ -372,42 +382,101 @@ function generate_external_datasource() {
   fi
 }
 
-function generate_external_datasource_xml() {
+### Start of RH-SSO add-on -- KEYCLOAK-15633:
+### -----------------------------------------
+### Allow specification of datasource connection properties for:
+### 1) XA datasources via the DB_XA_CONNECTION_PROPERTY_<property_name> and
+### 2) Non-XA datasources via the DB_CONNECTION_PROPERTY_<property_name>
+###
+### environment variable(s) defined on the container image. The <property_name>
+### in the above expressions is the actual name of the connection property to
+### be set on the underlying datasource.
+###
+function inject_connection_properties_to_datasource_xml() {
+  local ds="${1}"
+
   local failed="false"
+  local is_xa_ds="false"
+
+  if [[ "${ds}" =~ \<datasource[[:space:]].*$ ]]; then
+    local conn_prop_env_var="${prefix}_CONNECTION_PROPERTY_"
+    local conn_prop_xml_elem_name="connection-property"
+  elif [[ "${ds}" =~ \<xa-datasource[[:space:]].*$ ]]; then
+    local conn_prop_env_var="${prefix}_XA_CONNECTION_PROPERTY_"
+    local conn_prop_xml_elem_name="xa-datasource-property"
+    is_xa_ds="true"
+  else
+    log_warning "Unable to determine if '${ds}' datasource is a non-XA or XA one."
+    log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
+    failed="true"
+  fi
+
+  declare -ra conn_props=($(compgen -v | grep -s "${conn_prop_env_var}"))
+  if [ "${is_xa_ds}" == "true" ] && [ -z "${conn_props}" ]; then
+    log_warning "At least one ${prefix}_XA_CONNECTION_PROPERTY_property for datasource ${service_name} is required."
+    log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
+    failed="true"
+  fi
+
+  if [ "${failed}" != "true" ]; then
+    for property in "${conn_props[@]}"; do
+      # CIAM-1394 correction
+      prop_name=$(sed -e "s${AUS}${conn_prop_env_var}${AUS}${AUS}g" <<< "${property}")
+      # EOF CIAM-1394 correction
+      prop_value=$(find_env "${property}")
+      if [ ! -z "${prop_value}" ]; then
+          ds="${ds}
+               <${conn_prop_xml_elem_name} name=\"${prop_name}\">${prop_value}</${conn_prop_xml_elem_name}>"
+      fi
+    done
+  fi
+
+  # 'ds' value of empty string indicates an error occurred earlier
+  if [ "${failed}" == "true" ]; then
+    echo ""
+  else
+    echo "${ds}"
+  fi
+}
+### End of RH-SSO add-on
+### --------------------
+
+function generate_external_datasource_xml() {
+
+### Start of RH-SSO add-on -- KEYCLOAK-15633:
+### -----------------------------------------
+### Modify the 'generate_external_datasource_xml()' method to
+### allow specification of connection properties also for non-XA datasources
+
+  local failed="false"
+  local ds_universal_attrs="jndi-name=\"${jndi_name}\" pool-name=\"${pool_name}\" enabled=\"true\" use-java-context=\"true\" statistics-enabled=\"\${wildfly.datasources.statistics-enabled:\${wildfly.statistics-enabled:false}}\""
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
-    ds="<datasource jta=\"${jta}\" jndi-name=\"${jndi_name}\" pool-name=\"${pool_name}\" enabled=\"true\" use-java-context=\"true\" statistics-enabled=\"\${wildfly.datasources.statistics-enabled:\${wildfly.statistics-enabled:false}}\">
-          <connection-url>${url}</connection-url>
-          <driver>$driver</driver>"
+    ds="<datasource jta=\"${jta}\" ${ds_universal_attrs}>
+          <connection-url>${url}</connection-url>"
   else
-    ds=" <xa-datasource jndi-name=\"${jndi_name}\" pool-name=\"${pool_name}\" enabled=\"true\" use-java-context=\"true\" statistics-enabled=\"\${wildfly.datasources.statistics-enabled:\${wildfly.statistics-enabled:false}}\">"
-    local xa_props=$(compgen -v | grep -s "${prefix}_XA_CONNECTION_PROPERTY_")
-    if [ -z "$xa_props" ]; then
-      log_warning "At least one ${prefix}_XA_CONNECTION_PROPERTY_property for datasource ${service_name} is required. Datasource will not be configured."
-      failed="true"
-    else
-
-      for xa_prop in $(echo $xa_props); do
-        prop_name=$(echo "${xa_prop}" | sed -e "s/${prefix}_XA_CONNECTION_PROPERTY_//g")
-        prop_val=$(find_env $xa_prop)
-        if [ ! -z ${prop_val} ]; then
-          ds="$ds <xa-datasource-property name=\"${prop_name}\">${prop_val}</xa-datasource-property>"
-        fi
-      done
-
-      ds="$ds
-             <driver>${driver}</driver>"
-    fi
+    ds="<xa-datasource ${ds_universal_attrs}>"
   fi
+
+  ds=$(inject_connection_properties_to_datasource_xml "${ds}")
+  # 'ds' value of empty string indicates an error occurred earlier
+  if [ "${ds}" == "" ]; then
+    failed="true"
+  fi
+
+  ds="$ds
+       <driver>${driver}</driver>"
+### End of RH-SSO add-on
+### --------------------
 
   if [ -n "$tx_isolation" ]; then
     ds="$ds
-             <transaction-isolation>$tx_isolation</transaction-isolation>"
+            <transaction-isolation>$tx_isolation</transaction-isolation>"
   fi
 
   if [ -n "$min_pool_size" ] || [ -n "$max_pool_size" ]; then
     if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
-       ds="$ds
+      ds="$ds
              <pool>"
     else
       ds="$ds
@@ -473,9 +542,19 @@ function generate_external_datasource_xml() {
   fi
 }
 
+### Start of RH-SSO add-on -- KEYCLOAK-15633:
+### -----------------------------------------
+### Allow specification of datasource connection properties for:
+### 1) XA datasources via the DB_XA_CONNECTION_PROPERTY_<property_name> and
+### 2) Non-XA datasources via the DB_CONNECTION_PROPERTY_<property_name>
+###
+### environment variable(s) defined on the container image. The <property_name>
+### in the above expressions is the actual name of the connection property to
+### be set on the underlying datasource.
+###
 function generate_external_datasource_cli() {
   local failed="false"
-
+  local is_xa_ds="false"
   local subsystem_addr="/subsystem=datasources"
   local ds_resource="${subsystem_addr}"
   local other_ds_resource
@@ -487,11 +566,14 @@ function generate_external_datasource_cli() {
   ds_tmp_key_values["statistics-enabled"]="\${wildfly.datasources.statistics-enabled:\${wildfly.statistics-enabled:false}}"
   ds_tmp_key_values["driver-name"]="${driver}"
 
-  local -A ds_tmp_xa_connection_properties
+  local -A ds_tmp_connection_properties
 
   if [ -n "$NON_XA_DATASOURCE" ] && [ "$NON_XA_DATASOURCE" = "true" ]; then
     ds_resource="${subsystem_addr}/data-source=${pool_name}"
     other_ds_resource="${subsystem_addr}/xa-data-source=${pool_name}"
+
+    local conn_prop_env_var="${prefix}_CONNECTION_PROPERTY_"
+    local conn_prop_cli_elem_name="connection-properties"
 
     ds_tmp_key_values["jta"]="${jta}"
     ds_tmp_key_values['connection-url']="${url}"
@@ -500,19 +582,27 @@ function generate_external_datasource_cli() {
     ds_resource="${subsystem_addr}/xa-data-source=${pool_name}"
     other_ds_resource="${subsystem_addr}/data-source=${pool_name}"
 
-    local xa_props=$(compgen -v | grep -s "${prefix}_XA_CONNECTION_PROPERTY_")
-    if [ -z "$xa_props" ] && [ "$driver" != "postgresql" ] && [ "$driver" != "mysql" ]; then
-      log_warning "At least one ${prefix}_XA_CONNECTION_PROPERTY_property for datasource ${service_name} is required. Datasource will not be configured."
+    local conn_prop_env_var="${prefix}_XA_CONNECTION_PROPERTY_"
+    local conn_prop_cli_elem_name="xa-datasource-properties"
+    is_xa_ds="true"
+
+    declare -ra conn_props=($(compgen -v | grep -s "${conn_prop_env_var}"))
+    if [ "${is_xa_ds}" == "true" ] && [ -z "${conn_props}" ]; then
+      log_warning "At least one ${prefix}_XA_CONNECTION_PROPERTY_property for datasource ${service_name} is required."
+      log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
       failed="true"
     else
-
-      for xa_prop in $(echo $xa_props); do
-        prop_name=$(echo "${xa_prop}" | sed -e "s/${prefix}_XA_CONNECTION_PROPERTY_//g")
-        prop_val=$(find_env $xa_prop)
-        if [ ! -z ${prop_val} ]; then
-          ds_tmp_xa_connection_properties["$prop_name"]="$prop_val"
-        fi
-      done
+      if [ "${failed}" != "true" ]; then
+        for property in "${conn_props[@]}"; do
+          # CIAM-1394 correction
+          prop_name=$(sed -e "s${AUS}${conn_prop_env_var}${AUS}${AUS}g" <<< "${property}")
+          # EOF CIAM-1394 correction
+          prop_value=$(find_env "${property}")
+          if [ ! -z "${prop_value}" ]; then
+            ds_tmp_connection_properties["${prop_name}"]="${prop_value}"
+          fi
+        done
+      fi
     fi
   fi
 
@@ -559,11 +649,11 @@ function generate_external_datasource_cli() {
   done
   ds_tmp_add="${ds_tmp_add})"
 
-  # Add the xa-ds properties
-  local ds_tmp_xa_properties
-  for key in "${!ds_tmp_xa_connection_properties[@]}"; do
-    ds_tmp_xa_properties="${ds_tmp_xa_properties}
-        $ds_resource/xa-datasource-properties=${key}:add(value=\"${ds_tmp_xa_connection_properties[$key]}\")
+  # Add the connection properties to both XA & non-XA datasource
+  local ds_tmp_conn_props_add
+  for key in "${!ds_tmp_connection_properties[@]}"; do
+    ds_tmp_conn_props_add="${ds_tmp_conn_props_add}
+        $ds_resource/${conn_prop_cli_elem_name}=${key}:add(value=\"${ds_tmp_connection_properties[$key]}\")
     "
   done
 
@@ -589,9 +679,12 @@ function generate_external_datasource_cli() {
 
     batch
     ${ds_tmp_add}
-    ${ds_tmp_xa_properties}
+    ${ds_tmp_conn_props_add}
     run-batch
   "
+### End of RH-SSO add-on
+### --------------------
+
   if [ "$failed" == "true" ]; then
     echo ""
   else
@@ -673,7 +766,9 @@ function inject_default_timer_service() {
                       <file-data-store name=\"default-file-store\" path=\"timer-service-data\" relative-to=\"jboss.server.data.dir\"/>\
                   </data-stores>\
               </timer-service>"
-    sed -i "s|<!-- ##TIMER_SERVICE## -->|${timerservice}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so write here that we found a match
     touch "${TIMER_SERVICE_DATA_STORE_FILE}"
@@ -720,7 +815,9 @@ function inject_timer_service() {
                     <database-data-store name=\"${datastore_name}\" datasource-jndi-name=\"${jndi_name}\" database=\"${databasename}\" partition=\"${pool_name}_part\" refresh-interval=\"${refresh_interval}\"/>
                   </data-stores>\
               </timer-service>"
-    sed -i "s|<!-- ##TIMER_SERVICE## -->|${timerservice}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so write here that we found a match
     touch "${TIMER_SERVICE_DATA_STORE_FILE}"
@@ -810,10 +907,12 @@ function map_properties() {
     if [ -z "$(eval echo \$${prefix}_XA_CONNECTION_PROPERTY_URL)" ]; then
       if [ -z "${!serverNameVar}" ] || [ -z "${!portVar}" ] || [ -z "${!databaseNameVar}" ]; then
         if [ "$prefix" != "$service" ]; then
-          log_warning "Missing configuration for datasource $prefix. ${service}_SERVICE_HOST, ${service}_SERVICE_PORT, and/or ${prefix}_DATABASE is missing. Datasource will not be configured."
+          log_warning "Missing configuration for datasource $prefix. ${service}_SERVICE_HOST, ${service}_SERVICE_PORT, and/or ${prefix}_DATABASE is missing."
+          log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
           eval ${invalidVar}="true"
         else
-          log_warning "Missing configuration for XA datasource $prefix. Either ${prefix}_XA_CONNECTION_PROPERTY_URL or $serverNameVar, and $portVar, and $databaseNameVar is required. Datasource will not be configured."
+          log_warning "Missing configuration for XA datasource $prefix. Either ${prefix}_XA_CONNECTION_PROPERTY_URL or $serverNameVar, and $portVar, and $databaseNameVar is required."
+          log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
           eval ${invalidVar}="true"
         fi
       else
@@ -823,7 +922,8 @@ function map_properties() {
       fi
     fi
   else
-    log_warning "Missing configuration for datasource $prefix. ${service}_SERVICE_HOST, ${service}_SERVICE_PORT, and/or ${prefix}_DATABASE is missing. Datasource will not be configured."
+    log_warning "Missing configuration for datasource $prefix. ${service}_SERVICE_HOST, ${service}_SERVICE_PORT, and/or ${prefix}_DATABASE is missing."
+    log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
     eval ${invalidVar}="true"
   fi
 
@@ -950,7 +1050,8 @@ function inject_datasource() {
   fi
 
   if [ -z "$driver" ]; then
-    log_warning "DRIVER not set for datasource ${service_name}. Datasource will not be configured."
+    log_warning "DRIVER not set for datasource ${service_name}."
+    log_warning "Datasource '$(basename ${jndi_name})' will not be configured."
   else
     datasource=$(generate_datasource "${service,,}-${prefix}" "$jndi" "$username" "$password" "$host" "$port" "$database" "$checker" "$sorter" "$driver" "$service_name" "$jta" "$validate" "$url")
 
@@ -958,7 +1059,9 @@ function inject_datasource() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
-        sed -i "s|<!-- ##DATASOURCES## -->|${datasource}\n<!-- ##DATASOURCES## -->|" $CONFIG_FILE
+        # CIAM-1394 correction
+        sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}\n<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
+        # EOF CIAM-1394 correction
       elif [ "${dsConfMode}" = "cli" ]; then
         echo "${datasource}" >> ${CLI_SCRIPT_FILE}
       fi
@@ -984,7 +1087,9 @@ function inject_default_job_repository() {
   getConfigurationMode "<!-- ##DEFAULT_JOB_REPOSITORY## -->" "dsConfMode"
   if [ "${dsConfMode}" = "xml" ]; then
     local defaultjobrepo="     <default-job-repository name=\"${1}\"/>"
-    sed -i "s|<!-- ##DEFAULT_JOB_REPOSITORY## -->|${defaultjobrepo%$'\n'}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##DEFAULT_JOB_REPOSITORY## -->${AUS}${defaultjobrepo%$'\n'}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so create it to indicate we found a match
     touch "${DEFAULT_JOB_REPOSITORY_FILE}"
@@ -1026,7 +1131,9 @@ function inject_job_repository() {
       </job-repository>\
       <!-- ##JOB_REPOSITORY## -->"
 
-    sed -i "s|<!-- ##JOB_REPOSITORY## -->|${jobrepo%$'\n'}|" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JOB_REPOSITORY## -->${AUS}${jobrepo%$'\n'}${AUS}" $CONFIG_FILE
+    # EOF CIAM-1394 correction
 
     # We will use this file for validation later, so create it to indicate we found a match
     touch "${DEFAULT_JOB_REPOSITORY_FILE}"

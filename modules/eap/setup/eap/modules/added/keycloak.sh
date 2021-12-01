@@ -162,7 +162,9 @@ function configure_cli_keycloak() {
           keycloak_subsystem=$(cat "${SECURE_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
           keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak:1.1\">${keycloak_subsystem}</subsystem>${SUBSYSTEM_END_MARKER}"
 
-          sed -i "s|${SUBSYSTEM_END_MARKER}|${keycloak_subsystem}|" "${CONFIG_FILE}"
+          # CIAM-1394 correction
+          sed -i "s${AUS}${SUBSYSTEM_END_MARKER}${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
+          # EOF CIAM-1394 correction
 
           oidc_elytron="$(configure_OIDC_elytron $id)"
           ejb_config="$(configure_ejb $id $app_sec_domain)"
@@ -183,7 +185,9 @@ function configure_cli_keycloak() {
           keycloak_subsystem=$(cat "${SECURE_SAML_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
           keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak-saml:1.1\">${keycloak_subsystem}</subsystem>${SUBSYSTEM_END_MARKER}"
 
-          sed -i "s|${SUBSYSTEM_END_MARKER}|${keycloak_subsystem}|" "${CONFIG_FILE}"
+          # CIAM-1394 correction
+          sed -i "s${AUS}${SUBSYSTEM_END_MARKER}${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
+          # EOF CIAM-1394 correction
 
           saml_elytron="$(configure_SAML_elytron $id)"
           if [ "$useLegacySecurity" == "false" ]; then
@@ -554,14 +558,18 @@ function configure_keycloak() {
       keycloak_subsystem=$(cat "${SECURE_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
       keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak:1.1\">${keycloak_subsystem}</subsystem>"
 
-      sed -i "s|<!-- ##KEYCLOAK_SUBSYSTEM## -->|${keycloak_subsystem}|" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##KEYCLOAK_SUBSYSTEM## -->${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
 
     if [ -f $SECURE_SAML_DEPLOYMENTS ]; then
       keycloak_subsystem=$(cat "${SECURE_SAML_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
       keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak-saml:1.1\">${keycloak_subsystem}</subsystem>"
 
-      sed -i "s|<!-- ##KEYCLOAK_SAML_SUBSYSTEM## -->|${keycloak_subsystem}|" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##KEYCLOAK_SAML_SUBSYSTEM## -->${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
 
     enable_keycloak_deployments
@@ -590,31 +598,45 @@ function configure_keycloak() {
     keycloak_saml_sp=$(cat "${KEYCLOAK_SAML_SP_SUBSYSTEM_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
     configure_subsystem $SAML ${KEYCLOAK_SAML_REALM_SUBSYSTEM_FILE} "##KEYCLOAK_SAML_SUBSYSTEM##" "saml" ${KEYCLOAK_SAML_DEPLOYMENT_SUBSYSTEM_FILE}
 
-    sed -i "s|##KEYCLOAK_REALM##|${SSO_REALM}|g" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}##KEYCLOAK_REALM##${AUS}${SSO_REALM}${AUS}g" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
 
     if [ -n "$SSO_PUBLIC_KEY" ]; then
-      sed -i "s|<!-- ##KEYCLOAK_PUBLIC_KEY## -->|<realm-public-key>${SSO_PUBLIC_KEY}</realm-public-key>|g" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##KEYCLOAK_PUBLIC_KEY## -->${AUS}<realm-public-key>${SSO_PUBLIC_KEY}</realm-public-key>${AUS}g" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_TRUSTSTORE" ] && [ -n "$SSO_TRUSTSTORE_DIR" ]; then
-      sed -i "s|<!-- ##KEYCLOAK_TRUSTSTORE## -->|<truststore>${SSO_TRUSTSTORE_DIR}/${SSO_TRUSTSTORE}</truststore><truststore-password>${SSO_TRUSTSTORE_PASSWORD}</truststore-password>|g" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##KEYCLOAK_TRUSTSTORE## -->${AUS}<truststore>${SSO_TRUSTSTORE_DIR}/${SSO_TRUSTSTORE}</truststore><truststore-password>${SSO_TRUSTSTORE_PASSWORD}</truststore-password>${AUS}g" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
       sed -i "s|##KEYCLOAK_DISABLE_TRUST_MANAGER##|false|g" "${CONFIG_FILE}"
     else
       sed -i "s|##KEYCLOAK_DISABLE_TRUST_MANAGER##|true|g" "${CONFIG_FILE}"
     fi
 
-    sed -i "s|##KEYCLOAK_URL##|${SSO_URL}|g" "${CONFIG_FILE}"
+    # CIAM-1394 correction
+    sed -i "s${AUS}##KEYCLOAK_URL##${AUS}${SSO_URL}${AUS}g" "${CONFIG_FILE}"
+    # EOF CIAM-1394 correction
 
     if [ -n "$SSO_SAML_CERTIFICATE_NAME" ]; then
-      sed -i "s|##SSO_SAML_CERTIFICATE_NAME##|${SSO_SAML_CERTIFICATE_NAME}|g" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}##SSO_SAML_CERTIFICATE_NAME##${AUS}${SSO_SAML_CERTIFICATE_NAME}${AUS}g" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_SAML_KEYSTORE_PASSWORD" ]; then
-      sed -i "s|##SSO_SAML_KEYSTORE_PASSWORD##|${SSO_SAML_KEYSTORE_PASSWORD}|g" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}##SSO_SAML_KEYSTORE_PASSWORD##${AUS}${SSO_SAML_KEYSTORE_PASSWORD}${AUS}g" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_SAML_KEYSTORE" ] && [ -n "$SSO_SAML_KEYSTORE_DIR" ]; then
-      sed -i "s|##SSO_SAML_KEYSTORE##|${SSO_SAML_KEYSTORE_DIR}/${SSO_SAML_KEYSTORE}|g" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}##SSO_SAML_KEYSTORE##${AUS}${SSO_SAML_KEYSTORE_DIR}/${SSO_SAML_KEYSTORE}${AUS}g" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
   else
     log_warning "Missing SSO_URL. Unable to properly configure SSO-enabled applications"
@@ -661,7 +683,9 @@ function explode_keycloak_deployments() {
 
     if [ -f "${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml" ]; then
       requested_auth_method=$(cat ${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml | xmllint --nowarning --xpath "string(//*[local-name()='auth-method'])" - | sed ':a;N;$!ba;s/\n//g' | tr -d '[:space:]')
-      sed -i "s|${requested_auth_method}|${auth_method}|" "${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml"
+      # CIAM-1394 correction
+      sed -i "s${AUS}${requested_auth_method}${AUS}${auth_method}${AUS}" "${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml"
+      # EOF CIAM-1394 correction
     fi
   done
 }
@@ -694,12 +718,16 @@ function configure_extension() {
 }
 
 function configure_extensions_no_marker() {
-  sed -i "s|${EXTENSIONS_END_MARKER}|<extension module=\"org.keycloak.keycloak-adapter-subsystem\"/><extension module=\"org.keycloak.keycloak-saml-adapter-subsystem\"/>${EXTENSIONS_END_MARKER}|" "${CONFIG_FILE}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}${EXTENSIONS_END_MARKER}${AUS}<extension module=\"org.keycloak.keycloak-adapter-subsystem\"/><extension module=\"org.keycloak.keycloak-saml-adapter-subsystem\"/>${EXTENSIONS_END_MARKER}${AUS}" "${CONFIG_FILE}"
+  # EOF CIAM-1394 correction
 }
 
 function configure_security_domain() {
   keycloak_security_domain=$(cat "${KEYCLOAK_SECURITY_DOMAIN_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
-  sed -i "s|<!-- ##KEYCLOAK_SECURITY_DOMAIN## -->|${keycloak_security_domain%$'\n'}|" "${CONFIG_FILE}"
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ##KEYCLOAK_SECURITY_DOMAIN## -->${AUS}${keycloak_security_domain%$'\n'}${AUS}" "${CONFIG_FILE}"
+  # EOF CIAM-1394 correction
 }
 
 function configure_subsystem() {
@@ -975,7 +1003,9 @@ function configure_subsystem() {
 
   if [ -z "$is_cli" ]; then
     if [ -n "$subsystem" ]; then
-      sed -i "s|<!-- ${subsystem_marker} -->|${subsystem%$'\n'}|" "${CONFIG_FILE}"
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ${subsystem_marker} -->${AUS}${subsystem%$'\n'}${AUS}" "${CONFIG_FILE}"
+      # EOF CIAM-1394 correction
     fi
   fi
 }

@@ -289,7 +289,7 @@ generate_dns_ping_config() {
 
 configure_ha_args() {
   # Set HA args
-  IP_ADDR=`hostname -i`
+  IP_ADDR=`hostname -i | cut -d " " -f1`
   JBOSS_HA_ARGS="-b ${JBOSS_HA_IP:-${IP_ADDR}} -bprivate ${JBOSS_HA_IP:-${IP_ADDR}}"
 
   init_node_name
@@ -323,7 +323,9 @@ configure_ha() {
   fi
 
   if [ "${CONF_AUTH_MODE}" = "xml" ]; then
-    sed -i "s|<!-- ##JGROUPS_AUTH## -->|${JGROUPS_AUTH}|g" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JGROUPS_AUTH## -->${AUS}${JGROUPS_AUTH}${AUS}g" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   elif [ "${CONF_AUTH_MODE}" = "cli" ]; then
     echo "${JGROUPS_AUTH}" >> ${CLI_SCRIPT_FILE};
   fi
@@ -331,7 +333,9 @@ configure_ha() {
   log_info "Configuring JGroups discovery protocol to ${ping_protocol}"
 
   if [ "${CONF_PING_MODE}" = "xml" ]; then
-    sed -i "s|<!-- ##JGROUPS_PING_PROTOCOL## -->|${ping_protocol_element}|g" $CONFIG_FILE
+    # CIAM-1394 correction
+    sed -i "s${AUS}<!-- ##JGROUPS_PING_PROTOCOL## -->${AUS}${ping_protocol_element}${AUS}g" $CONFIG_FILE
+    # EOF CIAM-1394 correction
   elif [ "${CONF_PING_MODE}" = "cli" ]; then
     echo "${ping_protocol_element}" >> ${CLI_SCRIPT_FILE};
   fi

@@ -83,9 +83,13 @@ function inject_resource_adapters_common() {
   done
 
   if [ -n "${resource_adapters}" ]; then
-    resource_adapters=$(echo "${resource_adapters}" | sed -e "s/localhost/${hostname}/g")
+    # CIAM-1394 correction
+    resource_adapters=$(echo "${resource_adapters}" | sed -e "s${AUS}localhost${AUS}${hostname}${AUS}g")
+    # EOF CIAM-1394 correction
     if [ "${mode}" = "xml" ]; then
-      sed -i "s|<!-- ##RESOURCE_ADAPTERS## -->|${resource_adapters}<!-- ##RESOURCE_ADAPTERS## -->|" $CONFIG_FILE
+      # CIAM-1394 correction
+      sed -i "s${AUS}<!-- ##RESOURCE_ADAPTERS## -->${AUS}${resource_adapters}<!-- ##RESOURCE_ADAPTERS## -->${AUS}" $CONFIG_FILE
+      # EOF CIAM-1394 correction
     elif [ "${mode}" = "cli" ]; then
       echo "${resource_adapters}" >> ${CLI_SCRIPT_FILE}
     fi
@@ -204,7 +208,9 @@ function add_connection_definitions() {
 
       if [ -n "$ra_props" ]; then
         for ra_prop in $(echo $ra_props); do
-          prop_name=$(echo "${ra_prop}" | sed -e "s/${ra_prefix}_PROPERTY_//g")
+          # CIAM-1394 correction
+          prop_name=$(echo "${ra_prop}" | sed -e "s${AUS}${ra_prefix}_PROPERTY_${AUS}${AUS}g")
+          # EOF CIAM-1394 correction
           prop_val=$(find_env $ra_prop)
 
           resource_adapter="${resource_adapter}<config-property name=\"${prop_name}\">${prop_val}</config-property>"
@@ -319,7 +325,9 @@ function add_connection_definitions() {
 
       if [ -n "$ra_props" ]; then
         for ra_prop in $(echo $ra_props); do
-          prop_name=$(echo "${ra_prop}" | sed -e "s/${ra_prefix}_PROPERTY_//g")
+          # CIAM-1394 correction
+          prop_name=$(echo "${ra_prop}" | sed -e "s${AUS}${ra_prefix}_PROPERTY_${AUS}${AUS}g")
+          # EOF CIAM-1394 correction
           prop_val=$(find_env $ra_prop)
           resource_adapter="${resource_adapter}
             ${conn_def_addr}/config-properties=${prop_name}:add(value=\"${prop_val}\")

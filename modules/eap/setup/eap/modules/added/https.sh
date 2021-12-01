@@ -69,7 +69,9 @@ function configureSslXml() {
             </ssl>\n\
         </server-identities>"
 
-  sed -i "s|<!-- ##SSL## -->|${ssl}|" $CONFIG_FILE
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ##SSL## -->${AUS}${ssl}${AUS}" $CONFIG_FILE
+  # EOF CIAM-1394 correction
 }
 
 function configureSslCli() {
@@ -96,7 +98,9 @@ EOF
 
 function configureHttpsXml() {
   https_connector="<https-listener name=\"https\" socket-binding=\"https\" security-realm=\"ApplicationRealm\" proxy-address-forwarding=\"true\"/>"
-  sed -i "s|<!-- ##HTTPS_CONNECTOR## -->|${https_connector}|" $CONFIG_FILE
+  # CIAM-1394 correction
+  sed -i "s${AUS}<!-- ##HTTPS_CONNECTOR## -->${AUS}${https_connector}${AUS}" $CONFIG_FILE
+  # EOF CIAM-1394 correction
 }
 
 function configureHttpsCli() {

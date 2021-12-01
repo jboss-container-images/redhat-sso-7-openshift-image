@@ -3,6 +3,12 @@ schema_version: 1
 name: "rh-sso-7/sso75-openj9-openshift-rhel8"
 description: "Red Hat Single Sign-On 7.5 on OpenJ9 OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
+envs:
+    - name: "JAVA_SECURITY_FILE"
+      value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/conf/security/java.security"
+    - name: "JAVA_HOME"
+      value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/"
+
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso75-openj9-openshift-rhel8-container"
@@ -14,10 +20,6 @@ osbs:
                 compose:
                   pulp_repos: true
                   # include_unpublished_pulp_repos: true
-                  # packages:
-                  # - java-11-openj9
-                  # - java-11-openj9-headless
-                  # - java-11-openj9-devel
                   signing_intent: release
                   inherit: true
                 platforms:

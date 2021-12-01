@@ -33,7 +33,9 @@ function configure_administration() {
 
     if [ "${mode}" = "xml" ]; then
       local mgmt_iface_replace_str="security-realm=\"ManagementRealm\""
-      sed -i "s|><!-- ##MGMT_IFACE_REALM## -->| ${mgmt_iface_replace_str}>|" "$CONFIG_FILE"
+      # CIAM-1394 correction
+      sed -i "s${AUS}><!-- ##MGMT_IFACE_REALM## -->${AUS} ${mgmt_iface_replace_str}>${AUS}" "$CONFIG_FILE"
+      # EOF CIAM-1394 correction
     elif [ "${mode}" = "cli" ]; then
       cat << EOF >> "${CLI_SCRIPT_FILE}"
       if (outcome != success) of /core-service=management/management-interface=http-interface:read-resource
