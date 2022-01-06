@@ -32,7 +32,7 @@ artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
   md5: 115acd5c7fbcaea84f843c593e850515
-  url: http://$DOWNLOAD_SERVER/devel/candidates/middleware/eap/JBEAP-7.4.2.GA-CR1/jboss-eap-7.4.2.GA-CR1-image-builder-maven-repository.zip
+  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.2/jboss-eap-7.4.2-image-builder-maven-repository.zip
 # CIAM-711: Update RH-SSO server overlay to 'RH-SSO 7.5.0.CR4' build
 - name: keycloak-server-overlay.zip
   md5: 4150d09f7bf5d524b4173f8850a06617
