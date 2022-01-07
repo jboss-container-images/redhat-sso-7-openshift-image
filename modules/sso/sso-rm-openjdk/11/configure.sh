@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eu
 
 # Import RH-SSO global variables & functions to image build-time
@@ -15,3 +15,6 @@ if rpm -q ibm-semeru-open-11-jdk || rpm -q java-11-openj9-devel; then
         fi
     done
 fi
+
+# CIAM-1757: On each arch remove JDK 1.8 rpms if present (since using JDK 11 already)
+rpm --query --all name=java* version=1.8.0* | xargs rpm -e --nodeps
