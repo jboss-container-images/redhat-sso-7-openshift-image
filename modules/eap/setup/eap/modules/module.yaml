@@ -56,25 +56,25 @@ artifacts:
 #       accordingly in the 'modules/eap/setup/eap/modules/configure.sh'
 #       script too !!!
 #
-- name: wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
-  target: wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
-  md5: 3c9a5e92268506c90bce4b37fef83dab
-  url: https://repo.maven.apache.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2/wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar
-- name: wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
-  target: wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
-  md5: 5cb783c122d2478f0bc82505ad93a054
-  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.2.0.Alpha2/wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom
-- name: wildfly-provisioning-parent-5.2.0.Alpha2.pom
-  target: wildfly-provisioning-parent-5.2.0.Alpha2.pom
-  md5: 03f4634dd62a4e62746a3837fbea608b
-  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.2.0.Alpha2/wildfly-provisioning-parent-5.2.0.Alpha2.pom
+- name: wildfly-galleon-maven-plugin-5.1.2.Final.jar
+  target: wildfly-galleon-maven-plugin-5.1.2.Final.jar
+  md5: 0e12d3d2396de56c5f8c8e0851d7f3b8
+  url: https://repo.maven.apache.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.1.2.Final/wildfly-galleon-maven-plugin-5.1.2.Final.jar
+- name: wildfly-galleon-maven-plugin-5.1.2.Final.pom
+  target: wildfly-galleon-maven-plugin-5.1.2.Final.pom
+  md5: 98d3d4c4b128a884fd76893a64599739
+  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.1.2.Final/wildfly-galleon-maven-plugin-5.1.2.Final.pom
+- name: wildfly-provisioning-parent-5.1.2.Final.pom
+  target: wildfly-provisioning-parent-5.1.2.Final.pom
+  md5: 7af23761dea205fd0fa622135fba8322
+  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.1.2.Final/wildfly-provisioning-parent-5.1.2.Final.pom
 labels:
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.0"
+  value: "7.4.2"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.0"
+  value: "7.4.2"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
@@ -94,15 +94,15 @@ labels:
 envs:
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.0.GA-redhat-00005"
+  value: "7.4.2.GA-redhat-00002"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.0"
+  value: "7.4.2"
 - name: "PRODUCT_VERSION"
-  value: "7.4.0"
+  value: "7.4.2"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
@@ -392,8 +392,14 @@ envs:
 - name: GALLEON_S2I_FP_ARTIFACT_ID
 - name: GALLEON_VERSION
   value: "4.2.8.Final"
+# Important:
+#
+#   If you are updating 'GALLEON_WILDFLY_VERSION' version below be sure simultaneously to update also
+#   the versions, urls & MD5 sums of the 'wildfly-galleon-maven-plugin' and 'wildfly-provisioning-parent'
+#   artifacts listed in the 'artifacts:' section above
+#
 - name: GALLEON_WILDFLY_VERSION
-  value: "5.2.0.Alpha2"
+  value: "5.1.2.Final"
 - name: GALLEON_S2I_PRODUCER_NAME
 - name: S2I_FP_VERSION
 - name: GALLEON_PROVISION_SERVER

@@ -952,14 +952,14 @@ fi
 rm -rf $JBOSS_HOME/*
 
 # CIAM-1436 correction
-# Ensure 'wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar', 'wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom', and
-# 'wildfly-provisioning-parent-5.2.0.Alpha2.pom' artifacts are installed to expected location prior launching
+# Ensure 'wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.jar', 'wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.pom', and
+# 'wildfly-provisioning-parent-${GALLEON_WILDFLY_VERSION}.pom' artifacts are installed to expected location prior launching
 # the build Galleon s2i feature-pack maven command below
 
 declare -ar EXPECTED_WILDFLY_ARTIFACTS=(
-  "wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar"
-  "wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom"
-  "wildfly-provisioning-parent-5.2.0.Alpha2.pom"
+  "wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.jar"
+  "wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.pom"
+  "wildfly-provisioning-parent-${GALLEON_WILDFLY_VERSION}.pom"
 )
 # Sanity check - confirm the required artifacts are present under "/tmp/artifacts" location
 for artifact in "${EXPECTED_WILDFLY_ARTIFACTS[@]}"
@@ -971,23 +971,23 @@ do
   fi
 done
 
-# Install JAR & POM files of 'wildfly-galleon-maven-plugin-5.2.0.Alpha2' dependency
-mvn install:install-file                                                          \
-  -Dfile="/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.jar"           \
-  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                            \
-  -DpomFile="/tmp/artifacts/wildfly-galleon-maven-plugin-5.2.0.Alpha2.pom"        \
+# Install JAR & POM files of 'wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}' dependency
+mvn install:install-file                                                                 \
+  -Dfile="/tmp/artifacts/wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.jar"    \
+  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                                   \
+  -DpomFile="/tmp/artifacts/wildfly-galleon-maven-plugin-${GALLEON_WILDFLY_VERSION}.pom" \
   --settings "${GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML}"
 
-# Install POM file of 'wildfly-provisioning-parent-5.2.0.Alpha2.pom' dependency
+# Install POM file of 'wildfly-provisioning-parent-${GALLEON_WILDFLY_VERSION}.pom' dependency
 #
 # Note: The '-Dfile' argument in the following command is actually ignored, due
 #       to using the '-Dpackaging=pom' argument, so the corresponding JAR file
 #       of 'wildfly-provisioning-parent' isn't needed.
-mvn install:install-file                                                      \
-  -Dfile="/tmp/artifacts/wildfly-provisioning-parent-5.2.0.Alpha2.pom"        \
-  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                        \
-  -Dpackaging=pom                                                             \
-  -DpomFile="/tmp/artifacts/wildfly-provisioning-parent-5.2.0.Alpha2.pom"     \
+mvn install:install-file                                                                 \
+  -Dfile="/tmp/artifacts/wildfly-provisioning-parent-${GALLEON_WILDFLY_VERSION}.pom"     \
+  -Dmaven.repo.local="${TMP_GALLEON_LOCAL_MAVEN_REPO}"                                   \
+  -Dpackaging=pom                                                                        \
+  -DpomFile="/tmp/artifacts/wildfly-provisioning-parent-${GALLEON_WILDFLY_VERSION}.pom"  \
   --settings "${GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML}"
 
 # EOF CIAM-1436 correction
