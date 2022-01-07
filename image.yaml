@@ -124,17 +124,16 @@ modules:
           - name: openshift-layer
           - name: keycloak-layer
 
-          # Various SSO image pre-launch checks to prevent regressions
-          - name: sso-pre-launch-checks
-
-          # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
+          # The extensions module can be called only after all updates to standalone-openshift.xml have been done.
+          # See eg. https://access.redhat.com/solutions/3402171 for details how to use
           - name: sso-cli-extensions
 
-          # Actions performed by the 'sso-rm-openjdk' module shouldn't be needed for RHEL-8 UBI Minimal
-          # derived images already. But it's kept & called here for any case, so RPMs belonging to
-          # counterpart JVM aren't left in the image by an accident
+          # Ensure RPMs belonging to counterpart JVM are removed
           - name: sso-rm-openjdk
             version: *jdk_version
+
+          # Various SSO image pre-launch checks to prevent regressions
+          - name: sso-pre-launch-checks
 
 packages:
       manager: microdnf

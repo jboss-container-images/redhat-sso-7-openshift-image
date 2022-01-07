@@ -9,6 +9,7 @@ source "${JBOSS_HOME}/bin/launch/logging.sh"
 function postConfigure() {
   verify_CVE_2020_10695_fix_present
   verify_KEYCLOAK_16736_fix_present
+  verify_CIAM_1757_fix_present
 }
 
 # KEYCLOAK-13585 / RH BZ#1817530 / CVE-2020-10695:
@@ -40,10 +41,10 @@ function verify_KEYCLOAK_16736_fix_present() {
   # regardless of the particular image release
   # shellcheck disable=SC2061
   # shellcheck disable=SC2086
-  local -r ssoImageDockerfile=$(find /root/buildinfo -maxdepth 1 -type f -name Dockerfile-${JBOSS_IMAGE_NAME/\//-}-${JBOSS_IMAGE_VERSION}-*)
+  local -r ssoImageDockerfile=$(find /root/buildinfo -maxdepth 1 -type f -name Dockerfile-${JBOSS_IMAGE_NAME/\//-}-${JBOSS_IMAGE_VERSION}-* 2>/dev/null)
   local -r errorExitCode="1"
   # Throw an error if the image doesn't contain a Dockerfile we could check
-  if [ "x${ssoImageDockerfile}x" == "xx" ]
+  if [ -z "${ssoImageDockerfile}" ]
   then
     log_error "The specified Dockerfile: '${ssoImageDockerfile}' does not exist!"
     exit "${errorExitCode}"
@@ -57,6 +58,20 @@ function verify_KEYCLOAK_16736_fix_present() {
   then
     log_error "The value of 'WORKDIR' instruction in the ${ssoImageDockerfile}"
     log_error "doesn't match value of '${HOME}' variable!"
+    exit "${errorExitCode}"
+  fi
+}
+
+# CIAM-1757:
+#
+# Confirm JDK 1.8 rpms aren't present in the image, since using JDK 11 already
+#
+function verify_CIAM_1757_fix_present() {
+  local -r errorExitCode="1"
+  if [ -n "$(rpm --query --all name=java* version=1.8.0*)" ]
+  then
+    log_error "JDK 1.8 rpms detected in the image. It is recommended to uninstall them."
+    log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
     exit "${errorExitCode}"
   fi
 }
