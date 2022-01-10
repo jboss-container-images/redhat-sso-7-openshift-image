@@ -8,6 +8,8 @@ envs:
       value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/conf/security/java.security"
     - name: "JAVA_HOME"
       value: "/usr/lib/jvm/ibm-semeru-open-11-jdk/"
+    - name: "OPENJ9_JAVA_OPTIONS"
+      value: "-Xjit:{java/lang/invoke/AsTypeHandle.invokeExact_thunkArchetype*}(dontInline={java/lang/invoke/VirtualHandle.invokeExact_thunkArchetype*})"
 
 labels:
     - name: "com.redhat.component"
