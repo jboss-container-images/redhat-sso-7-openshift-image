@@ -12,7 +12,7 @@ labels:
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.4.9.GA"
+      value: &product_version "7.4.10.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
@@ -73,12 +73,12 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_739_CR2
+                  ref: EAP_7310_CR1
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_739_CR2
+                  ref: EAP_7310_CR1
 
           - name: cct_module
             git:
@@ -137,10 +137,10 @@ artifacts:
        md5: 3dba80cc1be17b00cb901441111886f3
        url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/eap7/7.3.0/jboss-eap-7.3.0.zip
 
-     - name: jboss-eap-7.3.9-patch
-       target: jboss-eap-7.3.9-patch.zip
-       md5: 00779380dacdbfa01bfb3e62a307279a
-       url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/eap7/7.3.9/jboss-eap-7.3.9-patch.zip
+     - name: jboss-eap-7.3.10-patch
+       target: jboss-eap-7.3.10-patch.zip
+       md5: 04b1dd4df9a979c47610be53a971992e
+       url: http://$DOWNLOAD_SERVER/devel/candidates/JBEAP/JBEAP-7.3.10.GA-CR2/jboss-eap-7.3.10.GA-CR2-patch.zip
 
 run:
       cmd:
