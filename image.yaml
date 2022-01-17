@@ -78,7 +78,7 @@ modules:
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_7310_CR1
+                  ref: EAP_7310_CR2
 
           - name: cct_module
             git:
@@ -140,7 +140,7 @@ artifacts:
      - name: jboss-eap-7.3.10-patch
        target: jboss-eap-7.3.10-patch.zip
        md5: 04b1dd4df9a979c47610be53a971992e
-       url: http://$DOWNLOAD_SERVER/devel/candidates/JBEAP/JBEAP-7.3.10.GA-CR2/jboss-eap-7.3.10.GA-CR2-patch.zip
+       url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/eap7/7.3.10/jboss-eap-7.3.10-patch.zip
 
 run:
       cmd:
