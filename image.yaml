@@ -94,26 +94,29 @@ modules:
             path: modules
 
       install:
-          # Define RH-SSO global variables & functions required by subsequent image modules.
+
+          # First define RH-SSO global variables & functions required by subsequent modules
           #
-          # IMPORTANT: This module needs to be included (sourced) in each of the following
-          #            modules using "sed -e" or "sed -i" expressions, where the regex pattern
-          #            or the replacement value is dynamic (coming from env var supplied to the
-          #            container image at runtime). See CIAM-1394 JIRA for details
+          # IMPORTANT: Include this module in each of the subsequent modules using some variable
+          #            or function definition from it
           - name: sso.rcfile
             version: '1.0'
+
+          # Setup nss_wrapper
           - name: sso.security.cve-2020-10695
             version: '1.0'
+
           # Install JDK runtime
           - name: sso-jdk
             version: &jdk_version '11'
-           # Perform all actions required by Wildfly / JBoss EAP Galleon Maven build
-           # See 'used-eap-modules-list.txt' for overview of used JBoss EAP modules,
-           # and the order they need to be called in
+
+          # Perform all actions required by Wildfly / JBoss EAP Galleon Maven build
+          # See 'used-eap-modules-list.txt' for overview of used JBoss EAP modules,
+          # and the order they need to be called in
           - name: eap
             version: '1.0'
 
-          ## RH-SSO product specific modules from modules/ path in this repository
+          # RH-SSO product specific modules from modules/ path in this repository
           - name: keycloak.openshift.clients
             version: '1.0'
           - name: sso.config.launch.setup.75
@@ -123,6 +126,12 @@ modules:
           # Other common modules from the main CE cct_module repository
           - name: openshift-layer
           - name: keycloak-layer
+
+          # Apply any possibly needed EAP / RH-SSO patches
+          # Note: In order to properly manage also RH-SSO patches, this module
+          #       can only be called once the 'keycloak' layer was added
+          - name: sso.apply.patches
+            version: '1.0'
 
           # The extensions module can be called only after all updates to standalone-openshift.xml have been done.
           # See eg. https://access.redhat.com/solutions/3402171 for details how to use

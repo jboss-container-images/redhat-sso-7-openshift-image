@@ -1,8 +1,10 @@
 schema_version: 1
 name: eap
-description: "Installs base EAP to the image."
+version: '1.0'
+description: Module to install base EAP layer to the RH-SSO container image
 
 # NOTE:
+#
 #   The former listing of all specific EAP modules to be included into the RH-SSO
 #   images was replaced with a single 'setup.eap.modules' CEKit module (therefore
 #   one new layer in the resulting built container image).
@@ -20,6 +22,7 @@ description: "Installs base EAP to the image."
 #   failed as a whole.
 #
 # IMPORTANT:
+#
 #   Do not change this approach!
 #
 #   If you need to add / list additional EAP module, not present yet, append the
@@ -36,30 +39,7 @@ description: "Installs base EAP to the image."
 #   the starting and ending comments, so the order in which the modules need
 #   to be included, is preserved and respected.
 
-version: '1.0'
-
 modules:
       install:
           - name: setup.eap.modules
             version: "1.0"
-
-execute:
-    - script: install-eap-one-offs.sh
-
-# Important:
-# ----------
-#
-# All EAP one-offs artifacts must be prefixed with "eap-one-off-" prefix and suffixed with in ".zip".
-# Ensure that only one-offs for the INSTALLED version of EAP are present, and comment all of them
-# that are obsoleted.
-#
-# For an example of proper / intended usage, see the "jbeap-18807.zip" example below.
-#
-# artifacts:
-#
-#      KEYCLOAK-13487 "jbeap-18807.zip" is obsolete in EAP-7.3.1 / RH-SSO 7.5.1, deprecate it
-#
-#      - md5: 1b6036cfcde2cf1dc05c2eb6eca228ff
-#        name: jbeap-18807.zip
-#        target: eap-one-off-jbeap-18807.zip
-#        url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.5.0.CR2/jbeap-18807.zip
