@@ -113,7 +113,7 @@ modules:
           - name: keycloak-layer
 
           # Various SSO image pre-launch checks to prevent regressions
-          - name: sso-pre-launch-checks
+          # - name: sso-pre-launch-checks
 
           # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
           - name: os-eap-extensions
