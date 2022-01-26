@@ -117,6 +117,14 @@ modules:
 
           # This needs to be the very last, after all updates to standalone-openshift.xml have been done. See eg. https://access.redhat.com/solutions/3402171 for use
           - name: os-eap-extensions
+          # Apply any possibly needed EAP / RH-SSO patches
+          # Note: In order to properly manage also RH-SSO patches, this module
+          #       can only be called once the 'keycloak' layer was added
+          - name: sso.apply.patches
+            version: '1.0'
+
+          # The extensions module can be called only after all updates to standalone-openshift.xml have been done.
+          # See eg. https://access.redhat.com/solutions/3402171 for details how to use
           - name: sso-cli-extensions
 
           - name: sso-rm-openjdk
