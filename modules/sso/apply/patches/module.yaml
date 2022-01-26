@@ -5,6 +5,12 @@ description: Module to apply any possibly needed EAP / RH-SSO one-off patches vi
 execute:
 - script: apply-eap-rh-sso-one-off-patches.sh
 
+artifacts:
+  - md5: 91ebfa4a519825dfcc52c6e8c1debb76
+    name: rhsso-1977.zip
+    target: eap-one-off-rh-sso-1977.zip
+    url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.10-CIAM-1977-patch/rhsso-1977.zip
+
 # Note:
 #
 # All EAP one-offs artifacts must be prefixed with "eap-one-off-" prefix and suffixed with ".zip".
