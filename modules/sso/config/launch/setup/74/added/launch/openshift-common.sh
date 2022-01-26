@@ -47,6 +47,5 @@ export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/keycloak-spi.sh"
   "${JBOSS_HOME}/bin/launch/access_log_valve.sh"
   "${JBOSS_HOME}/bin/launch/configure_sso_cli_extensions.sh"
-  "${JBOSS_HOME}/bin/launch/sso_image_pre_launch_checks.sh"
   /opt/run-java/proxy-options
 )
