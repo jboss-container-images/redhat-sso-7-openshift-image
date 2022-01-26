@@ -10,6 +10,7 @@ function postConfigure() {
   verify_CVE_2020_10695_fix_present
   verify_KEYCLOAK_16736_fix_present
   verify_CIAM_1757_fix_present
+  verify_CIAM_1975_fix_present
 }
 
 # KEYCLOAK-13585 / RH BZ#1817530 / CVE-2020-10695:
@@ -71,6 +72,20 @@ function verify_CIAM_1757_fix_present() {
   if [ -n "$(rpm --query --all name=java* version=1.8.0*)" ]
   then
     log_error "JDK 1.8 rpms detected in the image. It is recommended to uninstall them."
+    log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
+    exit "${errorExitCode}"
+  fi
+}
+
+# CIAM-1975
+#
+# Verify one-off patch for CIAM-1975 got properly installed to the expected location
+#
+function verify_CIAM_1975_fix_present() {
+  local -r errorExitCode="1"
+  if ! find "${JBOSS_HOME}"/modules/system/layers -name '*-rhsso-1974.jar' 2> /dev/null | grep -q .
+  then
+    log_error "The CIAM-1975 one-off patch wasn't properly installed."
     log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
     exit "${errorExitCode}"
   fi
