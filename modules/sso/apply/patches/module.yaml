@@ -10,6 +10,11 @@ artifacts:
     name: rhsso-1977.zip
     target: eap-one-off-rh-sso-1977.zip
     url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.10-CIAM-1977-patch/rhsso-1977.zip
+# CIAM-2060
+  - md5: 69b81d57d5010fb72a8d5df6465f5254
+    name: rhsso-2064.zip
+    target: eap-one-off-rh-sso-2064.zip
+    url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.4.10-CIAM-2064-patch/rhsso-2064.zip
 
 # Note:
 #
