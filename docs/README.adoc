@@ -16,7 +16,6 @@ toc::[levels=1]
 
 == templates
 
-* link:./templates/openj9.adoc[openj9]
 * link:./templates/scripts.adoc[scripts]
 * link:./templates/sso75-https.adoc[sso75-https]
 * link:./templates/sso75-ocp4-x509-https.adoc[sso75-ocp4-x509-https]
@@ -25,16 +24,6 @@ toc::[levels=1]
 * link:./templates/sso75-postgresql.adoc[sso75-postgresql]
 * link:./templates/sso75-x509-https.adoc[sso75-x509-https]
 * link:./templates/sso75-x509-postgresql-persistent.adoc[sso75-x509-postgresql-persistent]
-
-== templates/openj9
-
-* link:./templates/openj9/sso75-openj9-https.adoc[sso75-openj9-https]
-* link:./templates/openj9/sso75-openj9-ocp4-x509-https.adoc[sso75-openj9-ocp4-x509-https]
-* link:./templates/openj9/sso75-openj9-ocp4-x509-postgresql-persistent.adoc[sso75-openj9-ocp4-x509-postgresql-persistent]
-* link:./templates/openj9/sso75-openj9-postgresql-persistent.adoc[sso75-openj9-postgresql-persistent]
-* link:./templates/openj9/sso75-openj9-postgresql.adoc[sso75-openj9-postgresql]
-* link:./templates/openj9/sso75-openj9-x509-https.adoc[sso75-openj9-x509-https]
-* link:./templates/openj9/sso75-openj9-x509-postgresql-persistent.adoc[sso75-openj9-x509-postgresql-persistent]
 
 ////
   the source for the release notes part of this page is in the file

@@ -18,11 +18,10 @@ from collections import OrderedDict
 from ptemplate.template import Template
 
 TEMPLATE_DOCS = "docs/"
-template_dirs = [ 'templates', 'templates/openj9' ]
+template_dirs = [ 'templates' ]
 amq_ssl_desc = None
 
-LINKS =  { "redhat-sso75-openshift-rhel:1.0": "../../templates/sso75-openshift{outfilesuffix}[`rh-sso-7/sso75-openshift`]",
-           "redhat-sso75-openj9-openshift-rhel:1.0": "../../templates/openj9/sso75-openj9-openshift{outfilesuffix}[`rh-sso-7/sso75-openshift`]"}
+LINKS =  { "redhat-sso75-openshift-rhel:1.0": "../../templates/sso75-openshift{outfilesuffix}[`rh-sso-7/sso75-openshift`]"}
 
 PARAMETER_VALUES = {"APPLICATION_DOMAIN": "secure-app.test.router.default.local", \
                    "SOURCE_REPOSITORY_URL": "https://github.com/jboss-openshift/openshift-examples.git", \
