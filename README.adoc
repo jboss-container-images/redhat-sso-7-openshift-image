@@ -1,4 +1,4 @@
-# Red Hat Single Sign-On 7.5 for OpenJDK / OpenJ9 on OpenShift container images
+# Red Hat Single Sign-On 7.5 for OpenJDK
 
 # License
 
