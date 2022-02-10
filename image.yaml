@@ -137,10 +137,6 @@ modules:
           # See eg. https://access.redhat.com/solutions/3402171 for details how to use
           - name: sso-cli-extensions
 
-          # Ensure RPMs belonging to counterpart JVM are removed
-          - name: sso-rm-openjdk
-            version: *jdk_version
-
           # Various SSO image pre-launch checks to prevent regressions
           - name: sso-pre-launch-checks
 
