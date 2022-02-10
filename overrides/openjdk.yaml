@@ -3,12 +3,6 @@ schema_version: 1
 name: "rh-sso-7/sso75-openshift-rhel8"
 description: "Red Hat Single Sign-On 7.5 on OpenJDK OpenShift container image, based on the Red Hat Universal Base Image 8 Minimal container image"
 
-envs:
-    - name: "JAVA_SECURITY_FILE"
-      value: "/usr/lib/jvm/java/conf/security/java.security"
-    - name: "JAVA_HOME"
-      value: "/usr/lib/jvm/java-11/"
-
 labels:
     - name: "com.redhat.component"
       value: "redhat-sso-7-sso75-openshift-rhel8-container"
@@ -24,6 +18,8 @@ osbs:
                 platforms:
                   only:
                   - x86_64
+                  - s390x
+                  - ppc64le
       repository:
             name: containers/redhat-sso-7
             branch: rh-sso-7.5-rhel-8
