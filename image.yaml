@@ -137,6 +137,9 @@ modules:
           # See eg. https://access.redhat.com/solutions/3402171 for details how to use
           - name: sso-cli-extensions
 
+          # Various SSO image pre-launch actions to prevent regressions
+          - name: sso-pre-launch-actions
+
           # Various SSO image pre-launch checks to prevent regressions
           - name: sso-pre-launch-checks
 
