@@ -35,3 +35,6 @@ if grep -q "^$SECURERANDOM=.*" $JAVA_SECURITY_FILE; then
 else
     echo $SECURERANDOM=file:/dev/urandom >> $JAVA_SECURITY_FILE
 fi
+
+# CIAM-1757: On each arch remove JDK 1.8 rpms if present (since using JDK 11 already)
+rpm --query --all name=java* version=1.8.0* | xargs rpm -e --nodeps
