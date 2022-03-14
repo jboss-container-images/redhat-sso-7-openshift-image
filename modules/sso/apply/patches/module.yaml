@@ -2,20 +2,20 @@ schema_version: 1
 name: sso.apply.patches
 version: '1.0'
 description: Module to apply any possibly needed EAP / RH-SSO one-off patches via jboss-cli.sh
-execute:
-- script: apply-eap-rh-sso-one-off-patches.sh
-
-artifacts:
-# CIAM-1975
-- md5: 8f54d950472fb9abf34e2f965303a5fc
-  name: rhsso-1974.zip
-  target: eap-one-off-rhsso-1974.zip
-  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/sso/7.5.1/patches/rhsso-1974.zip
-# CIAM-2055
-- md5: e131a6a7ab26779951981665b9e63919
-  name: rhsso-2054.zip
-  target: eap-one-off-rhsso-2054.zip
-  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/sso/7.5.1/patches/rhsso-2054.zip
+#execute:
+#- script: apply-eap-rh-sso-one-off-patches.sh
+#
+#artifacts:
+## CIAM-1975
+#- md5: 8f54d950472fb9abf34e2f965303a5fc
+#  name: rhsso-1974.zip
+#  target: eap-one-off-rhsso-1974.zip
+#  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/sso/7.5.1/patches/rhsso-1974.zip
+## CIAM-2055
+#- md5: e131a6a7ab26779951981665b9e63919
+#  name: rhsso-2054.zip
+#  target: eap-one-off-rhsso-2054.zip
+#  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/sso/7.5.1/patches/rhsso-2054.zip
 
 # Note:
 #

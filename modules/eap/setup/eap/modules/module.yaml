@@ -31,11 +31,11 @@ ports:
 artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
-  md5: 115acd5c7fbcaea84f843c593e850515
-  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.2/jboss-eap-7.4.2-image-builder-maven-repository.zip
-# CIAM-711: Update RH-SSO server overlay to 'RH-SSO 7.5.0.CR4' build
+  md5: 2c0ab034200cafbffb0b808bf2f59e67
+  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.3/jboss-eap-7.4.3-image-builder-maven-repository.zip
+# RHSSO-1824: Update RH-SSO server overlay to 'RH-SSO 7.5.2.CR1' build
 - name: keycloak-server-overlay.zip
-  md5: 4150d09f7bf5d524b4173f8850a06617
+  md5: 7ea126bb6d903c88727fa3636150c63a
 # List remaining (particular RH-SSO build independent) artifacts below
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
@@ -72,9 +72,9 @@ labels:
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.2"
+  value: "7.4.3"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.2"
+  value: "7.4.3"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
@@ -94,15 +94,15 @@ labels:
 envs:
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.2.GA-redhat-00002"
+  value: "7.4.3.GA-redhat-00002"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.2"
+  value: "7.4.3"
 - name: "PRODUCT_VERSION"
-  value: "7.4.2"
+  value: "7.4.3"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
