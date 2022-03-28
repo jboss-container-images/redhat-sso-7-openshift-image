@@ -205,11 +205,11 @@ For DNS_PING to work, the following steps must be taken:
 . A ping service which exposes the ping port must be defined.  This service
   should be "headless" (ClusterIP=None) and must have the following:
 .. The port must be named for port discovery to work.
-.. It must be annotated with `service.alpha.kubernetes.io/tolerate-unready-endpoints`
-   set to `"true"`.  Omitting this annotation will result in each node forming
-   their own "cluster of one" during startup, then merging their cluster into
-   the other nodes' clusters after startup (as the other nodes are not detected
-   until after they have started).
+.. The `spec.publishNotReadyAddresses` field of this service must be set to
+   `"true"`. Omitting the setting of this boolean will result in each node
+   forming their own "cluster of one" during startup, then merging their
+   cluster into the other nodes' clusters after startup (as the other nodes are
+   not detected until after they have started).
 
 .Example ping service for use with DNS_PING
 [source,yaml]
@@ -221,12 +221,12 @@ spec:
     ports:
     - name: ping
       port: 8888
+    publishNotReadyAddresses: true
     selector:
         deploymentConfig: eap-app
 metadata:
     name: eap-app-ping
     annotations:
-        service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
         description: "The JGroups ping port for clustering."
 ----
 

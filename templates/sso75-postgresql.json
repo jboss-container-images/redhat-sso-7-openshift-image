@@ -349,6 +349,7 @@
                         "port": 8888
                     }
                 ],
+                "publishNotReadyAddresses": true,
                 "selector": {
                     "deploymentConfig": "${APPLICATION_NAME}"
                 }
@@ -359,7 +360,6 @@
                     "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
-                    "service.alpha.kubernetes.io/tolerate-unready-endpoints": "true",
                     "description": "The JGroups ping port for clustering."
                 }
             }
