@@ -375,23 +375,37 @@
                 <local-cache name="users">
                     <heap-memory size="10000"/>
                 </local-cache>
-                <distributed-cache name="sessions" owners="${env.CACHE_OWNERS_COUNT:1}"/>
-                <distributed-cache name="authenticationSessions" owners="${env.CACHE_OWNERS_AUTH_SESSIONS_COUNT:1}"/>
-                <distributed-cache name="offlineSessions" owners="${env.CACHE_OWNERS_COUNT:1}"/>
-                <distributed-cache name="clientSessions" owners="${env.CACHE_OWNERS_COUNT:1}"/>
-                <distributed-cache name="offlineClientSessions" owners="${env.CACHE_OWNERS_COUNT:1}"/>
-                <distributed-cache name="loginFailures" owners="${env.CACHE_OWNERS_COUNT:1}"/>
+                <distributed-cache name="sessions" owners="${env.CACHE_OWNERS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
+                <distributed-cache name="authenticationSessions" owners="${env.CACHE_OWNERS_AUTH_SESSIONS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
+                <distributed-cache name="offlineSessions" owners="${env.CACHE_OWNERS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
+                <distributed-cache name="clientSessions" owners="${env.CACHE_OWNERS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
+                <distributed-cache name="offlineClientSessions" owners="${env.CACHE_OWNERS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
+                <distributed-cache name="loginFailures" owners="${env.CACHE_OWNERS_COUNT:1}">
+                    <expiration lifespan="900000000000000000"/>
+                </distributed-cache>
                 <local-cache name="authorization">
                     <heap-memory size="10000"/>
                 </local-cache>
-                <replicated-cache name="work"/>
+                <replicated-cache name="work">
+                    <expiration lifespan="900000000000000000"/>
+                </replicated-cache>
                 <local-cache name="keys">
                     <heap-memory size="1000"/>
                     <expiration max-idle="3600000"/>
                 </local-cache>
                 <distributed-cache name="actionTokens" owners="${env.CACHE_OWNERS_COUNT:2}">
                     <heap-memory size="-1"/>
-                    <expiration max-idle="-1" interval="300000"/>
+                    <expiration max-idle="-1" lifespan="900000000000000000" interval="300000"/>
                 </distributed-cache>
             </cache-container>
             <cache-container name="ejb" default-cache="repl" aliases="sfsb" modules="org.wildfly.clustering.ejb.infinispan">
