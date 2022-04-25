@@ -31,8 +31,8 @@ ports:
 artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
-  md5: 2c0ab034200cafbffb0b808bf2f59e67
-  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.3/jboss-eap-7.4.3-image-builder-maven-repository.zip
+  md5: f09134d49bcee9a583ec3d2d9402f8c2
+  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.4/jboss-eap-7.4.4-image-builder-maven-repository.zip
 # RHSSO-1824: Update RH-SSO server overlay to 'RH-SSO 7.5.2.CR1' build
 - name: keycloak-server-overlay.zip
   md5: 7ea126bb6d903c88727fa3636150c63a
@@ -72,9 +72,9 @@ labels:
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.3"
+  value: "7.4.4"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.3"
+  value: "7.4.4"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
@@ -94,15 +94,15 @@ labels:
 envs:
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.3.GA-redhat-00002"
+  value: "7.4.4.GA-redhat-00011"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.3"
+  value: "7.4.4"
 - name: "PRODUCT_VERSION"
-  value: "7.4.3"
+  value: "7.4.4"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
