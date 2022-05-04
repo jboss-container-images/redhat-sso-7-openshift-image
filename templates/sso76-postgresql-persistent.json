@@ -256,7 +256,7 @@
             "displayName": "PostgreSQL Image Stream Tag",
             "description": "The tag to use for the \"postgresql\" image stream. Typically, this aligns with the major.minor version of PostgreSQL.",
             "name": "POSTGRESQL_IMAGE_STREAM_TAG",
-            "value": "10",
+            "value": "13-el8",
             "required": true
         },
         {
@@ -705,7 +705,7 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                                "name": "postgresql:${POSTGRESQL_IMAGE_STREAM_TAG}"
+                                "name": "postgresql13-for-sso76-openshift-rhel8:${POSTGRESQL_IMAGE_STREAM_TAG}"
                             }
                         }
                     },
