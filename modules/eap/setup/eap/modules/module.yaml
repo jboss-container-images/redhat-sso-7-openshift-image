@@ -56,18 +56,18 @@ artifacts:
 #       accordingly in the 'modules/eap/setup/eap/modules/configure.sh'
 #       script too !!!
 #
-- name: wildfly-galleon-maven-plugin-5.1.2.Final.jar
+- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.jar
+  pnc_build_id: ARNYWZY2QGAAA
+  pnc_artifact_id: "8065279"
   target: wildfly-galleon-maven-plugin-5.1.2.Final.jar
-  md5: 0e12d3d2396de56c5f8c8e0851d7f3b8
-  url: https://repo.maven.apache.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.1.2.Final/wildfly-galleon-maven-plugin-5.1.2.Final.jar
-- name: wildfly-galleon-maven-plugin-5.1.2.Final.pom
+- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.pom
+  pnc_build_id: ARNYWZY2QGAAA
+  pnc_artifact_id: "8065283"
   target: wildfly-galleon-maven-plugin-5.1.2.Final.pom
-  md5: 98d3d4c4b128a884fd76893a64599739
-  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-galleon-maven-plugin/5.1.2.Final/wildfly-galleon-maven-plugin-5.1.2.Final.pom
-- name: wildfly-provisioning-parent-5.1.2.Final.pom
+- name: wildfly-provisioning-parent-5.1.2.Final-redhat-00001.pom
+  pnc_build_id: ARNYWZY2QGAAA
+  pnc_artifact_id: "8065285"
   target: wildfly-provisioning-parent-5.1.2.Final.pom
-  md5: 7af23761dea205fd0fa622135fba8322
-  url: https://repo1.maven.org/maven2/org/wildfly/galleon-plugins/wildfly-provisioning-parent/5.1.2.Final/wildfly-provisioning-parent-5.1.2.Final.pom
 labels:
 - name: "org.jboss.product"
   value: "eap"
