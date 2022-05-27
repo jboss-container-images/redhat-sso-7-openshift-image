@@ -10,5 +10,5 @@ for additional details.
 
 This (sub)directory contains all the information needed to enable SSL/TLS
 support for the [PostgreSQL 10 SQL database server](https://catalog.redhat.com/software/containers/rhscl/postgresql-10-rhel7/5aa63541ac3db95f196086f1)
-used in the available PostgreSQL [templates](https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso75-dev/templates)
-for [Red Hat Single Sign-On 7.5 for OpenJDK](https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso75-dev).
+used in the available PostgreSQL [templates](https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev/templates)
+for [Red Hat Single Sign-On 7.6 for OpenJDK](https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev).

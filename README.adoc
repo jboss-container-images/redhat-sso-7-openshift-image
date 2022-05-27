@@ -1,4 +1,4 @@
-# Red Hat Single Sign-On 7.5 for OpenJDK
+# Red Hat Single Sign-On 7.6 for OpenJDK
 
 # License
 

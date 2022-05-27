@@ -21,7 +21,7 @@ TEMPLATE_DOCS = "docs/"
 template_dirs = [ 'templates' ]
 amq_ssl_desc = None
 
-LINKS =  { "redhat-sso75-openshift-rhel:1.0": "../../templates/sso75-openshift{outfilesuffix}[`rh-sso-7/sso75-openshift`]"}
+LINKS =  { "redhat-sso76-openshift-rhel:1.0": "../../templates/sso76-openshift{outfilesuffix}[`rh-sso-7/sso76-openshift`]"}
 
 PARAMETER_VALUES = {"APPLICATION_DOMAIN": "secure-app.test.router.default.local", \
                    "SOURCE_REPOSITORY_URL": "https://github.com/jboss-openshift/openshift-examples.git", \

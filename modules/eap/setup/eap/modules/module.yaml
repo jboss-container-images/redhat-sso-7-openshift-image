@@ -1,8 +1,7 @@
 schema_version: 1
 name: "setup.eap.modules"
 version: "1.0"
-description: "Performs setup of Red Hat JBoss Enterprise Application Platform
-EAP 7.4.0 modules used by Red Hat Single Sign-On for OpenShift images"
+description: "Performs setup of Red Hat JBoss Enterprise Application Platform EAP 7.4.x modules used by Red Hat Single Sign-On for OpenShift images"
 execute:
 - script: configure.sh
 packages:
@@ -33,9 +32,9 @@ artifacts:
   target: maven-repo.zip
   md5: f09134d49bcee9a583ec3d2d9402f8c2
   url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.4/jboss-eap-7.4.4-image-builder-maven-repository.zip
-# RHSSO-1824: Update RH-SSO server overlay to 'RH-SSO 7.5.2.CR1' build
+# Update RH-SSO server overlay to 'RH-SSO 7.6.0.CR1' build
 - name: keycloak-server-overlay.zip
-  md5: 7ea126bb6d903c88727fa3636150c63a
+  md5: 6fbda07e4e200dbf045e1be6f6d6329a
 # List remaining (particular RH-SSO build independent) artifacts below
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar

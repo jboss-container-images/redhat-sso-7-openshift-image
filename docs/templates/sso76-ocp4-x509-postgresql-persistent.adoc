@@ -4,12 +4,12 @@
     generator or the input template (./*.in)
 ////
 
-= sso75-x509-postgresql-persistent
+= sso76-ocp4-x509-postgresql-persistent
 :toc:
 :toc-placement!:
 :toclevels: 5
 
-An example application based on RH-SSO 7.5 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso75-dev/docs.
+An example application based on RH-SSO 7.6 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev/docs.
 
 toc::[]
 
@@ -194,15 +194,13 @@ for more information.
 |`JGROUPS_PING_PROTOCOL` | -- | openshift.DNS_PING
 |`OPENSHIFT_DNS_PING_SERVICE_NAME` | -- | `${APPLICATION_NAME}-ping`
 |`OPENSHIFT_DNS_PING_SERVICE_PORT` | -- | 8888
-|X509_CA_BUNDLE | -- | `/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
+|X509_CA_BUNDLE | -- | `/var/run/configmaps/service-ca/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
 |`JGROUPS_CLUSTER_PASSWORD` | The password for the JGroups cluster. | `${JGROUPS_CLUSTER_PASSWORD}`
 |`SSO_ADMIN_USERNAME` | RH-SSO Server administrator username | `${SSO_ADMIN_USERNAME}`
 |`SSO_ADMIN_PASSWORD` | RH-SSO Server administrator password | `${SSO_ADMIN_PASSWORD}`
 |`SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}`
 |`SSO_SERVICE_USERNAME` | The username used to access the RH-SSO service. This is used by clients to create the appliction client(s) within the specified RH-SSO realm. | `${SSO_SERVICE_USERNAME}`
 |`SSO_SERVICE_PASSWORD` | The password for the RH-SSO service user. | `${SSO_SERVICE_PASSWORD}`
-|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
-|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 .6+| `${APPLICATION_NAME}-postgresql`
 |`POSTGRESQL_USER` | -- | `${DB_USERNAME}`
 |`POSTGRESQL_PASSWORD` | -- | `${DB_PASSWORD}`
@@ -210,6 +208,8 @@ for more information.
 |`POSTGRESQL_MAX_CONNECTIONS` | The maximum number of client connections allowed. This also sets the maximum number of prepared transactions. | `${POSTGRESQL_MAX_CONNECTIONS}`
 |`POSTGRESQL_MAX_PREPARED_TRANSACTIONS` | -- | `${POSTGRESQL_MAX_CONNECTIONS}`
 |`POSTGRESQL_SHARED_BUFFERS` | Configures how much memory is dedicated to PostgreSQL for caching data. | `${POSTGRESQL_SHARED_BUFFERS}`
+|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
+|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
 |=======================================================================
 
 

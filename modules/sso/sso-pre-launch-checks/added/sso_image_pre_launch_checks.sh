@@ -12,7 +12,7 @@ function postConfigure() {
   verify_CIAM_1757_fix_present
   #verify_CIAM_1975_fix_present
   #verify_CIAM_2055_fix_present
-  verify_CIAM_2657_fix_present
+  #verify_CIAM_2657_fix_present
 }
 
 # KEYCLOAK-13585 / RH BZ#1817530 / CVE-2020-10695:
