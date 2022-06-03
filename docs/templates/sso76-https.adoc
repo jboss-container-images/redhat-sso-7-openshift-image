@@ -4,12 +4,12 @@
     generator or the input template (./*.in)
 ////
 
-= sso75-https
+= sso76-https
 :toc:
 :toc-placement!:
 :toclevels: 5
 
-An example application based on RH-SSO 7.5 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso75-dev/docs.
+An example application based on RH-SSO 7.6 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev/docs.
 
 toc::[]
 

@@ -34,7 +34,7 @@
 #    modules respectively,
 # 2) The actions performed by the 'os-eap-migration' EAP module are performed
 #    by the very same 'os-eap-migration' module, which is in the case of RH-SSO
-#    images called later -- namely, from the 'sso.config.launch.setup.75'
+#    images called later -- namely, from the 'sso.config.launch.setup.76'
 #    module
 #
 # - name: jboss.container.eap.launch

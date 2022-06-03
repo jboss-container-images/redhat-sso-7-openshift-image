@@ -756,7 +756,7 @@ function configure_subsystem() {
   if [ -n "$token" ]; then
     ### CIAM-690 -- Start of RH-SSO add-on:
     ### -----------------------------------
-    ### Add support for RH-SSO 7.5
+    ### Add support for RH-SSO 7.6
 
     realm_signing_key_certificate="xx"
     # SSO Server 7.0
