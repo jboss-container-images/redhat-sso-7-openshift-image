@@ -9,7 +9,7 @@ artifacts:
 - md5: 0925d9b712d75e1d12f8efa40bcc54ca
   name: rhsso-2657.zip
   target: rhsso-2657.zip
-  url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.5.2-CIAM-2657-patch/rhsso-2657.zip
+  url: http://$DOWNLOAD_SERVER/released/JBoss-middleware/sso/7.5.2/patches/rhsso-2657.zip
 
 # Note:
 #
