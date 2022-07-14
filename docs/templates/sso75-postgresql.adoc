@@ -55,7 +55,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`SSO_TRUSTSTORE` | `SSO_TRUSTSTORE` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE}` | False
 |`SSO_TRUSTSTORE_PASSWORD` | `SSO_TRUSTSTORE` | The password for the truststore and certificate (e.g. mykeystorepass) | `${SSO_TRUSTSTORE}` | False
 |`SSO_TRUSTSTORE_SECRET` | `SSO_TRUSTSTORE` | The name of the secret containing the truststore file (e.g. truststore-secret). Used for volume secretName | sso-app-secret | False
-|`POSTGRESQL_IMAGE_STREAM_TAG` | -- | The tag to use for the "postgresql" image stream. Typically, this aligns with the major.minor version of PostgreSQL. | 10 | True
+|`POSTGRESQL_IMAGE_STREAM_TAG` | -- | The tag to use for the "postgresql13-for-sso75-openshift-rhel8" image stream. | 13-el8 | True
 |`MEMORY_LIMIT` | -- | Container memory limit. | 1Gi | False
 |=======================================================================
 
