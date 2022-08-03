@@ -46,6 +46,10 @@ function configure_access_log_valve() {
     if [ "${mode}" == "xml" ]; then
       local pattern=$(getPattern "add-xml")
       local valve="<access-log use-server-log=\"true\" pattern=\"${pattern}\"/>"
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      valve=$(escape_sed_rhs_interpolated_characters "${valve}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##ACCESS_LOG_VALVE## -->${AUS}${valve}${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction
@@ -186,6 +190,10 @@ function configure_access_log_handler() {
     getConfigurationMode "<!-- ##ACCESS_LOG_HANDLER## -->" "mode"
 
     if [ "${mode}" = "xml" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      log_category=$(escape_sed_rhs_interpolated_characters "${log_category}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##ACCESS_LOG_HANDLER## -->${AUS}<logger category=\"${log_category}\"><level name=\"TRACE\"/></logger>${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction

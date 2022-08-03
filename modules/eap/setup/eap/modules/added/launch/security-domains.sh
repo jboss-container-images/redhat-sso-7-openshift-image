@@ -55,6 +55,10 @@ configure_security_domains() {
             </authentication>\n\
         </security-domain>\n"
 
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      domains=$(escape_sed_rhs_interpolated_characters "${domains}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->${AUS}${domains}<!-- ##ADDITIONAL_SECURITY_DOMAINS## -->${AUS}" "$CONFIG_FILE"
       # EOF CIAM-1394 correction

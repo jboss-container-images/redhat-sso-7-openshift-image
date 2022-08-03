@@ -20,6 +20,10 @@ function configure_port_offset() {
     getConfigurationMode "port-offset=\"0\"" "mode"
 
     if [ "${mode}" = "xml" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      PORT_OFFSET=$(escape_sed_rhs_interpolated_characters "${PORT_OFFSET}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}port-offset=\"0\"${AUS}port-offset=\"${PORT_OFFSET}\"${AUS}g" "$CONFIG_FILE"
       # EOF CIAM-1394 correction

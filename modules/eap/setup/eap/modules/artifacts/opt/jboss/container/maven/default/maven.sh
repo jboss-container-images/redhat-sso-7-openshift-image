@@ -17,7 +17,7 @@ function maven_init_vars() {
   maven_init_var_MAVEN_SETTINGS_XML
   maven_init_var_MAVEN_OPTS
   maven_init_var_MAVEN_ARGS
-  
+
   maven_init_backward_compatibility
 }
 
@@ -83,13 +83,13 @@ function maven_build() {
   log_info "Running 'mvn $MAVEN_ARGS $goals'"
   # Execute the actual build
   mvn $MAVEN_ARGS $goals
-  
+
   popd &> /dev/null
-  
+
 }
 
 # post build cleanup.  deletes local repository after a build, if MAVEN_CLEAR_REPO is set
-function maven_cleanup() { 
+function maven_cleanup() {
   # Remove repo if desired
   if [ "${MAVEN_CLEAR_REPO,,}" == "true" -a -n "$(find ${MAVEN_LOCAL_REPO} -maxdepth 0 -type d ! -empty 2> /dev/null)" ]; then
     log_info "Clearing local maven repository at ${MAVEN_LOCAL_REPO}"
@@ -151,6 +151,10 @@ function _add_maven_proxy() {
   xml="$xml\
        </proxy>"
     local sub="<!-- ### configured http proxy ### -->"
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    xml=$(escape_sed_rhs_interpolated_characters "${xml}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}${sub}${AUS}${xml}${AUS}" "$settings"
     # EOF CIAM-1394 correction
@@ -233,6 +237,10 @@ function _add_maven_mirror() {
     </mirror>\n\
     <!-- ### configured mirrors ### -->"
 
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  xml=$(escape_sed_rhs_interpolated_characters "${xml}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ### configured mirrors ### -->${AUS}$xml${AUS}" "${settings}"
   # EOF CIAM-1394 correction
@@ -245,6 +253,10 @@ function add_maven_repos() {
   # set the local repository
   local local_repo_xml="\n\
   <localRepository>${MAVEN_LOCAL_REPO}</localRepository>"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  local_repo_xml=$(escape_sed_rhs_interpolated_characters "${local_repo_xml}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ### configured local repository ### -->${AUS}${local_repo_xml}${AUS}" "${settings}"
   # EOF CIAM-1394 correction
@@ -350,6 +362,10 @@ function _add_maven_repo_profile() {
     </repositories>\n\
   </profile>\n\
   <!-- ### configured profiles ### -->"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  xml=$(escape_sed_rhs_interpolated_characters "${xml}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ### configured profiles ### -->${AUS}${xml}${AUS}" "${settings}"
   # EOF CIAM-1394 correction
@@ -358,6 +374,10 @@ function _add_maven_repo_profile() {
   xml="\n\
     <activeProfile>${profile_id}</activeProfile>\n\
     <!-- ### active profiles ### -->"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  xml=$(escape_sed_rhs_interpolated_characters "${xml}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ### active profiles ### -->${AUS}${xml}${AUS}" "${settings}"
   # EOF CIAM-1394 correction
@@ -400,6 +420,10 @@ function _add_maven_repo_server() {
   xml="${xml}\n\
     </server>\n\
     <!-- ### configured servers ### -->"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  xml=$(escape_sed_rhs_interpolated_characters "${xml}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ### configured servers ### -->${AUS}${xml}${AUS}" "${settings}"
   # EOF CIAM-1394 correction
@@ -430,7 +454,7 @@ function copy_artifacts() {
     types="$types;$1"
     shift
   done
-  
+
   for d in $(echo $dir | tr "," "\n")
   do
     shift

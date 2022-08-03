@@ -24,6 +24,10 @@ function configure_login_modules() {
         getConfigurationMode "<!-- ##OTHER_LOGIN_MODULES## -->" "confMode"
 
         if [ "${confMode}" = "xml" ]; then
+          # RHSSO-2017 Escape possible ampersand and semicolong characters
+          # which are interpolated when used in sed righ-hand side expression
+          login_modules=$(escape_sed_rhs_interpolated_characters "${login_modules}")
+          # EOF RHSSO-2017 correction
           # CIAM-1394 correction
           sed -i "s${AUS}<!-- ##OTHER_LOGIN_MODULES## -->${AUS}${login_modules}<!-- ##OTHER_LOGIN_MODULES## -->${AUS}" "$CONFIG_FILE"
           # EOF CIAM-1394 correction
@@ -59,5 +63,5 @@ configure_login_module_cli() {
           $add_login_module
         end-if
 EOF
-   
+
 }

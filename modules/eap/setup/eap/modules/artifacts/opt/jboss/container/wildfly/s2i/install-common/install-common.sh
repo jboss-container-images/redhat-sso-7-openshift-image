@@ -104,6 +104,10 @@ function configure_drivers(){
 
       if [ -n "$drivers" ] ; then
         if [ "${configMode}" = "xml" ]; then
+          # RHSSO-2017 Escape possible ampersand and semicolong characters
+          # which are interpolated when used in sed righ-hand side expression
+          drivers=$(escape_sed_rhs_interpolated_characters "${drivers}")
+          # EOF RHSSO-2017 correction
           # CIAM-1394 correction
           sed -i "s${AUS}<!-- ##DRIVERS## -->${AUS}${drivers}<!-- ##DRIVERS## -->${AUS}" $CONFIG_FILE
           # EOF CIAM-1394 correction
