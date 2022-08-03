@@ -37,6 +37,10 @@ function configureEnv() {
   # TODO - I don't think this is being used any more? The real action seems to be in tx-datasource.sh
   if [ -n "$JDBC_STORE_JNDI_NAME" ]; then
     local jdbcStore="<jdbc-store datasource-jndi-name=\"${JDBC_STORE_JNDI_NAME}\"/>"
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    jdbcStore=$(escape_sed_rhs_interpolated_characters "${jdbcStore}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##JDBC_STORE## -->${AUS}${jdbcStore}${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction

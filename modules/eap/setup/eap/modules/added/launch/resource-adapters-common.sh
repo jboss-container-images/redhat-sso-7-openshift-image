@@ -87,6 +87,10 @@ function inject_resource_adapters_common() {
     resource_adapters=$(echo "${resource_adapters}" | sed -e "s${AUS}localhost${AUS}${hostname}${AUS}g")
     # EOF CIAM-1394 correction
     if [ "${mode}" = "xml" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      resource_adapters=$(escape_sed_rhs_interpolated_characters "${resource_adapters}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##RESOURCE_ADAPTERS## -->${AUS}${resource_adapters}<!-- ##RESOURCE_ADAPTERS## -->${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction

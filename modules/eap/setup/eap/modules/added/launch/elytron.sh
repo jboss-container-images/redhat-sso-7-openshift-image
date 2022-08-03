@@ -69,6 +69,10 @@ insert_elytron_tls() {
          </tls>\n"
     # check for new config tag, use that if it's present, note we remove the <!-- ##ELYTRON_TLS## --> on first substitution
     if [ "true" = $(has_elytron_tls "${CONFIG_FILE}") ]; then
+        # RHSSO-2017 Escape possible ampersand and semicolong characters
+        # which are interpolated when used in sed righ-hand side expression
+        elytron_tls=$(escape_sed_rhs_interpolated_characters "${elytron_tls}")
+        # EOF RHSSO-2017 correction
         # CIAM-1394 correction
         sed -i "s${AUS}<!-- ##ELYTRON_TLS## -->${AUS}${elytron_tls}${AUS}" $CONFIG_FILE
         # EOF CIAM-1394 correction
@@ -293,6 +297,12 @@ configure_https() {
           # insert the new config element, only if it hasn't been added already
           insert_elytron_tls_config_if_needed "${CONFIG_FILE}"
           # insert the individual config blocks we leave the replacement tags around in case something else (e.g. jgoups might need to add a keystore etc)
+          # RHSSO-2017 Escape possible ampersand and semicolong characters
+          # which are interpolated when used in sed righ-hand side expression
+          elytron_key_store=$(escape_sed_rhs_interpolated_characters "${elytron_key_store}")
+          elytron_key_manager=$(escape_sed_rhs_interpolated_characters "${elytron_key_manager}")
+          elytron_server_ssl_context=$(escape_sed_rhs_interpolated_characters "${elytron_server_ssl_context}")
+          # EOF RHSSO-2017 correction
           # CIAM-1394 correction
           sed -i "s${AUS}<!-- ##ELYTRON_KEY_STORE## -->${AUS}${elytron_key_store}<!-- ##ELYTRON_KEY_STORE## -->${AUS}" $CONFIG_FILE
           sed -i "s${AUS}<!-- ##ELYTRON_KEY_MANAGER## -->${AUS}${elytron_key_manager}<!-- ##ELYTRON_KEY_MANAGER## -->${AUS}" $CONFIG_FILE
@@ -302,6 +312,10 @@ configure_https() {
           legacy_elytron_tls=$(elytron_legacy_config "${elytron_key_store}" "${elytron_key_manager}" "${elytron_server_ssl_context}")
       fi
       # will be empty unless only the old marker is present.
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      legacy_elytron_tls=$(escape_sed_rhs_interpolated_characters "${legacy_elytron_tls}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##TLS## -->${AUS}${legacy_elytron_tls}${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction
@@ -315,6 +329,10 @@ configure_https() {
     getConfigurationMode "<!-- ##HTTPS_CONNECTOR## -->" "elytron_https_connector_conf_mode"
     if [ "${elytron_https_connector_conf_mode}" = "xml" ]; then
       local elytron_https_connector=$(create_elytron_https_connector "https" "https" "LocalhostSslContext" "true")
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      elytron_https_connector=$(escape_sed_rhs_interpolated_characters "${elytron_https_connector}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##HTTPS_CONNECTOR## -->${AUS}${elytron_https_connector}${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction
@@ -391,6 +409,11 @@ configure_elytron_integration() {
           </security-realms>\n\
     </elytron-integration>"
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    elytron_integration=$(escape_sed_rhs_interpolated_characters "${elytron_integration}")
+    elytron_realm=$(escape_sed_rhs_interpolated_characters "${elytron_realm}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##ELYTRON_INTEGRATION## -->${AUS}${elytron_integration}${AUS}" $CONFIG_FILE
     sed -i "s${AUS}<!-- ##INTEGRATION_ELYTRON_REALM## -->${AUS}${elytron_realm}<!-- ##INTEGRATION_ELYTRON_REALM## -->${AUS}" $CONFIG_FILE
@@ -415,6 +438,10 @@ configure_elytron_security_domain() {
                       <realm name=\"${SECDOMAIN_NAME}\"/>\n\
                   </security-domain>"
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    elytron_security_domain=$(escape_sed_rhs_interpolated_characters "${elytron_security_domain}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##ELYTRON_SECURITY_DOMAIN## -->${AUS}${elytron_security_domain}<!-- ##ELYTRON_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -442,6 +469,10 @@ configure_http_authentication_factory() {
                       </mechanism-configuration>\n\
                   </http-authentication-factory>"
 
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      http_authentication_factory=$(escape_sed_rhs_interpolated_characters "${http_authentication_factory}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##HTTP_AUTHENTICATION_FACTORY## -->${AUS}${http_authentication_factory}<!-- ##HTTP_AUTHENTICATION_FACTORY## -->${AUS}" $CONFIG_FILE
       # EOF CIAM-1394 correction
@@ -466,6 +497,11 @@ configure_http_application_security_domains() {
                 <!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->\
             </application-security-domains>"
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    http_application_security_domains=$(escape_sed_rhs_interpolated_characters "${http_application_security_domains}")
+    application_security_domain=$(escape_sed_rhs_interpolated_characters "${application_security_domain}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##HTTP_APPLICATION_SECURITY_DOMAINS## -->${AUS}${http_application_security_domains}${AUS}" $CONFIG_FILE
     sed -i "s${AUS}<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->${AUS}${application_security_domain}<!-- ##HTTP_APPLICATION_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE
@@ -491,6 +527,11 @@ configure_ejb_application_security_domains() {
                 <!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->\
             </application-security-domains>"
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    ejb_application_security_domains=$(escape_sed_rhs_interpolated_characters "${ejb_application_security_domains}")
+    application_security_domain=$(escape_sed_rhs_interpolated_characters "${application_security_domain}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##EJB_APPLICATION_SECURITY_DOMAINS## -->${AUS}${ejb_application_security_domains}${AUS}" $CONFIG_FILE
     sed -i "s${AUS}<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->${AUS}${application_security_domain}<!-- ##EJB_APPLICATION_SECURITY_DOMAIN## -->${AUS}" $CONFIG_FILE

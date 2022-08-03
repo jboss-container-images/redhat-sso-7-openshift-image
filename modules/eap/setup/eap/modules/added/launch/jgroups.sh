@@ -387,6 +387,10 @@ configure_jgroups_encryption() {
   esac
 
   if [ "${key_store_conf_mode}" = "xml" ]; then
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    key_store=$(escape_sed_rhs_interpolated_characters "${key_store}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##ELYTRON_KEY_STORE## -->${AUS}${key_store}<!-- ##ELYTRON_KEY_STORE## -->${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -395,6 +399,10 @@ configure_jgroups_encryption() {
   fi
 
   if [ "${encrypt_conf_mode}" = "xml" ]; then
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    jgroups_encrypt=$(escape_sed_rhs_interpolated_characters "${jgroups_encrypt}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##JGROUPS_ENCRYPT## -->${AUS}${jgroups_encrypt}${AUS}g" "$CONFIG_FILE"
     # EOF CIAM-1394 correction

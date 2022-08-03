@@ -15,6 +15,10 @@ function add_management_interface_realm() {
 
     if [ "${mode}" = "xml" ]; then
       mgmt_iface_replace_str=" security-realm=\"$mgmt_iface_realm\">"
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      mgmt_iface_replace_str=$(escape_sed_rhs_interpolated_characters "${mgmt_iface_replace_str}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}><!-- ##MGMT_IFACE_REALM## -->${AUS}${mgmt_iface_replace_str}${AUS}" "$CONFIG_FILE"
       # EOF CIAM-1394 correction
