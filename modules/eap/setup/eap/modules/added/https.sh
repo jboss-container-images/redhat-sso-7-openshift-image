@@ -69,6 +69,10 @@ function configureSslXml() {
             </ssl>\n\
         </server-identities>"
 
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  ssl=$(escape_sed_rhs_interpolated_characters "${ssl}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ##SSL## -->${AUS}${ssl}${AUS}" $CONFIG_FILE
   # EOF CIAM-1394 correction
@@ -98,6 +102,7 @@ EOF
 
 function configureHttpsXml() {
   https_connector="<https-listener name=\"https\" socket-binding=\"https\" security-realm=\"ApplicationRealm\" proxy-address-forwarding=\"true\"/>"
+  # RHSSO-2017 Escape special characters for sed RHS fix not needed since "https_connector" has only static content
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ##HTTPS_CONNECTOR## -->${AUS}${https_connector}${AUS}" $CONFIG_FILE
   # EOF CIAM-1394 correction

@@ -24,6 +24,10 @@ function configure_deployment_scanner() {
   getConfigurationMode "##AUTO_DEPLOY_EXPLODED##" "configure_mode"
 
   if [ "${configure_mode}" = "xml" ]; then
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    auto_deploy_exploded=$(escape_sed_rhs_interpolated_characters "${auto_deploy_exploded}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}##AUTO_DEPLOY_EXPLODED##${AUS}${auto_deploy_exploded}${AUS}" "$CONFIG_FILE"
     # EOF CIAM-1394 correction

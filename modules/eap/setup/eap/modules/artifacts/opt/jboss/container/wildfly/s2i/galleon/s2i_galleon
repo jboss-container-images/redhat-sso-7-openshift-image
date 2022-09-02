@@ -12,6 +12,10 @@ function galleon_patch_generic_config() {
        fi
      done
      if [ -n "$layers" ]; then
+       # RHSSO-2017 Escape possible ampersand and semicolong characters
+       # which are interpolated when used in sed righ-hand side expression
+       layers=$(escape_sed_rhs_interpolated_characters "${layers}")
+       $ EOF RHSSO-2017 correction
        # CIAM-1394 correction
        sed -i "s${AUS}<!-- ##GALLEON_LAYERS## -->${AUS}${layers}${AUS}" $GALLEON_GENERIC_LAYERS_DEFINITION/config.xml
        # EOF CIAM-1394 correction
@@ -24,6 +28,10 @@ function galleon_patch_generic_config() {
        featurepacks="$featurepacks<location>$fp</location></feature-pack>"
      done
      if [ -n "$featurepacks" ]; then
+       # RHSSO-2017 Escape possible ampersand and semicolong characters
+       # which are interpolated when used in sed righ-hand side expression
+       featurepacks=$(escape_sed_rhs_interpolated_characters "${featurepacks}")
+       # EOF RHSSO-2017 correction
        # CIAM-1394 correction
        sed -i "s${AUS}<!-- ##GALLEON_FEATURE_PACKS## -->${AUS}${featurepacks}${AUS}" $GALLEON_GENERIC_LAYERS_DEFINITION/pom.xml
        # EOF CIAM-1394 correction
@@ -121,7 +129,7 @@ function galleon_init_mvn_env() {
     # Need to compute the project src root dir.
     dest_dir="${S2I_DESTINATION_DIR:-/tmp}"
     GALLEON_PROJECT_SRC_DIR="${dest_dir}/src"
-    
+
     # Identify custom galleon content directory
     if [ -n "${GALLEON_DIR}" ]; then
       GALLEON_LOCAL_PROVISIONING="${GALLEON_PROJECT_SRC_DIR}/${GALLEON_DIR}"
@@ -152,7 +160,7 @@ function galleon_init_mvn_env() {
     unset MAVEN_ARGS
     unset MAVEN_REPO_LOCAL
     #capture default Maven ARGS
-    maven_init_var_MAVEN_ARGS    
+    maven_init_var_MAVEN_ARGS
     # Add settings that Galleon plugin will use when generating config
     MAVEN_ARGS="$MAVEN_ARGS -Djboss.modules.settings.xml.url=file://$GALLEON_MAVEN_SETTINGS_XML"
 }
@@ -261,7 +269,7 @@ function galleon_provision_server() {
         exit 1
       fi
     fi
-    
+
     if [ -z "$GALLEON_DESCRIPTION_LOCATION" ]; then
         if [ -z "$GALLEON_PROVISION_SERVER" ]; then
           if [ -d $GALLEON_LOCAL_PROVISIONING ]; then
@@ -296,7 +304,7 @@ function galleon_provision_server() {
     fi
 
     if [ ! -z "$GALLEON_DESCRIPTION_LOCATION" ]; then
-      
+
       if [ -f "$GALLEON_DESCRIPTION_LOCATION/pom.xml" ]; then
           echo "Provisioning WildFly server..."
           maven_build "$GALLEON_DESCRIPTION_LOCATION" package

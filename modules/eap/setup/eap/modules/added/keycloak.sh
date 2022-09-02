@@ -104,12 +104,12 @@ function configure_cli_keycloak() {
           ejb_config="$(configure_ejb $id $app_sec_domain)"
 
           if [ "$useLegacySecurity" == "false" ]; then
-            echo " 
+            echo "
               $elytron_assert
               $oidc_elytron
               $ejb_config" >> ${CLI_SCRIPT_FILE}
           fi
-          echo " 
+          echo "
               $oidc_extension
               /subsystem=keycloak:add
               " >> ${CLI_SCRIPT_FILE}
@@ -128,7 +128,7 @@ function configure_cli_keycloak() {
               $elytron_assert
               $saml_elytron"  >> ${CLI_SCRIPT_FILE}
           fi
-          echo " 
+          echo "
             $saml_extension
             /subsystem=keycloak-saml:add
             " >> ${CLI_SCRIPT_FILE}
@@ -162,6 +162,10 @@ function configure_cli_keycloak() {
           keycloak_subsystem=$(cat "${SECURE_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
           keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak:1.1\">${keycloak_subsystem}</subsystem>${SUBSYSTEM_END_MARKER}"
 
+          # RHSSO-2017 Escape possible ampersand and semicolong characters
+          # which are interpolated when used in sed righ-hand side expression
+          keycloak_subsystem=$(escape_sed_rhs_interpolated_characters "${keycloak_subsystem}")
+          # EOF RHSSO-2017 correction
           # CIAM-1394 correction
           sed -i "s${AUS}${SUBSYSTEM_END_MARKER}${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
           # EOF CIAM-1394 correction
@@ -169,7 +173,7 @@ function configure_cli_keycloak() {
           oidc_elytron="$(configure_OIDC_elytron $id)"
           ejb_config="$(configure_ejb $id $app_sec_domain)"
           if [ "$useLegacySecurity" == "false" ]; then
-            echo " 
+            echo "
               $elytron_assert
               $oidc_elytron
               $ejb_config" >> ${CLI_SCRIPT_FILE}
@@ -185,6 +189,10 @@ function configure_cli_keycloak() {
           keycloak_subsystem=$(cat "${SECURE_SAML_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
           keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak-saml:1.1\">${keycloak_subsystem}</subsystem>${SUBSYSTEM_END_MARKER}"
 
+          # RHSSO-2017 Escape possible ampersand and semicolong characters
+          # which are interpolated when used in sed righ-hand side expression
+          keycloak_subsystem=$(escape_sed_rhs_interpolated_characters "${keycloak_subsystem}")
+          # EOF RHSSO-2017 correction
           # CIAM-1394 correction
           sed -i "s${AUS}${SUBSYSTEM_END_MARKER}${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
           # EOF CIAM-1394 correction
@@ -218,7 +226,7 @@ function configure_cli_keycloak() {
       enable_keycloak_deployments
   elif [ -n "$SSO_URL" ]; then
     enable_keycloak_deployments
-    
+
     oidc_extension="$(configure_OIDC_extension)"
     saml_extension="$(configure_SAML_extension)"
     oidc_elytron="$(configure_OIDC_elytron $id)"
@@ -235,7 +243,7 @@ function configure_cli_keycloak() {
     if [ ! -n "${SSO_REALM}" ]; then
       log_warning "Missing SSO_REALM. Defaulting to ${SSO_REALM:=master} realm"
     fi
-  
+
     set_curl
     get_token
 
@@ -253,7 +261,7 @@ function configure_cli_keycloak() {
             $oidc_extension
             $oidc" >> ${CLI_SCRIPT_FILE}
         else
-          echo " 
+          echo "
             $elytron_assert
             $oidc_extension
             $oidc_elytron
@@ -265,7 +273,7 @@ function configure_cli_keycloak() {
           log_warning "keycloak subsystem already exists, no configuration applied"
       fi
     fi
-    
+
     if [ ! -z "${saml}" ]; then
       if [ "${ret_saml}" -ne 0 ]; then
         if [ "$useLegacySecurity" == "true" ]; then
@@ -299,7 +307,7 @@ function configure_cli_keycloak() {
        $legacy_security"  >> ${CLI_SCRIPT_FILE}
     fi
   fi
-  
+
 }
 
 function configure_security_domain_cli() {
@@ -493,7 +501,7 @@ end-if"
 configure_ejb() {
   id=$1
   security_domain=$2
-  
+
   # We cannot have nested if sentences in CLI, so we use Xpath here to see if the subsystem=ejb3 is in the file
   xpath="\"//*[local-name()='subsystem' and starts-with(namespace-uri(), 'urn:jboss:domain:ejb3:')]\""
   local ret
@@ -521,12 +529,12 @@ function configure_OIDC_subsystem() {
     cli="
       ${subsystem}:add
       ${realm}:add(auth-server-url=${SSO_URL},register-node-at-startup=true,register-node-period=600,ssl-required=external,allow-any-hostname=false)"
-  
+
     if [ -n "$SSO_PUBLIC_KEY" ]; then
       cli="$cli
         ${realm}:write-attribute(name=realm-public-key,value=${SSO_PUBLIC_KEY})"
     fi
-    
+
     if [ -n "$SSO_TRUSTSTORE" ] && [ -n "$SSO_TRUSTSTORE_DIR" ]; then
       cli="$cli
         ${realm}:write-attribute(name=truststore,value=${SSO_TRUSTSTORE_DIR}/${SSO_TRUSTSTORE})
@@ -558,6 +566,10 @@ function configure_keycloak() {
       keycloak_subsystem=$(cat "${SECURE_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
       keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak:1.1\">${keycloak_subsystem}</subsystem>"
 
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      keycloak_subsystem=$(escape_sed_rhs_interpolated_characters "${keycloak_subsystem}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##KEYCLOAK_SUBSYSTEM## -->${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
@@ -567,6 +579,10 @@ function configure_keycloak() {
       keycloak_subsystem=$(cat "${SECURE_SAML_DEPLOYMENTS}" | sed ':a;N;$!ba;s/\n//g')
       keycloak_subsystem="<subsystem xmlns=\"urn:jboss:domain:keycloak-saml:1.1\">${keycloak_subsystem}</subsystem>"
 
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      keycloak_subsystem=$(escape_sed_rhs_interpolated_characters "${keycloak_subsystem}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##KEYCLOAK_SAML_SUBSYSTEM## -->${AUS}${keycloak_subsystem}${AUS}" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
@@ -598,42 +614,75 @@ function configure_keycloak() {
     keycloak_saml_sp=$(cat "${KEYCLOAK_SAML_SP_SUBSYSTEM_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
     configure_subsystem $SAML ${KEYCLOAK_SAML_REALM_SUBSYSTEM_FILE} "##KEYCLOAK_SAML_SUBSYSTEM##" "saml" ${KEYCLOAK_SAML_DEPLOYMENT_SUBSYSTEM_FILE}
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    SSO_REALM=$(escape_sed_rhs_interpolated_characters "${SSO_REALM}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}##KEYCLOAK_REALM##${AUS}${SSO_REALM}${AUS}g" "${CONFIG_FILE}"
     # EOF CIAM-1394 correction
 
     if [ -n "$SSO_PUBLIC_KEY" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      SSO_PUBLIC_KEY=$(escape_sed_rhs_interpolated_characters "${SSO_PUBLIC_KEY}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##KEYCLOAK_PUBLIC_KEY## -->${AUS}<realm-public-key>${SSO_PUBLIC_KEY}</realm-public-key>${AUS}g" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_TRUSTSTORE" ] && [ -n "$SSO_TRUSTSTORE_DIR" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      SSO_TRUSTSTORE_DIR=$(escape_sed_rhs_interpolated_characters "${SSO_TRUSTSTORE_DIR}")
+      SSO_TRUSTSTORE=$(escape_sed_rhs_interpolated_characters "${SSO_TRUSTSTORE}")
+      SSO_TRUSTSTORE_PASSWORD=$(escape_sed_rhs_interpolated_characters "${SSO_TRUSTSTORE_PASSWORD}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ##KEYCLOAK_TRUSTSTORE## -->${AUS}<truststore>${SSO_TRUSTSTORE_DIR}/${SSO_TRUSTSTORE}</truststore><truststore-password>${SSO_TRUSTSTORE_PASSWORD}</truststore-password>${AUS}g" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
+      # RHSSO-2017 Escape special characters for sed RHS fix not needed because replacement is only static
       sed -i "s|##KEYCLOAK_DISABLE_TRUST_MANAGER##|false|g" "${CONFIG_FILE}"
     else
+      # RHSSO-2017 Escape special characters for sed RHS fix not needed because replacement is only static
       sed -i "s|##KEYCLOAK_DISABLE_TRUST_MANAGER##|true|g" "${CONFIG_FILE}"
     fi
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    SSO_URL=$(escape_sed_rhs_interpolated_characters "${SSO_URL}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}##KEYCLOAK_URL##${AUS}${SSO_URL}${AUS}g" "${CONFIG_FILE}"
     # EOF CIAM-1394 correction
 
     if [ -n "$SSO_SAML_CERTIFICATE_NAME" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      SSO_SAML_CERTIFICATE_NAME=$(escape_sed_rhs_interpolated_characters "${SSO_SAML_CERTIFICATE_NAME}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}##SSO_SAML_CERTIFICATE_NAME##${AUS}${SSO_SAML_CERTIFICATE_NAME}${AUS}g" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_SAML_KEYSTORE_PASSWORD" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      SSO_SAML_KEYSTORE_PASSWORD=$(escape_sed_rhs_interpolated_characters "${SSO_SAML_KEYSTORE_PASSWORD}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}##SSO_SAML_KEYSTORE_PASSWORD##${AUS}${SSO_SAML_KEYSTORE_PASSWORD}${AUS}g" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
     fi
 
     if [ -n "$SSO_SAML_KEYSTORE" ] && [ -n "$SSO_SAML_KEYSTORE_DIR" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      SSO_SAML_KEYSTORE_DIR=$(escape_sed_rhs_interpolated_characters "${SSO_SAML_KEYSTORE_DIR}")
+      SSO_SAML_KEYSTORE=$(escape_sed_rhs_interpolated_characters "${SSO_SAML_KEYSTORE}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}##SSO_SAML_KEYSTORE##${AUS}${SSO_SAML_KEYSTORE_DIR}/${SSO_SAML_KEYSTORE}${AUS}g" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
@@ -683,6 +732,10 @@ function explode_keycloak_deployments() {
 
     if [ -f "${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml" ]; then
       requested_auth_method=$(cat ${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml | xmllint --nowarning --xpath "string(//*[local-name()='auth-method'])" - | sed ':a;N;$!ba;s/\n//g' | tr -d '[:space:]')
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      auth_method=$(escape_sed_rhs_interpolated_characters "${auth_method}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}${requested_auth_method}${AUS}${auth_method}${AUS}" "${JBOSS_HOME}/standalone/deployments/${sso_deployment}/WEB-INF/web.xml"
       # EOF CIAM-1394 correction
@@ -714,10 +767,15 @@ function get_token() {
 }
 
 function configure_extension() {
+  # RHSSO-2017 Fix for escaping special characters in sed RHS not needed because replacement is only static
   sed -i 's|<!-- ##KEYCLOAK_EXTENSION## -->|<extension module="org.keycloak.keycloak-adapter-subsystem"/><extension module="org.keycloak.keycloak-saml-adapter-subsystem"/>|' "${CONFIG_FILE}"
 }
 
 function configure_extensions_no_marker() {
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  EXTENSIONS_END_MARKER=$(escape_sed_rhs_interpolated_characters "${EXTENSIONS_END_MARKER}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}${EXTENSIONS_END_MARKER}${AUS}<extension module=\"org.keycloak.keycloak-adapter-subsystem\"/><extension module=\"org.keycloak.keycloak-saml-adapter-subsystem\"/>${EXTENSIONS_END_MARKER}${AUS}" "${CONFIG_FILE}"
   # EOF CIAM-1394 correction
@@ -725,6 +783,10 @@ function configure_extensions_no_marker() {
 
 function configure_security_domain() {
   keycloak_security_domain=$(cat "${KEYCLOAK_SECURITY_DOMAIN_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  keycloak_security_domain=$(escape_sed_rhs_interpolated_characters "${keycloak_security_domain}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ##KEYCLOAK_SECURITY_DOMAIN## -->${AUS}${keycloak_security_domain%$'\n'}${AUS}" "${CONFIG_FILE}"
   # EOF CIAM-1394 correction
@@ -1003,6 +1065,10 @@ function configure_subsystem() {
 
   if [ -z "$is_cli" ]; then
     if [ -n "$subsystem" ]; then
+      # RHSSO-2017 Escape possible ampersand and semicolong characters
+      # which are interpolated when used in sed righ-hand side expression
+      subsystem=$(escape_sed_rhs_interpolated_characters "${subsystem}")
+      # EOF RHSSO-2017 correction
       # CIAM-1394 correction
       sed -i "s${AUS}<!-- ${subsystem_marker} -->${AUS}${subsystem%$'\n'}${AUS}" "${CONFIG_FILE}"
       # EOF CIAM-1394 correction
@@ -1099,7 +1165,7 @@ function read_web_dot_xml {
 }
 
 function get_application_routes {
-  
+
   if [ -n "$HOSTNAME_HTTP" ]; then
     route="http://${HOSTNAME_HTTP}"
   fi
@@ -1144,7 +1210,7 @@ function add_route_with_default_port() {
       fi
     fi
   done
-  
+
   IFS=$IFS_save
 
   echo ${routesWithPort%;}
@@ -1186,7 +1252,7 @@ function query_routes_from_service() {
       echo $routes
     else
       log_warning "Fail to query the Route using the Kubernetes API, the Service Account might not have the necessary privileges."
-      
+
       if [ ! -z "${response}" ]; then
         log_warning "Response message: ${response::- 3} - HTTP Status code: ${response: -3}"
       fi

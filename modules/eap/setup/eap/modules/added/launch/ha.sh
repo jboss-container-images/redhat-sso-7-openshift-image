@@ -323,6 +323,10 @@ configure_ha() {
   fi
 
   if [ "${CONF_AUTH_MODE}" = "xml" ]; then
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    JGROUPS_AUTH=$(escape_sed_rhs_interpolated_characters "${JGROUPS_AUTH}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##JGROUPS_AUTH## -->${AUS}${JGROUPS_AUTH}${AUS}g" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -333,6 +337,10 @@ configure_ha() {
   log_info "Configuring JGroups discovery protocol to ${ping_protocol}"
 
   if [ "${CONF_PING_MODE}" = "xml" ]; then
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    ping_protocol_element=$(escape_sed_rhs_interpolated_characters "${ping_protocol_element}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##JGROUPS_PING_PROTOCOL## -->${AUS}${ping_protocol_element}${AUS}g" $CONFIG_FILE
     # EOF CIAM-1394 correction

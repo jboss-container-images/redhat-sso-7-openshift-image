@@ -118,6 +118,10 @@ function inject_default_job_repositories() {
 # $1 - default job repository name
 function inject_default_job_repository() {
   defaultjobrepo="     <default-job-repository name=\"${1}\"/>"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  defaultjobrepo=$(escape_sed_rhs_interpolated_characters "${defaultjobrepo}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ##DEFAULT_JOB_REPOSITORY## -->${AUS}${defaultjobrepo%$'\n'}${AUS}" $CONFIG_FILE
   # EOF CIAM-1394 correction
@@ -128,6 +132,10 @@ function inject_job_repository() {
       <jdbc data-source=\"${1}\"/>\
     </job-repository>\
     <!-- ##JOB_REPOSITORY## -->"
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  jobrepo=$(escape_sed_rhs_interpolated_characters "${jobrepo}")
+  # EOF RHSSO-2017 correction
   # CIAM-1394 correction
   sed -i "s${AUS}<!-- ##JOB_REPOSITORY## -->${AUS}${jobrepo%$'\n'}${AUS}" $CONFIG_FILE
   # EOF CIAM-1394 correction
