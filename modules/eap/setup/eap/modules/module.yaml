@@ -31,11 +31,11 @@ ports:
 artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
-  md5: f09134d49bcee9a583ec3d2d9402f8c2
-  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.4/jboss-eap-7.4.4-image-builder-maven-repository.zip
-# RHSSO-1824: Update RH-SSO server overlay to 'RH-SSO 7.5.2.CR1' build
+  md5: 3630967f24b62c537fa3fa7b1d25232d
+  url: http://$DOWNLOAD_SERVER/released/jboss/eap7/7.4.6/jboss-eap-7.4.6-image-builder-maven-repository.zip
+# RHSSO-1824: Update RH-SSO server overlay to 'RH-SSO 7.5.3.CR2' build
 - name: keycloak-server-overlay.zip
-  md5: 7ea126bb6d903c88727fa3636150c63a
+  md5: 275620f9b71aed491819f0b29ca12495
 # List remaining (particular RH-SSO build independent) artifacts below
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
@@ -58,53 +58,59 @@ artifacts:
 #       accordingly in the 'modules/eap/setup/eap/modules/configure.sh'
 #       script too !!!
 #
-- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.jar
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065279"
-  target: wildfly-galleon-maven-plugin-5.1.2.Final.jar
-- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.pom
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065283"
-  target: wildfly-galleon-maven-plugin-5.1.2.Final.pom
-- name: wildfly-provisioning-parent-5.1.2.Final-redhat-00001.pom
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065285"
-  target: wildfly-provisioning-parent-5.1.2.Final.pom
+- name: wildfly-galleon-maven-plugin-5.2.6.Final-redhat-00001.pom
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706028"
+  target: wildfly-galleon-maven-plugin-5.2.6.Final.pom
+- name: wildfly-galleon-maven-plugin-5.2.6.Final-redhat-00001.jar
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706035"
+  target: wildfly-galleon-maven-plugin-5.2.6.Final.jar
+- name: wildfly-provisioning-parent-5.2.6.Final-redhat-00001.pom
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706024"
+  target: wildfly-provisioning-parent-5.2.6.Final.pom
 labels:
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.4"
+  value: "7.4.6"
+- name: "org.jboss.product.openjdk.version"
+  value: "11"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
   value: "DEBUG:true"
 - name: "com.redhat.dev-mode.port"
   value: "DEBUG_PORT:8787"
-- name: io.fabric8.s2i.version.maven
+- name: "com.redhat.license_terms"
+  value: "https://www.redhat.com/agreements"
+- name: "io.fabric8.s2i.version.maven"
   value: "3.6"
-- name: io.fabric8.s2i.version.jolokia
-  value: "1.6.2-redhat-00002"
+- name: "io.openshift.expose-services"
+  value: "8080:http"
+- name: "io.fabric8.s2i.version.jolokia"
+  value: "1.7.1.redhat-00001"
 - name: "io.openshift.s2i.scripts-url"
   value: "image:///usr/local/s2i"
-- name: io.openshift.s2i.destination
+- name: "io.openshift.s2i.destination"
   value: "/tmp"
-- name: org.jboss.container.deployments-dir
+- name: "org.jboss.container.deployments-dir"
   value: "/deployments"
 envs:
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.4.GA-redhat-00011"
+  value: "7.4.6.GA-redhat-00002"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "PRODUCT_VERSION"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
@@ -120,7 +126,7 @@ envs:
 - name: MAVEN_VERSION
   value: "3.6"
 - name: JOLOKIA_VERSION
-  value: "1.6.2"
+  value: "1.7.1"
 - name: AB_JOLOKIA_PASSWORD_RANDOM
   value: "true"
 - name: AB_JOLOKIA_AUTH_OPENSHIFT
@@ -244,7 +250,7 @@ envs:
   description: ^
     Space separated list of filters to be applied when copying deployments.
     Defaults to ** * **
-  value: "*"
+  value: "*.war *.ear *.rar *.jar"
   example: "*.jar *.war *.ear"
 - name: S2I_TARGET_DEPLOYMENTS_DIR
   description: ^
@@ -371,9 +377,6 @@ envs:
   value: /opt/jboss/container/wildfly/s2i
 - name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_PROVISION
   value: /opt/jboss/container/wildfly/s2i/galleon/provisioning/generic_provisioning
-- name: GALLEON_DEFINITIONS
-- name: S2I_SOURCE_DEPLOYMENTS_FILTER
-  value: "*.war *.ear *.rar *.jar"
 - name: WILDFLY_S2I_OUTPUT_DIR
   value: "/s2i-output"
 - name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_DIR
@@ -390,7 +393,7 @@ envs:
 - name: GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
   value: /opt/jboss/container/wildfly/s2i/galleon/build-image-settings.xml
 - name: GALLEON_MAVEN_REPO_HOOK_SCRIPT
-- name: GALLEON_S2I_FP_GROUP_ID
+  value: /opt/jboss/container/eap/galleon/patching.sh
 - name: GALLEON_S2I_FP_ARTIFACT_ID
 - name: GALLEON_VERSION
   value: "4.2.8.Final"
@@ -401,12 +404,9 @@ envs:
 #   artifacts listed in the 'artifacts:' section above
 #
 - name: GALLEON_WILDFLY_VERSION
-  value: "5.1.2.Final"
-- name: GALLEON_S2I_PRODUCER_NAME
-- name: S2I_FP_VERSION
+  value: "5.2.6.Final"
 - name: GALLEON_PROVISION_SERVER
 - name: GALLEON_PROVISION_LAYERS
-- name: GALLEON_DEFAULT_FAT_SERVER
 - name: GALLEON_PROVISION_DEFAULT_FAT_SERVER
 - name: S2I_COPY_SERVER
   value: "true"
