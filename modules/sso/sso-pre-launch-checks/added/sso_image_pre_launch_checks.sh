@@ -12,7 +12,6 @@ function postConfigure() {
   verify_CIAM_1757_fix_present
   #verify_CIAM_1975_fix_present
   #verify_CIAM_2055_fix_present
-  verify_CIAM_2657_fix_present
 }
 
 # KEYCLOAK-13585 / RH BZ#1817530 / CVE-2020-10695:
@@ -102,16 +101,6 @@ function verify_CIAM_2055_fix_present() {
   if ! find "${JBOSS_HOME}"/modules/system/layers -name '*-rhsso-2054.jar' 2> /dev/null | grep -q .
   then
     log_error "The CIAM-2055 one-off patch wasn't properly installed."
-    log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
-    exit "${errorExitCode}"
-  fi
-}
-
-function verify_CIAM_2657_fix_present() {
-  local -r errorExitCode="1"
-  if ! find "${JBOSS_HOME}"/modules/system/layers -name '*-rhsso-2657.jar' 2> /dev/null | grep -q .
-  then
-    log_error "The CIAM-2657 one-off patch wasn't properly installed."
     log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
     exit "${errorExitCode}"
   fi

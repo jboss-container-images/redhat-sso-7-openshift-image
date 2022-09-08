@@ -12,7 +12,7 @@ labels:
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.5.2.GA"
+      value: &product_version "7.5.3.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
@@ -73,22 +73,22 @@ modules:
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
-                  ref: 0.45.3
+                  ref: 0.45.4
 
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_744_CR2
+                  ref: EAP_746_CR2_3
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_744_CR2
+                  ref: EAP_LP_746_CR1
 
           - name: wildfly-cekit-modules
             git:
                   url: https://github.com/wildfly/wildfly-cekit-modules.git
-                  ref: 0.23.4
+                  ref: 0.23.8
 
           - name: sso-modules
             path: modules
