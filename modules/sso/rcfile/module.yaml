@@ -1,9 +1,36 @@
 schema_version: 1
 name: sso.rcfile
 version: '1.0'
-description: >
-  Defines RH-SSO global variables & functions required by subsequent image modules.
+description: ^
+  Defines RH-SSO global variables & functions required by subsequent image
+  modules.
 envs:
+# CIAM-1394 Use a non-printable character - ASCII 31 (octal 037) unit
+# separator character as the sed substitute (s) command delimiter for each
+# existing call of "sed -i" and "sed -e" across the various container image
+# modules, where either the regexp or the replacement value is dynamically
+# generated (IOW it's not a fixed string) and it's based on / derived from
+# the value of some environment variable.
+#
+# Do this to avoid clash of the sed substitute command delimiter with some
+# special character specified in env var value (e.g. in password), leading to:
+#
+# * sed: -e expression #1, char <CHAR_POS>: unterminated `s' command
+# * sed: -e expression #1, char <CHAR_POS>: unknown option to 's'
+#
+# type of errors
+- name: "AUS"
+  # Since the notation of octal numbers changed in YAML specification between
+  # v1.1 (using the '0777' notation) vs v1.2 (using the '0o777' notation), we
+  # express the AUS value using the hexadecimal notation, which is same and
+  # works across all YAML spec versions.
+  value: "\x1f"
+  description: ^
+    A **single** **control** character used as the delimiter within any sed 's'
+    command executed throughout the run of the RH-SSO container image. In
+    ASCII, the control characters have octal codes 000 through 037, and 177
+    (DEL). Defaults to the ASCII Unit Separator (US) character, the '1F' value
+    in hex notation.
 - name: "JBOSS_HOME"
   value: "/opt/eap"
 execute:
