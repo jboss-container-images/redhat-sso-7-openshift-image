@@ -7,48 +7,11 @@ set -e
 source "${JBOSS_HOME}/bin/launch/logging.sh"
 
 function postConfigure() {
-  verify_correct_definition_of_sed_delimiter_character
   verify_CVE_2020_10695_fix_present
   verify_KEYCLOAK_16736_fix_present
   verify_CIAM_1757_fix_present
   #verify_CIAM_1975_fix_present
   #verify_CIAM_2055_fix_present
-}
-
-# RHSSO-2191
-#
-# Verify the AUS env var, used as the sed delimiter character in any sed 's'
-# command:
-#
-# 1) Is defined (is not an empty string),
-# 2) Is a control character (octal 000 through 037, or the DEL character),
-#    not to clash with any other printable character, possibly present in
-#    sed regex/replacement,
-# 3) Is it a single character (since sed supports only single-byte characters
-#    as delimiters)
-#
-function verify_correct_definition_of_sed_delimiter_character() {
-  local -r errorExitCode="1"
-  # Is AUS env var defined and not empty?
-  # NOTE: The -v test checks the name of the env var, not its value,
-  #       so we intentionally don't use the dollar sign in the next statement.
-  if ! [[ -v AUS ]]
-  then
-    log_error "The AUS environment variable is not set or is empty string."
-    log_error "Please define it as it is used as the delimiter character for the sed 's' command."
-    exit "${errorExitCode}"
-  # Is AUS a control char?
-  elif ! [[ "${AUS}" =~ [[:cntrl:]] ]]
-  then
-    log_error "Only control character (octal codes 000 through 037, and 177)"
-    log_error "can be used as the delimiter character for the sed 's' command."
-    exit "${errorExitCode}"
-  # Is AUS a single character?
-  elif [[ "${#AUS}" -ne "1" ]]
-  then
-    log_error "Only a single-byte character can be used as the delimiter for the sed 's' command."
-    exit "${errorExitCode}"
-  fi
 }
 
 # KEYCLOAK-13585 / RH BZ#1817530 / CVE-2020-10695:
