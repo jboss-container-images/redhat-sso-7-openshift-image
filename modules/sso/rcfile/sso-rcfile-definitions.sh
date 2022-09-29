@@ -8,23 +8,13 @@ set -e
 
 
 ### RH-SSO globally used variables
-
-# CIAM-1394 Use a non-printable character - ASCII 31 (octal 037) unit
-# separator character as the sed substitute (s) command delimiter for each
-# existing call of "sed -i" and "sed -e" across the various container image
-# modules, where either the regexp or the replacement value is dynamically
-# generated (IOW it's not a fixed string) and it's based on / derived from
-# the value of some environment variable.
 #
-# Do this to avoid clash of the sed substitute command delimiter with some
-# special character specified in env var value (e.g. in password), leading to:
-#
-# * sed: -e expression #1, char <CHAR_POS>: unterminated `s' command
-# * sed: -e expression #1, char <CHAR_POS>: unknown option to 's'
-#
-# type of errors
-# shellcheck disable=SC2034
-export readonly AUS=$'\037'
+# NOTE: Shell variables intended to be global should be defined at YAML level
+#       rather than in this place. Using their YAML level definition ensures
+#       they are defined regardless of the way the Bash script of a particular
+#       CCT module is executed (interactive vs non-interactive mode) and they
+#       are defined also regardless of the user ID, which is used to run the
+#       Bash script of a particular CCT module
 
 ### RH-SSO globally used functions
 
@@ -68,8 +58,10 @@ function escape_xml_characters() {
 #
 function sanitize_shell_env_vars_to_valid_xml_values() {
   # Certain shell environment variables have a special function (e.g. HOSTNAME)
-  # Avoid their modification (XML escaping) by listing them as protected
+  # Avoid their modification (XML escaping) by enumerating them as protected
   declare -ra PROTECTED_SHELL_VARIABLES=(
+    # A single control character used as the sed 's' command delimiter
+    "AUS"
     # Base set of env vars as known to Red Hat UBI 8 Minimal container image,
     # which need to be protected
     "HOME" "HOSTNAME" "LANG" "OLDPWD" "PATH" "PWD" "SHLVL" "TERM" "_"
