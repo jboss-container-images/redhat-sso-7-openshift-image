@@ -39,9 +39,11 @@ artifacts:
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
   md5: 305aa706018b1089e5b82528b601541f
+  url: http://$DOWNLOAD_SERVER/brewroot/packages/io.narayana-narayana-openshift-tools-parent/1.1.4.Final_redhat_00001/1/maven/io/narayana/txn-recovery-marker-jdbc-common/1.1.4.Final-redhat-00001/txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
 - name: txn-recovery-marker-jdbc-hibernate5
   target: txn-recovery-marker-jdbc-hibernate5-1.1.4.Final-redhat-00001.jar
   md5: 99f2a2e68fb92273b8016e2b199fbd91
+  url: http://$DOWNLOAD_SERVER/brewroot/packages/io.narayana-narayana-openshift-tools-parent/1.1.4.Final_redhat_00001/1/maven/io/narayana/txn-recovery-marker-jdbc-hibernate5/1.1.4.Final-redhat-00001/txn-recovery-marker-jdbc-hibernate5-1.1.4.Final-redhat-00001.jar
 
 # The following three Wildfly Galleon plug-in related artifacts are required
 # for a successful OSBS build.
