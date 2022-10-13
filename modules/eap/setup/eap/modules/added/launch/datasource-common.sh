@@ -109,6 +109,10 @@ function inject_internal_datasources() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
+        # RHSSO-2017 Escape possible ampersand and semicolong characters
+        # which are interpolated when used in sed righ-hand side expression
+        datasource=$(escape_sed_rhs_interpolated_characters "${datasource}")
+        # EOF RHSSO-2017 correction
         # CIAM-1394 correction
         sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
         # EOF CIAM-1394 correction
@@ -199,6 +203,10 @@ function writeEEDefaultDatasourceXml() {
   else
     defaultDatasource=""
   fi
+  # RHSSO-2017 Escape possible ampersand and semicolong characters
+  # which are interpolated when used in sed righ-hand side expression
+  defaultDatasource=$(escape_sed_rhs_interpolated_characters "${defaultDatasource}")
+  # EOF RHSSO-2017 correction
   # new format replacement : datasource="##DEFAULT_DATASOURCE##"
   # CIAM-1394 correction
   sed -i "s${AUS}datasource=\"##DEFAULT_DATASOURCE##\"${AUS}${defaultDatasource}${AUS}" $CONFIG_FILE
@@ -766,6 +774,10 @@ function inject_default_timer_service() {
                       <file-data-store name=\"default-file-store\" path=\"timer-service-data\" relative-to=\"jboss.server.data.dir\"/>\
                   </data-stores>\
               </timer-service>"
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    timerservice=$(escape_sed_rhs_interpolated_characters "${timerservice}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -815,6 +827,10 @@ function inject_timer_service() {
                     <database-data-store name=\"${datastore_name}\" datasource-jndi-name=\"${jndi_name}\" database=\"${databasename}\" partition=\"${pool_name}_part\" refresh-interval=\"${refresh_interval}\"/>
                   </data-stores>\
               </timer-service>"
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    timerservice=$(escape_sed_rhs_interpolated_characters "${timerservice}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##TIMER_SERVICE## -->${AUS}${timerservice}${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -1059,6 +1075,10 @@ function inject_datasource() {
       local dsConfMode
       getDataSourceConfigureMode "dsConfMode"
       if [ "${dsConfMode}" = "xml" ]; then
+        # RHSSO-2017 Escape possible ampersand and semicolong characters
+        # which are interpolated when used in sed righ-hand side expression
+        datasource=$(escape_sed_rhs_interpolated_characters "${datasource}")
+        # EOF RHSSO-2017 correction
         # CIAM-1394 correction
         sed -i "s${AUS}<!-- ##DATASOURCES## -->${AUS}${datasource}\n<!-- ##DATASOURCES## -->${AUS}" $CONFIG_FILE
         # EOF CIAM-1394 correction
@@ -1087,6 +1107,10 @@ function inject_default_job_repository() {
   getConfigurationMode "<!-- ##DEFAULT_JOB_REPOSITORY## -->" "dsConfMode"
   if [ "${dsConfMode}" = "xml" ]; then
     local defaultjobrepo="     <default-job-repository name=\"${1}\"/>"
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    defaultjobrepo=$(escape_sed_rhs_interpolated_characters "${defaultjobrepo}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##DEFAULT_JOB_REPOSITORY## -->${AUS}${defaultjobrepo%$'\n'}${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
@@ -1131,6 +1155,10 @@ function inject_job_repository() {
       </job-repository>\
       <!-- ##JOB_REPOSITORY## -->"
 
+    # RHSSO-2017 Escape possible ampersand and semicolong characters
+    # which are interpolated when used in sed righ-hand side expression
+    jobrepo=$(escape_sed_rhs_interpolated_characters "${jobrepo}")
+    # EOF RHSSO-2017 correction
     # CIAM-1394 correction
     sed -i "s${AUS}<!-- ##JOB_REPOSITORY## -->${AUS}${jobrepo%$'\n'}${AUS}" $CONFIG_FILE
     # EOF CIAM-1394 correction
