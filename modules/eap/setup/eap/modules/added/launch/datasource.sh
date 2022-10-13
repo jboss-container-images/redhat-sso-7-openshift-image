@@ -2,6 +2,9 @@
 
 source $JBOSS_HOME/bin/launch/datasource-common.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 function preConfigure() {
   # Since inject_datasources_common ends up executing in a sub-shell for where I want
   # to grab the value, use temp files to store what was used

@@ -2,6 +2,9 @@
 
 source $JBOSS_HOME/bin/launch/jgroups_common.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 prepareEnv() {
   unset OPENSHIFT_KUBE_PING_NAMESPACE
   unset OPENSHIFT_KUBE_PING_LABELS

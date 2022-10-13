@@ -12,6 +12,8 @@ DEPLOY_DIR=$JBOSS_HOME/standalone/deployments
 
 source ${JBOSS_HOME}/bin/launch/openshift-common.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
 
 function find_env() {
   var=${!1}

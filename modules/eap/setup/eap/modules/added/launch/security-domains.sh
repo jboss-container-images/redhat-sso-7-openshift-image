@@ -1,4 +1,7 @@
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 function prepareEnv() {
   unset SECDOMAIN_NAME
   unset SECDOMAIN_USERS_PROPERTIES

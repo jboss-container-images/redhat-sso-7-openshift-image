@@ -2,6 +2,9 @@
 
 source $JBOSS_HOME/bin/launch/launch-common.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 # Arguments:
 # $1 - realm
 function add_management_interface_realm() {

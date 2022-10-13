@@ -160,31 +160,3 @@ function escape_sed_rhs_interpolated_characters() {
     exit 1
   fi
 }
-
-### Script body
-
-# Important:
-# ----------
-#
-# RHSSO-2017 Since we want to escape the special XML characters (replace them
-# with their XML escape sequence counterparts) possibly present in the values
-# of selected environment variables (those that don't have a special meaning to
-# the shell itself) in both the current shell environment and also in the
-# subsequent child shell sessions, the
-# "sanitize_shell_env_vars_to_valid_xml_values()" function below is truly
-# intended to be executed RIGHT AWAY in the moment this script definition is
-# being Bash "source"d (included in another Bash script / module).
-#
-# Executing the function right away as part of the sourcing ensures also values
-# of the environment variables in the current shell will be sanitized (and via
-# export also propagated to subsequent child shells), see e.g.:
-#
-# * https://stackoverflow.com/a/28489593
-# * https://www.man7.org/linux/man-pages/man1/bash.1.html#SHELL_BUILTIN_COMMANDS
-#   (see the section dedicated to the 'source' directive)
-#
-# in contrary to the case when just the copy of the environment variable
-# accessible to the subshell, from which the function was called would be
-# updated
-#
-sanitize_shell_env_vars_to_valid_xml_values

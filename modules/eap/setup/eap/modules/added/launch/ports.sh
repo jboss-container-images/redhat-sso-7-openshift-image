@@ -1,6 +1,9 @@
 #!/bin/sh
 # only processes a single environment as the placeholder is not preserved
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 function prepareEnv() {
   unset PORT_OFFSET
 }

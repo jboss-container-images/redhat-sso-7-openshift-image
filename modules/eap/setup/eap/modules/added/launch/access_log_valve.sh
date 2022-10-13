@@ -31,6 +31,9 @@
 
 source $JBOSS_HOME/bin/launch/logging.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 function configure() {
   configure_access_log_valve
   configure_access_log_handler

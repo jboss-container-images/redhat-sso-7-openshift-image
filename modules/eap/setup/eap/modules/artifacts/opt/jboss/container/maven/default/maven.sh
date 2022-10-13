@@ -1,6 +1,9 @@
 # common shell routines for use with maven
 source "$JBOSS_CONTAINER_UTIL_LOGGING_MODULE/logging.sh"
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 # default settings.xml file
 __JBOSS_MAVEN_DEFAULT_SETTINGS_FILE="${HOME}/.m2/settings.xml"
 

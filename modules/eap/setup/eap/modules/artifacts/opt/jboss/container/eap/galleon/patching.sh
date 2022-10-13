@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 mavenRepo="$1"
 if [ -f "$mavenRepo/patches.xml" ]; then
   echo "The maven repository has been patched, setting patches in galleon feature-pack."
