@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 # Openshift EAP launch script datasource generation routines
 
 if [ -f $JBOSS_HOME/bin/launch/launch-common.sh ]; then

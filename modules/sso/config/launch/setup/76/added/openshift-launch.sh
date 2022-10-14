@@ -1,9 +1,7 @@
 #!/bin/sh
 # Openshift EAP launch script
 
-# Import RH-SSO global variables & functions to container run-time
-source ${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh
-# Other imports
+# Import the necessary Bash modules
 source ${JBOSS_HOME}/bin/launch/openshift-common.sh
 source $JBOSS_HOME/bin/launch/logging.sh
 

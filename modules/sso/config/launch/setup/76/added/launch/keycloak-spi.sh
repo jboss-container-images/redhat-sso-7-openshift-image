@@ -3,6 +3,9 @@
 # Import logging module
 source $JBOSS_HOME/bin/launch/logging.sh
 
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
 function prepareEnv() {
   unset SSO_TRUSTSTORE
   unset SSO_TRUSTSTORE_DIR

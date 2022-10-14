@@ -6,6 +6,15 @@ if [ "${SCRIPT_DEBUG}" = "true" ] ; then
     echo "Script debugging is enabled, allowing bash commands and their arguments to be printed as they are executed"
 fi
 
+# RHSSO-2211 Import common EAP launch routines
+source "${JBOSS_HOME}/bin/launch/launch-common.sh"
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
+# Escape XML special characters possibly present in values of
+# selected environment variables with their XML entity counterparts
+sanitize_shell_env_vars_to_valid_xml_values
+
 export CONFIG_FILE="${JBOSS_HOME}/standalone/configuration/standalone-openshift.xml"
 export LOGGING_FILE="${JBOSS_HOME}/standalone/configuration/logging.properties"
 

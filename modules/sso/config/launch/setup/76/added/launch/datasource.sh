@@ -1,4 +1,8 @@
+
 source $JBOSS_HOME/bin/launch/datasource-common.sh
+
+# RHSSO-2211 Import common RH-SSO global variables & functions
+source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
 
 function prepareEnv() {
   clearDatasourcesEnv
