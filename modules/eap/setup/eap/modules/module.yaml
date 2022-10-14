@@ -30,12 +30,18 @@ ports:
 artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
-  md5: f09134d49bcee9a583ec3d2d9402f8c2
-  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.4/jboss-eap-7.4.4-image-builder-maven-repository.zip
-# Update RH-SSO server overlay to 'RH-SSO 7.6.0.CR1' build
+  md5: 3630967f24b62c537fa3fa7b1d25232d
+  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.6/jboss-eap-7.4.6-image-builder-maven-repository.zip
+# Update RH-SSO server overlay to 'RH-SSO 7.6.1.CR1' build
 - name: keycloak-server-overlay.zip
-  md5: 6fbda07e4e200dbf045e1be6f6d6329a
+  md5: b43cdb5188c2fa45901a8f2dde524c07
 # List remaining (particular RH-SSO build independent) artifacts below
+#
+# Note: The versions of the "txn-recovery-marker-jdbc-*" artifacts below should
+#       match their counterpart versions as used in the EAP_746_CR2 container image:
+#
+#       registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
   md5: 305aa706018b1089e5b82528b601541f
@@ -53,29 +59,34 @@ artifacts:
 # But feel free to update their versions as appropriate (to match their
 # corresponding versions listed in the 'maven-repo.zip' archive above)
 #
-# Note: When updating their versions, be sure to update their versions
-#       accordingly in the 'modules/eap/setup/eap/modules/configure.sh'
-#       script too !!!
+# Note: The versions of wildfly-galleon-maven-plugin-* & wildfly-provisioning-parent-*
+#       artifacts should match the version listed/used in the GALLEON_WILDFLY_VERSION
+#       env var defined below
 #
-- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.jar
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065279"
-  target: wildfly-galleon-maven-plugin-5.1.2.Final.jar
-- name: wildfly-galleon-maven-plugin-5.1.2.Final-redhat-00001.pom
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065283"
-  target: wildfly-galleon-maven-plugin-5.1.2.Final.pom
-- name: wildfly-provisioning-parent-5.1.2.Final-redhat-00001.pom
-  pnc_build_id: ARNYWZY2QGAAA
-  pnc_artifact_id: "8065285"
-  target: wildfly-provisioning-parent-5.1.2.Final.pom
+- name: wildfly-galleon-maven-plugin-5.2.6.Final-redhat-00001.jar
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706035"
+  target: wildfly-galleon-maven-plugin-5.2.6.Final.jar
+- name: wildfly-galleon-maven-plugin-5.2.6.Final-redhat-00001.pom
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706028"
+  target: wildfly-galleon-maven-plugin-5.2.6.Final.pom
+- name: wildfly-provisioning-parent-5.2.6.Final-redhat-00001.pom
+  pnc_build_id: ATUBRXXNDVQAA
+  pnc_artifact_id: "8706024"
+  target: wildfly-provisioning-parent-5.2.6.Final.pom
 labels:
+# Note: The values of the following labels should match the values of their counterpart labels
+# as defined in the EAP_746_CR2 container image:
+#
+#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
@@ -85,7 +96,7 @@ labels:
 - name: io.fabric8.s2i.version.maven
   value: "3.6"
 - name: io.fabric8.s2i.version.jolokia
-  value: "1.6.2-redhat-00002"
+  value: "1.7.1.redhat-00001"
 - name: "io.openshift.s2i.scripts-url"
   value: "image:///usr/local/s2i"
 - name: io.openshift.s2i.destination
@@ -93,17 +104,22 @@ labels:
 - name: org.jboss.container.deployments-dir
   value: "/deployments"
 envs:
+# Note: The values of the following env vars should match the values of their counterpart env vars
+# as defined in the EAP_746_CR2 container image:
+#
+#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.4.GA-redhat-00011"
+  value: "7.4.6.GA-redhat-00002"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "PRODUCT_VERSION"
-  value: "7.4.4"
+  value: "7.4.6"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
@@ -119,7 +135,7 @@ envs:
 - name: MAVEN_VERSION
   value: "3.6"
 - name: JOLOKIA_VERSION
-  value: "1.6.2"
+  value: "1.7.1"
 - name: AB_JOLOKIA_PASSWORD_RANDOM
   value: "true"
 - name: AB_JOLOKIA_AUTH_OPENSHIFT
@@ -242,8 +258,7 @@ envs:
 - name: S2I_SOURCE_DEPLOYMENTS_FILTER
   description: ^
     Space separated list of filters to be applied when copying deployments.
-    Defaults to ** * **
-  value: "*"
+  value: "*.war *.ear *.rar *.jar"
   example: "*.jar *.war *.ear"
 - name: S2I_TARGET_DEPLOYMENTS_DIR
   description: ^
@@ -370,9 +385,6 @@ envs:
   value: /opt/jboss/container/wildfly/s2i
 - name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_PROVISION
   value: /opt/jboss/container/wildfly/s2i/galleon/provisioning/generic_provisioning
-- name: GALLEON_DEFINITIONS
-- name: S2I_SOURCE_DEPLOYMENTS_FILTER
-  value: "*.war *.ear *.rar *.jar"
 - name: WILDFLY_S2I_OUTPUT_DIR
   value: "/s2i-output"
 - name: JBOSS_CONTAINER_WILDFLY_S2I_GALLEON_DIR
@@ -388,9 +400,6 @@ envs:
   value: "/opt/jboss/container/wildfly/s2i/galleon/settings.xml"
 - name: GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
   value: /opt/jboss/container/wildfly/s2i/galleon/build-image-settings.xml
-- name: GALLEON_MAVEN_REPO_HOOK_SCRIPT
-- name: GALLEON_S2I_FP_GROUP_ID
-- name: GALLEON_S2I_FP_ARTIFACT_ID
 - name: GALLEON_VERSION
   value: "4.2.8.Final"
 # Important:
@@ -400,12 +409,10 @@ envs:
 #   artifacts listed in the 'artifacts:' section above
 #
 - name: GALLEON_WILDFLY_VERSION
-  value: "5.1.2.Final"
-- name: GALLEON_S2I_PRODUCER_NAME
+  value: "5.2.6.Final"
 - name: S2I_FP_VERSION
 - name: GALLEON_PROVISION_SERVER
 - name: GALLEON_PROVISION_LAYERS
-- name: GALLEON_DEFAULT_FAT_SERVER
 - name: GALLEON_PROVISION_DEFAULT_FAT_SERVER
 - name: S2I_COPY_SERVER
   value: "true"
@@ -414,7 +421,7 @@ envs:
 - name: GALLEON_DEFINITIONS
   value: /opt/jboss/container/eap/galleon/definitions
 - name: GALLEON_MAVEN_REPO_HOOK_SCRIPT
-  value: /opt/jboss/container/eap/galleon/patching.sh
+  value: "/opt/jboss/container/eap/galleon/patching.sh"
 - name: GALLEON_DEFAULT_SERVER
   description: "Mandatory. Absolute path to directory that contains galleon default server provisioning.xml file."
   value: /opt/jboss/container/eap/galleon/definitions/slim-default-server
@@ -444,7 +451,7 @@ envs:
 - name: GALLEON_S2I_FP_GROUP_ID
   value: org.jboss.eap.galleon.s2i
 - name: GALLEON_S2I_FP_ARTIFACT_ID
-  value: eap-s2i-galleon-pack
+  value: "eap-s2i-galleon-pack"
 - name: GALLEON_S2I_PRODUCER_NAME
   value: eap-s2i
 - name: DELETE_BUILD_ARTIFACTS
@@ -544,3 +551,15 @@ envs:
 - name: "${PREFIX}_ADMIN_OBJECT_${ADMIN_OBJECT_PREFIX}_PHYSICAL_NAME"
   description: "Name of the management resource created for this admin object"
   example: "org.apache.activemq.command.ActiveMQQueue"
+- name: JBOSS_CONTAINER_OPENJDK_JDK_MODULE
+  value: "/opt/jboss/container/openjdk/jdk"
+- name: JAVA_VERSION
+  value: 11
+- name: JAVA_VENDOR
+  value: "openjdk"
+- name: DEFAULT_ADMIN_USERNAME
+  value: "eapadmin"
+- name: HTTPS_ENABLE_HTTP2
+  value: "true"
+- name: JAVA_HOME
+  value: "/usr/lib/jvm/java-11"
