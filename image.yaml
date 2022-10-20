@@ -151,6 +151,8 @@ packages:
       install:
       - which
       - unzip
+      # RHSSO-2239
+      - procps-ng
 
 run:
       cmd:
