@@ -150,7 +150,19 @@ function sanitize_shell_env_vars_to_valid_xml_values() {
 function escape_sed_rhs_interpolated_characters() {
   if [[ "$#" -eq "1" ]]
   then
-    input="${1//&/\\&}"
+    local input="${1}"
+    # SSOSUP-351/RHSSO-2238 Assume the specified input is partially escaped
+    # already. To properly escape the whole input string but simultaneously
+    # avoid escaping the already escaped portions of it 2-nd time, unescape
+    # the already escaped sections of it back to their plaintext form first.
+    input="${input//\\&/&}"
+    input="${input//\\;/;}"
+    # Now it's safe to escape the input string. This will escape both variants
+    # of the input. The originally escaped text sections will be escaped back,
+    # and formerly not-escaped parts of it, that were possibly added as a
+    # result of concatenation of environment variables values will be escaped
+    # too
+    input="${input//&/\\&}"
     input="${input//;/\\;}"
     # Return the resulting string
     echo "${input}"
