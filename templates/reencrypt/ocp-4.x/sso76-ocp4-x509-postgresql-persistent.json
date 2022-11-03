@@ -6,20 +6,20 @@
             "iconClass" : "icon-sso",
             "tags" : "sso,keycloak,jboss",
             "version": "7.6.1.GA",
-            "openshift.io/display-name": "Red Hat Single Sign-On 7.6 on OpenJDK + PostgreSQL SSL/TLS (Persistent)",
+            "openshift.io/display-name": "Red Hat Single Sign-On 7.6 on OpenJDK + PostgreSQL (Persistent) for OpenShift 4.X",
             "openshift.io/provider-display-name": "Red Hat, Inc.",
             "description": "An example application based on RH-SSO 7.6 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev/docs.",
-            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Single Sign-On 7.6 on OpenJDK server based deployment, deployment configuration for PostgreSQL using persistence and encrypted database connection, and securing RH-SSO communication using re-encrypt TLS.",
+            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Single Sign-On 7.6 on OpenJDK server based deployment, deployment configuration for PostgreSQL using persistence, and securing RH-SSO communication using re-encrypt TLS. It is intended to be used solely on OpenShift 4.X versions. For OpenShift 3.X variant of this template refer to 'sso76-ocp3-x509-postgresql-persistent' one.",
             "template.openshift.io/documentation-url": "https://access.redhat.com/documentation/en/red-hat-single-sign-on/",
             "template.openshift.io/support-url": "https://access.redhat.com"
         },
-        "name": "sso76-x509-postgresql-persistent"
+        "name": "sso76-ocp4-x509-postgresql-persistent"
     },
     "labels": {
-        "template": "sso76-x509-postgresql-persistent",
+        "template": "sso76-ocp4-x509-postgresql-persistent",
         "rhsso": "7.6.1.GA"
     },
-    "message": "A new persistent RH-SSO service (using SSL/TLS secured PostgreSQL) has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. The username/password for accessing the PostgreSQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}. The HTTPS keystore used for serving secure content, the JGroups keystore used for securing JGroups communications, the server truststore used for securing RH-SSO requests, and SSL/TLS certificate & private key used to run PostgreSQL server with SSL/TLS support were automatically created via OpenShift's service serving x509 certificate secrets.",
+    "message": "A new persistent RH-SSO service (using PostgreSQL) has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. The username/password for accessing the PostgreSQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}. The HTTPS keystore used for serving secure content, the JGroups keystore used for securing JGroups communications, and server truststore used for securing RH-SSO requests were automatically created via OpenShift's service serving x509 certificate secrets by using a CA bundle that is automatically injected into any configMap annotated with 'service.beta.openshift.io/inject-cabundle=true' annotation. Refer to: https://github.com/openshift/openshift-docs/blob/enterprise-4.1/release_notes/ocp-4-1-release-notes.adoc#service-ca-bundle-changes for additional details about this CA bundle.",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -162,24 +162,6 @@
             "required": true
         },
         {
-            "description": "Git source URI for the application extending PostgreSQL SQL server container image with SSL/TLS support.",
-            "name": "POSTGRESQL_SOURCE_REPOSITORY_URL",
-            "value": "https://github.com/iankko/redhat-sso-7-openshift-image",
-            "required": true
-        },
-                {
-            "description": "Git branch/tag reference for the application extending PostgreSQL SQL server container image with SSL/TLS support.",
-            "name": "POSTGRESQL_SOURCE_REPOSITORY_REF",
-            "value": "KEYCLOAK-15633",
-            "required": true
-        },
-                {
-            "description": "Path within the Git project to build the application extending PostgreSQL SQL server container image with SSL/TLS support.",
-            "name": "POSTGRESQL_CONTEXT_DIR",
-            "value": "s2i/postgresql/enable-ssl",
-            "required": true
-        },
-        {
             "displayName": "Container Memory Limit",
             "description": "Container memory limit.",
             "name": "MEMORY_LIMIT",
@@ -188,6 +170,20 @@
         }
     ],
     "objects": [
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "metadata": {
+                "annotations": {
+                    "description": "ConfigMap providing service ca bundle.",
+                    "service.beta.openshift.io/inject-cabundle": "true"
+                },
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "name": "${APPLICATION_NAME}-service-ca"
+            }
+        },
         {
             "kind": "Service",
             "apiVersion": "v1",
@@ -215,87 +211,6 @@
             }
         },
         {
-            "kind": "ImageStream",
-            "apiVersion": "image.openshift.io/v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-postgresql-ssl",
-                "labels": {
-                    "application": "${APPLICATION_NAME}-postgresql-ssl"
-                }
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "build.openshift.io/v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-postgresql-enable-ssl",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "Build config to extend the vanilla PostgreSQL SQL database server container image with SSL/TLS support."
-                }
-            },
-            "spec": {
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "${POSTGRESQL_SOURCE_REPOSITORY_URL}",
-                        "ref": "${POSTGRESQL_SOURCE_REPOSITORY_REF}"
-                    },
-                    "contextDir": "${POSTGRESQL_CONTEXT_DIR}"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "forcePull": true,
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                            "name": "postgresql13-for-sso76-openshift-rhel8:${POSTGRESQL_IMAGE_STREAM_TAG}"
-                        },
-                        "env": [
-                            {
-                                "name": "ARTIFACT_DIR",
-                                "value": "${ARTIFACT_DIR}"
-                            },
-                            {
-                                "name": "MAVEN_ARGS_APPEND",
-                                "value": ""
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-postgresql-ssl:latest"
-                    }
-                },
-                "triggers": [
-                    {
-                        "type": "GitHub",
-                        "github": {
-                            "secret": "${GITHUB_WEBHOOK_SECRET}"
-                        }
-                    },
-                    {
-                        "type": "Generic",
-                        "generic": {
-                            "secret": "${GENERIC_WEBHOOK_SECRET}"
-                        }
-                    },
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ]
-            }
-        },
-        {
             "kind": "Service",
             "apiVersion": "v1",
             "spec": {
@@ -315,8 +230,7 @@
                     "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
-                    "description": "The database server's port.",
-                    "service.alpha.openshift.io/serving-cert-secret-name": "postgresql-ssl-secret"
+                    "description": "The database server's port."
                 }
             }
         },
@@ -435,6 +349,11 @@
                                         "name": "sso-x509-jgroups-volume",
                                         "mountPath": "/etc/x509/jgroups",
                                         "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/var/run/configmaps/service-ca",
+                                        "name": "service-ca",
+                                        "readOnly": true
                                     }
                                 ],
                                 "livenessProbe": {
@@ -533,7 +452,7 @@
                                     },
                                     {
                                         "name": "X509_CA_BUNDLE",
-                                        "value": "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+                                        "value": "/var/run/configmaps/service-ca/service-ca.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
                                     },
                                     {
                                         "name": "JGROUPS_CLUSTER_PASSWORD",
@@ -574,6 +493,12 @@
                                 "secret": {
                                     "secretName": "sso-x509-jgroups-secret"
                                 }
+                            },
+                            {
+                                "name": "service-ca",
+                                "configMap": {
+                                    "name": "${APPLICATION_NAME}-service-ca"
+                                }
                             }
                         ]
                     }
@@ -603,7 +528,8 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "${APPLICATION_NAME}-postgresql-ssl:latest"
+                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
+                                "name": "postgresql13-for-sso76-openshift-rhel8:${POSTGRESQL_IMAGE_STREAM_TAG}"
                             }
                         }
                     },
@@ -642,7 +568,7 @@
                                     "successThreshold:": 1,
                                     "failureThreshold": 3,
                                     "exec": {
-                                        "command": [ "/bin/sh", "-i", "-c", "PGSSLMODE=require psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]
+                                        "command": [ "/bin/sh", "-i", "-c", "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]
                                     }
                                 },
                                 "livenessProbe": {
@@ -658,11 +584,6 @@
                                     {
                                         "mountPath": "/var/lib/pgsql/data",
                                         "name": "${APPLICATION_NAME}-postgresql-pvol"
-                                    },
-                                    {
-                                        "name": "postgresql-ssl-volume",
-                                        "mountPath": "/etc/pki/postgresql",
-                                        "readOnly": true
                                     }
                                 ],
                                 "env": [
@@ -698,12 +619,6 @@
                                 "name": "${APPLICATION_NAME}-postgresql-pvol",
                                 "persistentVolumeClaim": {
                                     "claimName": "${APPLICATION_NAME}-postgresql-claim"
-                                }
-                            },
-                            {
-                                "name": "postgresql-ssl-volume",
-                                "secret": {
-                                    "secretName": "postgresql-ssl-secret"
                                 }
                             }
                         ]
