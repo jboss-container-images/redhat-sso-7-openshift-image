@@ -13,6 +13,8 @@ artifacts:
       path: /tmp/artifacts
     - name: keycloak-saml-eap7-adapter.zip
       path: /tmp/artifacts
+    - name: keycloak-saml-eap8-adapter.zip
+      path: /tmp/artifacts
     - name: keycloak-js-adapter.zip
       path: /tmp/artifacts
     - name: keycloak-eap7-adapter.zip
