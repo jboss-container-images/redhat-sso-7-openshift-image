@@ -14,6 +14,7 @@ FILE_RES = (
     ("keycloak-js-adapter.zip",         re.compile(r"keycloak-js-adapter-dist-.*\.zip", re.I)),
     ("keycloak-saml-eap6-adapter.zip",  re.compile(r"keycloak-saml-eap6-adapter-dist-.*\.zip", re.I)),
     ("keycloak-saml-eap7-adapter.zip",  re.compile(r"keycloak-saml-wildfly-adapter-dist-.*\.zip", re.I)),
+    ("keycloak-saml-eap8-adapter.zip",  re.compile(r"keycloak-saml-wildfly-adapter-dist-.*\.zip", re.I)),
 )
 
 build_artifacts = json.load(sys.stdin)

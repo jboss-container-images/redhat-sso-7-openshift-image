@@ -31,6 +31,7 @@ declare -r SSO_ADAPTERS_BASE_DIR="/opt/rh/rh-sso/client"
 declare -rA SSO_ADAPTER_DIR_TO_ZIP=(
   ["eap6"]="keycloak-eap6-adapter.zip,keycloak-saml-eap6-adapter.zip"
   ["eap7"]="keycloak-eap7-adapter.zip,keycloak-saml-eap7-adapter.zip"
+  ["eap8"]="keycloak-saml-eap8-adapter.zip"
   ["js"]="keycloak-js-adapter.zip"
 )
 
