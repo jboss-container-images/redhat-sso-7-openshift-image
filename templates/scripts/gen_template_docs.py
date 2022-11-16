@@ -1,13 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # gen_template_doc.py
-# Kyle Liberti <kliberti@redhat.com>, Jonathan Dowland <jdowland@redhat.com>
-# ver:  Python 3
-# Desc: Generates application-template documentation by cloning application-template 
-#       repository, then translating information from template JSON files into 
-#       template asciidoctor files, and stores them in the a directory(Specified by
-#       TEMPLATE_DOCS variable).
-# 
-# Notes: NEEDS TO BE CLEANED UP
+# Original Authors:  Kyle Liberti <kliberti@redhat.com>, Jonathan Dowland <jdowland@redhat.com>
+# Description:       Generates application-template documentation by cloning application-template
+#                    repository, then translating information from template JSON files into
+#                    template asciidoctor files, and stores them in the a directory(Specified by
+#                    TEMPLATE_DOCS variable).
+#
+# Requires:          Python 2.X is required for now. Python 3.X isn't supported yet (patches welcome)
 
 import json
 import yaml
@@ -17,11 +16,21 @@ import re
 from collections import OrderedDict
 from ptemplate.template import Template
 
+# Exit with error msg if the major version of Python, used to run the script doesn't match 2
+if sys.version_info[0] != 2:
+    sys.exit(
+        "Python major version of '" + str(sys.version_info[0]) + "' isn't supported by the scrpt for now.\n" +
+        "Please use Python 2.X to run the script."
+    )
+
 TEMPLATE_DOCS = "docs/"
-template_dirs = [ 'templates' ]
+template_dirs = ['templates/passthrough', 'templates/reencrypt/ocp-3.x', 'templates/reencrypt/ocp-4.x']
 amq_ssl_desc = None
 
-LINKS =  { "redhat-sso76-openshift-rhel:1.0": "../../templates/sso76-openshift{outfilesuffix}[`rh-sso-7/sso76-openshift`]"}
+LINKS =  {
+    "sso76-openshift-rhel8:7.6" : "../../templates/sso76-openshift-rhel8{outfilesuffix}[`rh-sso-7/sso76-openshift-rhel8`]",
+    "postgresql13-for-sso76-openshift-rhel8:${POSTGRESQL_IMAGE_STREAM_TAG}" : "../../templates/postgresql13-for-sso76-openshift-rhel8{outfilesuffix}['rhel8/postgresql-13']"
+}
 
 PARAMETER_VALUES = {"APPLICATION_DOMAIN": "secure-app.test.router.default.local", \
                    "SOURCE_REPOSITORY_URL": "https://github.com/jboss-openshift/openshift-examples.git", \
@@ -182,7 +191,7 @@ def getVolumePurpose(name):
       return "--"
 
 # Used for getting image enviorment variables into parameters table and parameter
-# descriptions into image environment table 
+# descriptions into image environment table
 def getVariableInfo(data, name, value):
    for d in data:
       if(d["name"] == name or name[1:] in d["name"] or d["name"][1:] in name):
@@ -245,7 +254,7 @@ def createObjectTable(data, tableKind):
 def createDeployConfigTable(data, table):
    text = ""
    deploymentConfig = (obj for obj in data["objects"] if obj["kind"] == "DeploymentConfig")
-   for obj in deploymentConfig: 
+   for obj in deploymentConfig:
       columns = []
       deployment = obj["metadata"]["name"]
       spec = obj["spec"]

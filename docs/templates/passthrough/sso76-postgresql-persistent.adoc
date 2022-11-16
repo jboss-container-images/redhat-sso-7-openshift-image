@@ -4,7 +4,7 @@
     generator or the input template (./*.in)
 ////
 
-= sso76-https
+= sso76-postgresql-persistent
 :toc:
 :toc-placement!:
 :toclevels: 5
@@ -27,6 +27,8 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`HOSTNAME_HTTP` | -- | Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix> | -- | False
 |`HOSTNAME_HTTPS` | -- | Custom hostname for https service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix> | -- | False
 |`SSO_HOSTNAME` | `SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}` | False
+|`DB_JNDI` | `DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | java:jboss/datasources/KeycloakDS | False
+|`DB_DATABASE` | `DB_DATABASE` | Database name | root | True
 |`HTTPS_SECRET` | -- | The name of the secret containing the keystore file | sso-app-secret | False
 |`HTTPS_KEYSTORE` | `HTTPS_KEYSTORE_DIR` | The name of the keystore file within the secret | keystore.jks | False
 |`HTTPS_KEYSTORE_TYPE` | `HTTPS_KEYSTORE` | The type of the keystore file (JKS or JCEKS) | `${HTTPS_KEYSTORE}` | False
@@ -35,6 +37,11 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`DB_MIN_POOL_SIZE` | `DB_MIN_POOL_SIZE` | Sets xa-pool/min-pool-size for the configured datasource. | `${DB_MIN_POOL_SIZE}` | False
 |`DB_MAX_POOL_SIZE` | `DB_MAX_POOL_SIZE` | Sets xa-pool/max-pool-size for the configured datasource. | `${DB_MAX_POOL_SIZE}` | False
 |`DB_TX_ISOLATION` | `DB_TX_ISOLATION` | Sets transaction-isolation for the configured datasource. | `${DB_TX_ISOLATION}` | False
+|`POSTGRESQL_MAX_CONNECTIONS` | `POSTGRESQL_MAX_CONNECTIONS` | The maximum number of client connections allowed. This also sets the maximum number of prepared transactions. | `${POSTGRESQL_MAX_CONNECTIONS}` | False
+|`POSTGRESQL_SHARED_BUFFERS` | `POSTGRESQL_SHARED_BUFFERS` | Configures how much memory is dedicated to PostgreSQL for caching data. | `${POSTGRESQL_SHARED_BUFFERS}` | False
+|`DB_USERNAME` | `DB_USERNAME` | Database user name | `${DB_USERNAME}` | True
+|`DB_PASSWORD` | `DB_PASSWORD` | Database user password | `${DB_PASSWORD}` | True
+|`VOLUME_CAPACITY` | -- | Size of persistent storage for database volume. | 1Gi | True
 |`JGROUPS_ENCRYPT_SECRET` | `JGROUPS_ENCRYPT_SECRET` | The name of the secret containing the keystore file | sso-app-secret | False
 |`JGROUPS_ENCRYPT_KEYSTORE` | `JGROUPS_ENCRYPT_KEYSTORE_DIR` | The name of the keystore file within the secret | jgroups.jceks | False
 |`JGROUPS_ENCRYPT_NAME` | `JGROUPS_ENCRYPT_NAME` | The name associated with the server certificate (e.g. secret-key) | `${JGROUPS_ENCRYPT_NAME}` | False
@@ -49,6 +56,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`SSO_TRUSTSTORE` | `SSO_TRUSTSTORE` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE}` | False
 |`SSO_TRUSTSTORE_PASSWORD` | `SSO_TRUSTSTORE` | The password for the truststore and certificate (e.g. mykeystorepass) | `${SSO_TRUSTSTORE}` | False
 |`SSO_TRUSTSTORE_SECRET` | `SSO_TRUSTSTORE` | The name of the secret containing the truststore file (e.g. truststore-secret). Used for volume secretName | sso-app-secret | False
+|`POSTGRESQL_IMAGE_STREAM_TAG` | -- | The tag to use for the "postgresql" image stream. Typically, this aligns with the major.minor version of PostgreSQL. | 13-el8 | True
 |`MEMORY_LIMIT` | -- | Container memory limit. | 1Gi | False
 |=======================================================================
 
@@ -74,6 +82,9 @@ https://cloud.google.com/container-engine/docs/services/[container-engine docume
 .1+| `secure-${APPLICATION_NAME}`
 |8443 | --
 .1+| The web server's https port.
+.1+| `${APPLICATION_NAME}-postgresql`
+|5432 | --
+.1+| The database server's port.
 .1+| `${APPLICATION_NAME}-ping`
 |8888 | ping
 .1+| The JGroups ping port for clustering.
@@ -113,6 +124,7 @@ https://access.redhat.com/beta/documentation/en/openshift-enterprise-30-develope
 |Deployment | Triggers
 
 |`${APPLICATION_NAME}` | ImageChange
+|`${APPLICATION_NAME}-postgresql` | ImageChange
 |============
 
 
@@ -128,6 +140,7 @@ for more information.
 |Deployment | Replicas
 
 |`${APPLICATION_NAME}` | 1
+|`${APPLICATION_NAME}-postgresql` | 1
 |============
 
 
@@ -142,6 +155,7 @@ for more information.
 |Deployment | Image
 
 |`${APPLICATION_NAME}` | `${APPLICATION_NAME}`
+|`${APPLICATION_NAME}-postgresql` | postgresql
 |============
 
 
@@ -152,6 +166,11 @@ for more information.
 .${APPLICATION_NAME}
 ----
 /bin/bash -c /opt/eap/bin/readinessProbe.sh
+----
+
+.${APPLICATION_NAME}-postgresql
+----
+/bin/sh -i -c psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
 ----
 
 
@@ -167,6 +186,8 @@ for more information.
 |http | 8080 | `TCP`
 |https | 8443 | `TCP`
 |ping | 8888 | `TCP`
+.1+| `${APPLICATION_NAME}-postgresql`
+|-- | 5432 | `TCP`
 |=============
 
 
@@ -176,12 +197,17 @@ for more information.
 |=======================================================================
 |Deployment |Variable name |Description |Example value
 
-.28+| `${APPLICATION_NAME}`
+.32+| `${APPLICATION_NAME}`
 |`SSO_HOSTNAME` | Custom hostname for the RH-SSO server. | `${SSO_HOSTNAME}`
+|`DB_SERVICE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
+|`DB_JNDI` | Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql | `${DB_JNDI}`
+|`DB_USERNAME` | Database user name | `${DB_USERNAME}`
+|`DB_PASSWORD` | Database user password | `${DB_PASSWORD}`
+|`DB_DATABASE` | Database name | `${DB_DATABASE}`
+|`TX_DATABASE_PREFIX_MAPPING` | -- | `${APPLICATION_NAME}-postgresql=DB`
 |`DB_MIN_POOL_SIZE` | Sets xa-pool/min-pool-size for the configured datasource. | `${DB_MIN_POOL_SIZE}`
 |`DB_MAX_POOL_SIZE` | Sets xa-pool/max-pool-size for the configured datasource. | `${DB_MAX_POOL_SIZE}`
 |`DB_TX_ISOLATION` | Sets transaction-isolation for the configured datasource. | `${DB_TX_ISOLATION}`
-|`DB_TX_TIMEOUT` | Sets transaction timeout for the configured datasource. | `${DB_TX_TIMEOUT}`
 |`JGROUPS_PING_PROTOCOL` | -- | openshift.DNS_PING
 |`OPENSHIFT_DNS_PING_SERVICE_NAME` | -- | `${APPLICATION_NAME}-ping`
 |`OPENSHIFT_DNS_PING_SERVICE_PORT` | -- | 8888
@@ -204,8 +230,13 @@ for more information.
 |`SSO_TRUSTSTORE` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE}`
 |`SSO_TRUSTSTORE_DIR` | The name of the truststore file within the secret (e.g. truststore.jks) | `/etc/sso-secret-volume`
 |`SSO_TRUSTSTORE_PASSWORD` | The name of the truststore file within the secret (e.g. truststore.jks) | `${SSO_TRUSTSTORE_PASSWORD}`
-|`CACHE_OWNERS_COUNT` | The number of owners for caches | `1`
-|`CACHE_OWNERS_AUTH_SESSIONS_COUNT` | The number of owners for the `authenticationSessions` cache | `2`
+.6+| `${APPLICATION_NAME}-postgresql`
+|`POSTGRESQL_USER` | -- | `${DB_USERNAME}`
+|`POSTGRESQL_PASSWORD` | -- | `${DB_PASSWORD}`
+|`POSTGRESQL_DATABASE` | -- | `${DB_DATABASE}`
+|`POSTGRESQL_MAX_CONNECTIONS` | The maximum number of client connections allowed. This also sets the maximum number of prepared transactions. | `${POSTGRESQL_MAX_CONNECTIONS}`
+|`POSTGRESQL_MAX_PREPARED_TRANSACTIONS` | -- | `${POSTGRESQL_MAX_CONNECTIONS}`
+|`POSTGRESQL_SHARED_BUFFERS` | Configures how much memory is dedicated to PostgreSQL for caching data. | `${POSTGRESQL_SHARED_BUFFERS}`
 |=======================================================================
 
 
@@ -216,10 +247,25 @@ for more information.
 |Deployment |Name  | mountPath | Purpose | readOnly 
 
 |`${APPLICATION_NAME}` | eap-keystore-volume | `/etc/eap-secret-volume` | ssl certs | True
+|`${APPLICATION_NAME}-postgresql` | `${APPLICATION_NAME}-postgresql-pvol` | `/var/lib/pgsql/data` | postgresql | false
 |=============
 
 
 === External Dependencies
+
+
+==== Volume Claims
+
+A `PersistentVolume` object is a storage resource in an OpenShift cluster. Storage is provisioned by an administrator
+by creating `PersistentVolume` objects from sources such as GCE Persistent Disks, AWS Elastic Block Stores (EBS), and NFS mounts.
+Refer to the https://docs.openshift.com/enterprise/3.0/dev_guide/persistent_volumes.html#overview[Openshift documentation] for
+more information.
+
+|=============
+|Name | Access Mode
+
+|`${APPLICATION_NAME}-postgresql-claim` | ReadWriteOnce
+|=============
 
 
 
