@@ -1,0 +1,39 @@
+# gen_template_doc.py
+
+Original Authors: Kyle Liberti <kliberti@redhat.com>, Jonathan Dowland <jdowland@redhat.com>
+Description:      Generates application-template documentation by cloning application-template
+                  repository, then translating information from template JSON files into
+                  template asciidoctor files, and stores them in the a directory(Specified by
+                  TEMPLATE_DOCS variable).
+
+# Recreating the templates documentation
+
+## Python 2.X required
+Requires:         Python 2.X is required for now. Python 3.X isn't supported yet (patches welcome)
+
+## Install the required modules
+[source, bash]
+----
+$ pip2 install -r requirements.txt
+----
+
+## To recreate the templates documentation run the script
+[source, bash]
+----
+$ ./gen_template_docs.py
+----
+
+A successful run of the script should produce an output similar to the following one:
+[source,bash]
+----
+$ ./gen_template_docs.py 
+Generating docs/templates/passthrough/sso76-https.adoc...
+Generating docs/templates/passthrough/sso76-postgresql-persistent.adoc...
+Generating docs/templates/passthrough/sso76-postgresql.adoc...
+Generating docs/templates/reencrypt/ocp-3.x/sso76-ocp3-x509-https.adoc...
+Generating docs/templates/reencrypt/ocp-3.x/sso76-ocp3-x509-postgresql-persistent.adoc...
+Generating docs/templates/reencrypt/ocp-4.x/sso76-ocp4-x509-https.adoc...
+Generating docs/templates/reencrypt/ocp-4.x/sso76-ocp4-x509-postgresql-persistent.adoc...
+----
+
+## Then add the produced templates docs/templates/*.adoc files to git index and commit the change
