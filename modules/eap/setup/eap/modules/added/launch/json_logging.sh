@@ -6,23 +6,21 @@ function configure() {
 function configure_json_logging() {
   sed -i "s|^.*\.module=org\.jboss\.logmanager\.ext$||" $LOGGING_FILE
   local configureMode
-  getConfigurationMode "COLOR-PATTERN" "configureMode"
+  getConfigurationMode "##CONSOLE-FORMATTER##" "configureMode"
   if [ "${configureMode}" = "xml" ]; then
     configureByMarkers
   elif [ "${configureMode}" = "cli" ]; then
     configureByCLI
   else
-    sed -i 's|COLOR-PATTERN|COLOR-PATTERN|' $LOGGING_FILE
+    sed -i 's|##CONSOLE-FORMATTER##|COLOR-PATTERN|' $LOGGING_FILE
   fi
 }
 
 function configureByMarkers() {
   if [ "${ENABLE_JSON_LOGGING^^}" == "TRUE" ]; then
-    sed -i 's|COLOR-PATTERN|OPENSHIFT|' $CONFIG_FILE
-    sed -i 's|COLOR-PATTERN|OPENSHIFT|' $LOGGING_FILE
+    sed -i 's|##CONSOLE-FORMATTER##|OPENSHIFT|' $CONFIG_FILE $LOGGING_FILE
   else
-    sed -i 's|COLOR-PATTERN|COLOR-PATTERN|' $CONFIG_FILE
-    sed -i 's|COLOR-PATTERN|COLOR-PATTERN|' $LOGGING_FILE
+    sed -i 's|##CONSOLE-FORMATTER##|COLOR-PATTERN|' $CONFIG_FILE $LOGGING_FILE
   fi
 }
 
@@ -46,9 +44,9 @@ function configureByCLI() {
 EOF
       consoleHandlerName "OPENSHIFT" >> ${CLI_SCRIPT_FILE}
     fi
-    sed -i 's|COLOR-PATTERN|OPENSHIFT|' $LOGGING_FILE
+    sed -i 's|##CONSOLE-FORMATTER##|OPENSHIFT|' $LOGGING_FILE
   else
-    sed -i 's|COLOR-PATTERN|COLOR-PATTERN|' $LOGGING_FILE
+    sed -i 's|##CONSOLE-FORMATTER##|COLOR-PATTERN|' $LOGGING_FILE
   fi
 }
 
