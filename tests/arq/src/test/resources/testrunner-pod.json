@@ -63,14 +63,6 @@
                 {
                     "name": "MQ_TOPICS",
                     "value": ""
-                },
-                {
-                    "name": "ADMIN_USERNAME",
-                    "value": "admin"
-                },
-                {
-                    "name": "ADMIN_PASSWORD",
-                    "value": "Admin#70365"
                 }
             ]
         }]

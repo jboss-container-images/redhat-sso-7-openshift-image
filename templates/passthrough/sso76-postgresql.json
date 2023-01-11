@@ -482,6 +482,11 @@
                                         "name": "sso-truststore-volume",
                                         "mountPath": "/etc/sso-secret-volume",
                                         "readOnly": true
+                                    },
+                                    {
+                                        "name": "sso-probe-netrc-volume",
+                                        "mountPath": "/mnt/rh-sso",
+                                        "readOnly": false
                                     }
                                 ],
                                 "livenessProbe": {
@@ -674,6 +679,12 @@
                                 "name": "sso-truststore-volume",
                                 "secret": {
                                     "secretName": "${SSO_TRUSTSTORE_SECRET}"
+                                }
+                            },
+                            {
+                                "name": "sso-probe-netrc-volume",
+                                "emptyDir": {
+                                    "medium": "Memory"
                                 }
                             }
                         ]

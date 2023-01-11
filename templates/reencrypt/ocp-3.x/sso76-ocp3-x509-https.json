@@ -254,6 +254,11 @@
                                         "name": "sso-x509-jgroups-volume",
                                         "mountPath": "/etc/x509/jgroups",
                                         "readOnly": true
+                                    },
+                                    {
+                                        "name": "sso-probe-netrc-volume",
+                                        "mountPath": "/mnt/rh-sso",
+                                        "readOnly": false
                                     }
                                 ],
                                 "livenessProbe": {
@@ -368,6 +373,12 @@
                                 "name": "sso-x509-jgroups-volume",
                                 "secret": {
                                     "secretName": "sso-x509-jgroups-secret"
+                                }
+                            },
+                            {
+                                "name": "sso-probe-netrc-volume",
+                                "emptyDir": {
+                                    "medium": "Memory"
                                 }
                             }
                         ]

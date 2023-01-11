@@ -21,7 +21,6 @@ import requests
 import sys
 
 from collections import OrderedDict
-
 from probe.api import qualifiedClassName, BatchingProbe, Status, Test
 
 class DmrProbe(BatchingProbe):
@@ -35,24 +34,64 @@ class DmrProbe(BatchingProbe):
         super(DmrProbe, self).__init__(tests)
         self.logger = logging.getLogger(qualifiedClassName(self))
         self.__readConfig()
-        
+
     def __readConfig(self):
         """
         Configuration consists of:
-            host: localhost
+            host: Value of 'machine' field from the DMR probe netrc file
             port: 9990 + $PORT_OFFSET
-            user: $ADMIN_USERNAME
-            password: $ADMIN_PASSWORD
+            user: Value of 'login' field from the DMR probe netrc file
+            password: Value of 'password' field from the DMR probe netrc file
         """
-        
-        self.host = "localhost"
+
         self.port = 9990 + int(os.getenv('PORT_OFFSET', 0))
-        self.user = os.getenv('ADMIN_USERNAME')
-        self.password = os.getenv('ADMIN_PASSWORD')
-        if self.password != "":
-          if self.user is None or self.user == "":
-            self.user = os.getenv('DEFAULT_ADMIN_USERNAME')
-        self.logger.debug("Configuration set as follows: host=%s, port=%s, user=%s, password=***", self.host, self.port, self.user)
+        # Load the content of DMR probe netrc file
+        netrc_file_content = os.popen(
+            "source ${JBOSS_HOME}/bin/launch/probe_user.sh;"
+            +
+            "load_probe_netrc_file"
+        ).read().strip().split(" ")
+        # It needs to have exactly six elements, see '-n, --netrc' option
+        # of curl for an example
+        if len(netrc_file_content) != 6:
+            self.logger.error(
+                "Unable to parse the content of DMR probe netrc file."
+            )
+            sys.exit(1)
+
+        # All OK
+        self.host = netrc_file_content[1].strip()
+        self.user = netrc_file_content[3].strip()
+        self.password = netrc_file_content[5].strip()
+
+        # Check host name, user name, and password aren't empty
+        for var in [ self.host, self.user, self.password]:
+            missing = None
+            if var is None or var == "":
+                if id(var) == id(self.host):
+                    missing = "system's host name"
+                elif id(var) == id(self.user):
+                    missing = "user name"
+                elif id(var) == id(self.password):
+                    missing = "password"
+            if missing is not None:
+                self.logger.error(
+                    "Unable to determine the %s to use for probe requests." %
+                    missing
+                )
+                sys.exit(1)
+
+        # Ensure the DMR API management probe user also exists at EAP side
+        os.system(
+            "source ${JBOSS_HOME}/bin/launch/probe_user.sh;"
+            +
+            "ensure_probe_mgmt_user_exists \"%s\"" % self.user
+        )
+
+        self.logger.debug(
+            "Probe request configuration set as follows: host=%s, port=%s, user=%s, password=***",
+            self.host, self.port, self.user
+        )
 
     def getTestInput(self, results, testIndex):
         return list(results["result"].values())[testIndex]
