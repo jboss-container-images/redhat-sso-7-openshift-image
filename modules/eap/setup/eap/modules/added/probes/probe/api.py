@@ -158,8 +158,13 @@ class BatchingProbe(Probe):
                     output[qualifiedClassName(test)] = "Exception executing test: %s" % (sys.exc_info()[1])
             return (status, output)
         except:
-            self.logger.exception("Unexpected failure sending probe request")
-            return (set([Status.FAILURE]), "Error sending probe request: %s" % (sys.exc_info()[1]))
+            # In case of an exception, return also exception type, e.g. 'requests.ConnectionError',
+            # which often might be more intuitive than the exception message itself
+            return (
+                set([Status.FAILURE]),
+                "Error sending probe request:\n\tException type: %s,\n\tException message: %s" %
+                (sys.exc_info()[0], sys.exc_info[1])
+            )
 
     def createRequest(self):
         """

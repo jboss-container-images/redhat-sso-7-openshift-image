@@ -76,18 +76,18 @@ function sanitize_shell_env_vars_to_valid_xml_values() {
     # nss_wrapper specific env vars, which need to be protected
     "LD_PRELOAD" "NSS_WRAPPER_GROUP" "NSS_WRAPPER_PASSWD"
     # EAP layer specific env vars, which need to be protected
-    "ADMIN_USERNAME" "ADMIN_PASSWORD"
-    "EAP_ADMIN_USERNAME" "EAP_ADMIN_PASSWORD"
-    "DEFAULT_ADMIN_USERNAME" # !DEFAULT_ADMIN_PASSWORD variable doesn't exist!
-    "SSO_USERNAME" "SSO_PASSWORD"
+    "PROBE_NETRC_FILE" "SSO_USERNAME" "SSO_PASSWORD"
     # RH-SSO layer specific env vars, which need to be protected
     "SSO_ADMIN_USERNAME" "SSO_ADMIN_PASSWORD" "SSO_REALM"
     "SSO_SERVICE_USERNAME" "SSO_SERVICE_PASSWORD"
   )
   # All shell variables present in RH-SSO container image without lowercase
   # ones also ignoring alias definitions
+  # Note: Disable the associated shellcheck test since we want the array items
+  #       to be word splitted
+  # shellcheck disable=SC2207
   declare -ra ALL_SHELL_VARIABLES=(
-    $(printenv | grep -P ^[A-Z_]+= | cut -d= -f1 | sort)
+    $(printenv | grep -P '^[A-Z_]+=' | cut -d= -f1 | sort)
   )
   # For better code readability store Bash representation of apostrophe and
   # double quote to local readonly variables for later use
@@ -100,6 +100,7 @@ function sanitize_shell_env_vars_to_valid_xml_values() {
   for var in "${ALL_SHELL_VARIABLES[@]}"
   do
     # Get the current (original) value of the environment variable
+    # shellcheck disable=SC2155
     local ORIGINAL_VALUE=$(printenv "${var}")
     if
       # Variable isn't protected
@@ -108,6 +109,7 @@ function sanitize_shell_env_vars_to_valid_xml_values() {
       grep -Pq "(${BASH_APOS}|${BASH_QUOT}|&|<|>)" <<< "${ORIGINAL_VALUE}"
     then
       # XML escape the original value of the environment variable
+      # shellcheck disable=SC2155
       local XML_ESCAPED_VALUE=$(escape_xml_characters "${ORIGINAL_VALUE}")
       # Reset the value of the environment variable to the escaped form
       # First explicitly undefine / remove the variable definition
@@ -169,6 +171,28 @@ function escape_sed_rhs_interpolated_characters() {
   else
     echo "Please specify exactly one string to be escaped"
     echo "for sed right-hand side expression."
+    exit 1
+  fi
+}
+
+# Generate a (pseudo) random string of a requested length
+function generate_random_string() {
+  if [[ "$#" -eq "1" ]]
+  then
+    local length="${1}"
+    if ! [ -v "${length}" ] && ! [ "${length}" -eq "${length}" ] 2> /dev/null
+    then
+      echo "Please specify random string length as a number."
+      exit 1
+    fi
+    # shellcheck disable=SC2155
+    local result=$(
+      tr -dc "[:alpha:]" < /dev/urandom | fold -w "${1:-${length}}" | head -n 1
+    )
+    echo "${result}"
+  else
+    echo "Please specify the expected length of the random string to be"
+    echo "generated."
     exit 1
   fi
 }

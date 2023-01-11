@@ -55,9 +55,7 @@ function createConfigExecutionContext() {
 
 createConfigExecutionContext
 
-#For backward compatibility
-ADMIN_USERNAME=${ADMIN_USERNAME:-${EAP_ADMIN_USERNAME:-$DEFAULT_ADMIN_USERNAME}}
-ADMIN_PASSWORD=${ADMIN_PASSWORD:-$EAP_ADMIN_PASSWORD}
+# For backward compatibility
 NODE_NAME=${NODE_NAME:-$EAP_NODE_NAME}
 HTTPS_NAME=${HTTPS_NAME:-$EAP_HTTPS_NAME}
 HTTPS_PASSWORD=${HTTPS_PASSWORD:-$EAP_HTTPS_PASSWORD}
@@ -78,7 +76,7 @@ export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/nss_wrapper_passwd.sh"
   "${JBOSS_HOME}/bin/launch/datasource.sh"
   "${JBOSS_HOME}/bin/launch/resource-adapter.sh"
-  "${JBOSS_HOME}/bin/launch/admin.sh"
+  "${JBOSS_HOME}/bin/launch/mgmt_iface.sh"
   "${JBOSS_HOME}/bin/launch/ha.sh"
   "${JBOSS_HOME}/bin/launch/openshift-x509.sh"
   "${JBOSS_HOME}/bin/launch/elytron.sh"

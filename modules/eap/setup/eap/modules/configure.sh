@@ -560,8 +560,10 @@ SCRIPT_DIR=$(dirname $0)
 ADDED_DIR=${SCRIPT_DIR}/added
 
 mkdir -p ${JBOSS_HOME}/bin/launch/
-cp -p ${ADDED_DIR}/launch/admin.sh ${JBOSS_HOME}/bin/launch/
-cp -p ${ADDED_DIR}/launch/management-common.sh ${JBOSS_HOME}/bin/launch/
+### Start of RH-SSO add-on: Modify original EAP admin.sh script to fix CVE-2022-4039
+cp -p ${ADDED_DIR}/launch/mgmt_iface.sh ${JBOSS_HOME}/bin/launch/
+cp -r ${ADDED_DIR}/launch/probe_user.sh ${JBOSS_HOME}/bin/launch/
+### Endf of RH-SSO add-on: Modify original EAP admin.sh script to fix CVE-2022-4039
 ### End of: 'wildfly-cekit-modules/jboss/container/wildfly/launch/admin' module
 
 ### Start of: 'wildfly-cekit-modules/jboss/container/wildfly/launch/access-log-valve' module

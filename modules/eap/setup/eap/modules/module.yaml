@@ -557,8 +557,6 @@ envs:
   value: 11
 - name: JAVA_VENDOR
   value: "openjdk"
-- name: DEFAULT_ADMIN_USERNAME
-  value: "eapadmin"
 - name: HTTPS_ENABLE_HTTP2
   value: "true"
 - name: JAVA_HOME
