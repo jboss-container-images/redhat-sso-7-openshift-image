@@ -30,17 +30,17 @@ ports:
 artifacts:
 - name: eap-image-maven-repo
   target: maven-repo.zip
-  md5: 3630967f24b62c537fa3fa7b1d25232d
-  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.6/jboss-eap-7.4.6-image-builder-maven-repository.zip
+  md5: 8b162c33c68266eb7d362e65c6710c46
+  url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.8/jboss-eap-7.4.8-image-builder-maven-repository.zip
 # Update RH-SSO server overlay to 'RH-SSO 7.6.1.CR1' build
 - name: keycloak-server-overlay.zip
   md5: b43cdb5188c2fa45901a8f2dde524c07
 # List remaining (particular RH-SSO build independent) artifacts below
 #
 # Note: The versions of the "txn-recovery-marker-jdbc-*" artifacts below should
-#       match their counterpart versions as used in the EAP_746_CR2 container image:
+#       match their counterpart versions as used in the EAP_748_CR2 container image:
 #
-#       registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#       registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.8-4
 #
 - name: txn-recovery-marker-jdbc-common
   target: txn-recovery-marker-jdbc-common-1.1.4.Final-redhat-00001.jar
@@ -77,16 +77,16 @@ artifacts:
   target: wildfly-provisioning-parent-5.2.6.Final.pom
 labels:
 # Note: The values of the following labels should match the values of their counterpart labels
-# as defined in the EAP_746_CR2 container image:
+# as defined in the EAP_748_CR2 container image:
 #
-#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.8-4
 #
 - name: "org.jboss.product"
   value: "eap"
 - name: "org.jboss.product.version"
-  value: "7.4.6"
+  value: "7.4.8"
 - name: "org.jboss.product.eap.version"
-  value: "7.4.6"
+  value: "7.4.8"
 - name: "com.redhat.deployments-dir"
   value: "/opt/eap/standalone/deployments"
 - name: "com.redhat.dev-mode"
@@ -105,21 +105,21 @@ labels:
   value: "/deployments"
 envs:
 # Note: The values of the following env vars should match the values of their counterpart env vars
-# as defined in the EAP_746_CR2 container image:
+# as defined in the EAP_748_CR2 container image:
 #
-#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.6-5
+#   registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.8-4
 #
 - name: "WILDFLY_VERSION"
   description: "Mandatory. WildFly server version."
-  value: "7.4.6.GA-redhat-00002"
+  value: "7.4.8.GA-redhat-00002"
 - name: "LAUNCH_JBOSS_IN_BACKGROUND"
   value: "true"
 - name: "JBOSS_PRODUCT"
   value: "eap"
 - name: "JBOSS_EAP_VERSION"
-  value: "7.4.6"
+  value: "7.4.8"
 - name: "PRODUCT_VERSION"
-  value: "7.4.6"
+  value: "7.4.8"
 - name: "EAP_FULL_GROUPID"
   value: "org.jboss.eap"
 - name: "JBOSS_HOME"
