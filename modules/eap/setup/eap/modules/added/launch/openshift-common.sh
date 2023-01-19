@@ -164,12 +164,27 @@ function exec_cli_scripts() {
         exit 1
       fi
       if [ "${SCRIPT_DEBUG}" != "true" ] ; then
-        rm ${script} 2> /dev/null
-        rm ${CLI_SCRIPT_PROPERTY_FILE} 2> /dev/null
-        rm ${CONFIG_ERROR_FILE} 2> /dev/null
-        rm ${CONFIG_WARNING_FILE} 2> /dev/null
-        rm ${CLI_SCRIPT_FILE_FOR_EMBEDDED} 2> /dev/null
-        rm ${CLI_SCRIPT_OUTPUT_FILE} 2> /dev/null
+        # RHSSO-1953 correction
+        # Use '-f, --force' option for each of the 'rm' calls below not to
+        # throw (exit with an) error if some of the files below doesn't exist.
+        #
+        # This is required because without the '-f' option 'rm' exits with an
+        # error for a non-existent file, and for example in the case the
+        # 'jboss-cli.sh' call above succeeded, for the very least the
+        # "${CONFIG_ERROR_FILE}" error file won't clearly exist. 'rm' throwing
+        # an error in this specific case for such a non-existent file, causes
+        # the whole image boot process to abort (despite the CLI script were
+        # executed successfully).
+        #
+        # Therefore protect this scenario from happening by using the
+        # '-f, --force' option of 'rm' for each of the calls below
+        rm -f "${script}" 2> /dev/null
+        rm -f "${CLI_SCRIPT_PROPERTY_FILE}" 2> /dev/null
+        rm -f "${CONFIG_ERROR_FILE}" 2> /dev/null
+        rm -f "${CONFIG_WARNING_FILE}" 2> /dev/null
+        rm -f "${CLI_SCRIPT_FILE_FOR_EMBEDDED}" 2> /dev/null
+        rm -f "${CLI_SCRIPT_OUTPUT_FILE}" 2> /dev/null
+        # EOF RHSSO-1953 correction
       fi
     fi
   else

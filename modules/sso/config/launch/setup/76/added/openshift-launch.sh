@@ -1,9 +1,11 @@
-#!/bin/sh
-# Openshift EAP launch script
+#!/bin/bash
+# Openshift RH-SSO launch script
 
 # Import the necessary Bash modules
-source ${JBOSS_HOME}/bin/launch/openshift-common.sh
-source $JBOSS_HOME/bin/launch/logging.sh
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}"/bin/launch/sso-openshift-common.sh
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}"/bin/launch/logging.sh
 
 STATISTICS_ARGS=""
 if [ "${STATISTICS_ENABLED^^}" = "TRUE" ]; then
@@ -14,7 +16,7 @@ fi
 # TERM signal handler
 function clean_shutdown() {
   log_error "*** JBossAS wrapper process ($$) received TERM signal ***"
-  $JBOSS_HOME/bin/jboss-cli.sh -c ":shutdown(timeout=60)"
+  "${JBOSS_HOME}"/bin/jboss-cli.sh -c ":shutdown(timeout=60)"
   wait $!
 }
 
@@ -24,11 +26,26 @@ function runServer() {
 
   export NODE_NAME="${NODE_NAME:-node}-${count}"
 
-  source $JBOSS_HOME/bin/launch/configure-modules.sh
+  source "${JBOSS_HOME}"/bin/launch/configure-modules.sh
+
+  # RHSSO-1953 correction
+  # The scripts will add the CLI operations in a special file,
+  # invoke the embedded server if necessary and execute the CLI scripts.
+  exec_cli_scripts "${CLI_SCRIPT_FILE}"
+  # Ensure we start with clean CLI files since they were already executed
+  createConfigExecutionContext
   # CIAM-1522 correction
   # if a delayedpostconfigure.sh file exists call it, otherwise fallback on postconfigure.sh
   executeModules delayedPostConfigure
   # EOF CIAM-1522 correction
+  # Process any errors and warnings generated while running the launch configuration scripts
+  if ! processErrorsAndWarnings; then
+    exit 1
+  fi
+  # Re-run CLI scipts just in case a delayed postinstall updated
+  # (added some new changes to) them
+  exec_cli_scripts "${CLI_SCRIPT_FILE}"
+  # EOF RHSSO-1953 correction
 
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 
@@ -38,10 +55,15 @@ function runServer() {
     set_server_hostname_spi_to_fixed "${SSO_HOSTNAME}"
   fi
 
-  if [ -n "$SSO_IMPORT_FILE" ] && [ -f $SSO_IMPORT_FILE ]; then
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS}  &
+  # Note:
+  # We intentionally want the JBOSS_HA_ARGS, STATISTICS_ARGS, JBOSS_MESSAGING_ARGS, and JAVA_PROXY_OPTIONS
+  # environment variables in the next statement to be split at spaces as multiple CLI arguments passed to
+  # the standalone.sh call, therefore the particular ShellCheck test is disabled
+  # shellcheck disable=SC2086
+  if [ -n "${SSO_IMPORT_FILE}" ] && [ -f "${SSO_IMPORT_FILE}" ]; then
+    "${JBOSS_HOME}"/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file="${SSO_IMPORT_FILE}" -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS}  &
   else
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
+    "${JBOSS_HOME}"/bin/standalone.sh -c standalone-openshift.xml $JBOSS_HA_ARGS $STATISTICS_ARGS -Djboss.server.data.dir="$instanceDir" ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
   fi
 
   PID=$!
@@ -51,8 +73,8 @@ function runServer() {
 
 function init_data_dir() {
   local DATA_DIR="$1"
-  if [ -d "${JBOSS_HOME}/standalone/data" ]; then
-    cp -rf ${JBOSS_HOME}/standalone/data/* $DATA_DIR
+  if [ -d "${JBOSS_HOME}"/standalone/data ]; then
+    cp -rf "${JBOSS_HOME}"/standalone/data/* "${DATA_DIR}"
   fi
 }
 
@@ -63,11 +85,26 @@ if [ "${SPLIT_DATA^^}" = "TRUE" ]; then
 
   partitionPV "${DATA_DIR}" "${SPLIT_LOCK_TIMEOUT:-30}"
 else
-  source $JBOSS_HOME/bin/launch/configure-modules.sh
+  source "${JBOSS_HOME}"/bin/launch/configure-modules.sh
+
+  # RHSSO-1953 correction
+  # The scripts will add the CLI operations in a special file,
+  # invoke the embedded server if necessary and execute the CLI scripts.
+  exec_cli_scripts "${CLI_SCRIPT_FILE}"
+  # Ensure we start with clean CLI files since they were already executed
+  createConfigExecutionContext
   # CIAM-1522 correction
   # if a delayedpostconfigure.sh file exists call it, otherwise fallback on postconfigure.sh
   executeModules delayedPostConfigure
   # EOF CIAM-1522 correction
+  # Process any errors and warnings generated while running the launch configuration scripts
+  if ! processErrorsAndWarnings; then
+    exit 1
+  fi
+  # Re-run CLI scipts just in case a delayed postinstall updated
+  # (added some new changes to) them
+  exec_cli_scripts "${CLI_SCRIPT_FILE}"
+  # EOF RHSSO-1953 correction
 
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 
@@ -82,10 +119,15 @@ else
     log_info "Using CLI Graceful Shutdown instead of TERM signal"
   fi
 
-  if [ -n "$SSO_IMPORT_FILE" ] && [ -f $SSO_IMPORT_FILE ]; then
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${SSO_IMPORT_FILE} -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS} &
+  # Note:
+  # We intentionally want the JBOSS_HA_ARGS, STATISTICS_ARGS, JBOSS_MESSAGING_ARGS, and JAVA_PROXY_OPTIONS
+  # environment variables in the next statement to be split at spaces as multiple CLI arguments passed to
+  # the standalone.sh call, therefore the particular ShellCheck test is disabled
+  # shellcheck disable=SC2086
+  if [ -n "${SSO_IMPORT_FILE}" ] && [ -f "${SSO_IMPORT_FILE}" ]; then
+    "${JBOSS_HOME}"/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file="${SSO_IMPORT_FILE}" -Dkeycloak.migration.strategy=IGNORE_EXISTING ${JAVA_PROXY_OPTIONS} &
   else
-    $JBOSS_HOME/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
+    "${JBOSS_HOME}"/bin/standalone.sh -c standalone-openshift.xml $STATISTICS_ARGS $JBOSS_HA_ARGS ${JBOSS_MESSAGING_ARGS} ${JAVA_PROXY_OPTIONS} &
   fi
 
   PID=$!

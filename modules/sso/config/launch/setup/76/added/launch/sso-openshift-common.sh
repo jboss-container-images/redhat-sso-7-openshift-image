@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-# Openshift EAP launch script
+#
+# Openshift RH-SSO container image main configuration script
+#
+# Used to configure values of environment variables important to RH-SSO container image
+# and to define the list of configure scripts (see the CONFIGURE_SCRIPTS array definition
+# below) to be executed upon RH-SSO container start and the order of their execution
 
 if [ "${SCRIPT_DEBUG}" = "true" ] ; then
     set -x
@@ -7,53 +12,26 @@ if [ "${SCRIPT_DEBUG}" = "true" ] ; then
 fi
 
 # RHSSO-2211 Import common EAP launch routines
+# shellcheck disable=SC1091
 source "${JBOSS_HOME}/bin/launch/launch-common.sh"
 # RHSSO-2211 Import common RH-SSO global variables & functions
+# shellcheck disable=SC1091
 source "${JBOSS_HOME}/bin/launch/sso-rcfile-definitions.sh"
+
+# RHSSO-1953 Import main OpenShift common script from EAP layer first
+# To define certain variables and functions later re-used by the RH-SSO image
+# shellcheck disable=SC1091
+source "${JBOSS_HOME}/bin/launch/openshift-common.sh"
+# But reset / redefine the values of selected environment variables so they
+# correspond to the needs of RH-SSO container image (rather than to EAP one)
+export SERVER_CONFIG="standalone-openshift.xml"
+export CONFIG_FILE="${JBOSS_HOME}/standalone/configuration/${SERVER_CONFIG}"
+export IMPORT_REALM_FILE="${JBOSS_HOME}/standalone/configuration/import-realm.json"
+export LOGGING_FILE="${JBOSS_HOME}/standalone/configuration/logging.properties"
 
 # Escape XML special characters possibly present in values of
 # selected environment variables with their XML entity counterparts
 sanitize_shell_env_vars_to_valid_xml_values
-
-export CONFIG_FILE="${JBOSS_HOME}/standalone/configuration/standalone-openshift.xml"
-export LOGGING_FILE="${JBOSS_HOME}/standalone/configuration/logging.properties"
-
-# Define various CLI_SCRIPT_* variables required by EAP configure scripts
-function createConfigExecutionContext() {
-  systime=$(date +%s)
-  # This is the cli file generated
-  export CLI_SCRIPT_FILE=/tmp/cli-script-$systime.cli
-  # The property file used to pass variables to jboss-cli.sh
-  export CLI_SCRIPT_PROPERTY_FILE=/tmp/cli-script-property-$systime.cli
-  # This is the cli process output file
-  export CLI_SCRIPT_OUTPUT_FILE=/tmp/cli-script-output-$systime.cli
-  # This is the file used to log errors by the launch scripts
-  export CONFIG_ERROR_FILE=/tmp/cli-script-error-$systime.cli
-  # This is the file used to log warnings by the launch scripts
-  export CONFIG_WARNING_FILE=/tmp/cli-warning-$systime.log
-
-  # Ensure we start with clean files
-  if [ -s "${CLI_SCRIPT_FILE}" ]; then
-    echo -n "" > "${CLI_SCRIPT_FILE}"
-  fi
-  if [ -s "${CONFIG_ERROR_FILE}" ]; then
-    echo -n "" > "${CONFIG_ERROR_FILE}"
-  fi
-  if [ -s "${CONFIG_WARNING_FILE}" ]; then
-    echo -n "" > "${CONFIG_WARNING_FILE}"
-  fi
-  if [ -s "${CLI_SCRIPT_PROPERTY_FILE}" ]; then
-    echo -n "" > "${CLI_SCRIPT_PROPERTY_FILE}"
-  fi
-  if [ -s "${CLI_SCRIPT_OUTPUT_FILE}" ]; then
-    echo -n "" > "${CLI_SCRIPT_OUTPUT_FILE}"
-  fi
-
-  echo "error_file=${CONFIG_ERROR_FILE}" > "${CLI_SCRIPT_PROPERTY_FILE}"
-  echo "warning_file=${CONFIG_WARNING_FILE}" >> "${CLI_SCRIPT_PROPERTY_FILE}"
-}
-
-createConfigExecutionContext
 
 # For backward compatibility
 NODE_NAME=${NODE_NAME:-$EAP_NODE_NAME}
@@ -65,8 +43,6 @@ SECDOMAIN_USERS_PROPERTIES=${SECDOMAIN_USERS_PROPERTIES:-${EAP_SECDOMAIN_USERS_P
 SECDOMAIN_ROLES_PROPERTIES=${SECDOMAIN_ROLES_PROPERTIES:-${EAP_SECDOMAIN_ROLES_PROPERTIES:-roles.properties}}
 SECDOMAIN_NAME=${SECDOMAIN_NAME:-$EAP_SECDOMAIN_NAME}
 SECDOMAIN_PASSWORD_STACKING=${SECDOMAIN_PASSWORD_STACKING:-$EAP_SECDOMAIN_PASSWORD_STACKING}
-
-export IMPORT_REALM_FILE="${JBOSS_HOME}/standalone/configuration/import-realm.json"
 
 export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/configure_extensions.sh"
