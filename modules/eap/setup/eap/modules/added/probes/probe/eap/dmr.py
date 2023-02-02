@@ -22,8 +22,9 @@ from probe.dmr import DmrProbe
 
 class EapProbe(DmrProbe):
     """
-    Basic EAP probe which uses the DMR interface to query server state.  It
-    defines tests for server status, server running mode, boot errors and deployment status.
+    Basic EAP probe which uses the DMR interface to query server state. It
+    defines tests for server status, server running mode, boot errors, deployment
+    and datasources status.
     """
 
     def __init__(self):
@@ -32,7 +33,9 @@ class EapProbe(DmrProbe):
                 ServerStatusTest(),
                 ServerRunningModeTest(),
                 BootErrorsTest(),
-                DeploymentTest()
+                DeploymentTest(),
+                LoopOverNonXADatasourcesTest(),
+                LoopOverXADatasourcesTest()
             ]
         )
 
@@ -54,7 +57,7 @@ class ServerStatusTest(Test):
         Evaluates the test:
             READY for "running"
             FAILURE if the query itself failed
-            NOT_READY for all other states 
+            NOT_READY for all other states
         """
 
         if results["outcome"] != "success" and results.get("failure-description"):
@@ -81,7 +84,7 @@ class ServerRunningModeTest(Test):
         Evaluates the test:
             READY for "NORMAL"
             FAILURE if the query itself failed
-            NOT_READY for all other states 
+            NOT_READY for all other states
         """
 
         if results["outcome"] != "success" and results.get("failure-description"):
@@ -175,9 +178,249 @@ class DeploymentTest(Test):
 
         return (min(status), messages)
 
+class LoopOverNonXADatasourcesTest(Test):
+    """
+    Loops over the defined non-XA datasources and for each
+    of them checks if a JDBC connection can be established.
+    """
+
+    def __init__(self):
+        super(LoopOverNonXADatasourcesTest, self).__init__(
+            {
+                "address": {
+                    "subsystem": "datasources",
+                    "data-source": "*"
+                },
+                "name": "jndi-name",
+                "operation": "read-attribute"
+            }
+        )
+
+    def evaluate(self, results):
+        """
+        Evaluates the test:
+            READY if the DMR query succeeded and the list of defined non-XA datasources is empty
+            READY if the DMR query succeeded, there are some non-XA datasources defined and a JDBC
+            connection test succeeded for each of them
+            FAILURE if the DMR query itself failed
+            FAILURE if a JDBC connection test for a particular non-XA datasource returns ambiguous (more
+            than one) exit status
+            FAILURE if the DMR query succeeded, the list of names of defined non-XA datasources
+            was retrieved successfully, but the JDBC connection test failed for at least one
+            of them
+        """
+
+        # Retrieve the names of all defined non-XA datasources
+        datasourceNames = set()
+        # Query failed
+        if results["outcome"] != "success":
+            return (Status.FAILURE, "Failed to retrieve the names of defined non-XA datasources.")
+        # Query succeeded, but no non-XA datasource is defined
+        if results["outcome"] == "success" and not results["result"]:
+            return (Status.READY, "List of defined non-XA datasources is empty.")
+        # Query succeeded
+        for result in results["result"]:
+            if result["outcome"] != "success":
+                return (Status.FAILURE, "Failed to retrieve the names of defined non-XA datasources.")
+            else:
+                datasourceNames.add(result["address"][1]["data-source"])
+
+        # For each of them, check if a JDBC connection can be established
+        dsProbe = DmrProbe()
+        dsLoopOutput = dict()
+        for ds in datasourceNames:
+            dsProbe.addTest(SingleNonXADatasourceConnectionTest(ds))
+            (dsTestStatusSet, dsTestOutput) = dsProbe.execute()
+            # Valid tests have just a single exit status
+            if len(dsTestStatusSet) != 1:
+                return (Status.FAILURE, "Ambiguous result of the SingleNonXADatasourceConnectionTest test, when checking the '" + ds + "' datasource.")
+            # Datasource connection test failed
+            # Return the actual exit status and output message of the test
+            if Status.READY not in dsTestStatusSet:
+                dsTestStatus = dsTestStatusSet.pop()
+                # But from the dict containing output of all tests, filter just
+                # the output message relevant to this specific test
+                for key, value in dsTestOutput.items():
+                    if "SingleNonXADatasourceConnectionTest" in key and ds in value:
+                        dsTestOutputMessage = str(key) + ":" + str(value)
+                        return (dsTestStatus, dsTestOutputMessage)
+            # Datasource connection test succeeded
+            # Just append the output message of the test to the overall output
+            else:
+                for key, value in dsTestOutput.items():
+                    # But from the dict containing output messages of all tests,
+                    # filter just the output message relevant to this specific test
+                    if "SingleNonXADatasourceConnectionTest" in key and ds in value:
+                        dsLoopOutput[key + " of '" + ds + "' datasource:"] = value
+
+        # In the case the connection test succeeded for all non-XA datasources,
+        # return success (ready status) and the overall output message
+        return (Status.READY, dsLoopOutput)
+
+class LoopOverXADatasourcesTest(Test):
+    """
+    Loops over the defined XA datasources and for each
+    of them checks if a JDBC connection can be established.
+    """
+
+    def __init__(self):
+        super(LoopOverXADatasourcesTest, self).__init__(
+            {
+                "address": {
+                    "subsystem": "datasources",
+                    "xa-data-source": "*"
+                },
+                "name": "jndi-name",
+                "operation": "read-attribute"
+            }
+        )
+
+    def evaluate(self, results):
+        """
+        Evaluates the test:
+            READY if the DMR query succeeded and the list of defined XA datasources is empty
+            READY if the DMR query succeeded, there are some XA datasources defined and the JDBC
+            connection test succeeded for each of them
+            FAILURE if the DMR query itself failed
+            FAILURE if a JDBC connection test for a particular XA datasource returns ambiguous (more
+            than one) exit status
+            FAILURE if the DMR query succeeded, the list of names of defined XA datasources
+            was retrieved successfully, but the JDBC connection test failed for at least one
+            of them
+        """
+
+        # Retrieve the names of all defined XA datasources
+        xaDatasourceNames = set()
+        # Query failed
+        if results["outcome"] != "success":
+            return (Status.FAILURE, "Failed to retrieve the names of defined XA datasources.")
+        # Query succeeded, but no XA datasource is defined
+        if results["outcome"] == "success" and not results["result"]:
+            return (Status.READY, "List of defined XA datasources is empty.")
+        # Query succeeded
+        for result in results["result"]:
+            if result["outcome"] != "success":
+                return (Status.FAILURE, "Failed to retrieve the names of defined XA datasources.")
+            else:
+                xaDatasourceNames.add(result["address"][1]["xa-data-source"])
+
+        # For each of them, check if a JDBC connection can be established
+        xadsProbe = DmrProbe()
+        xadsLoopOutput = dict()
+        for xads in xaDatasourceNames:
+            xadsProbe.addTest(SingleXADatasourceConnectionTest(xads))
+            (xadsTestStatusSet, xadsTestOutput) = xadsProbe.execute()
+            # Valid tests have just a single exit status
+            if len(xadsTestStatusSet) != 1:
+                return (Status.FAILURE, "Ambiguous result of the SingleXADatasourceConnectionTest test, when checking the '" + xads + "' XA datasource.")
+            # Datasource connection test failed
+            # Return the actual exit status and output message of the test
+            if Status.READY not in xadsTestStatusSet:
+                xadsTestStatus = xadsTestStatusSet.pop()
+                # But from the dict containing output of all tests, filter just
+                # the output message relevant to this specific test
+                for key, value in xadsTestOutput.items():
+                    if "SingleXADatasourceConnectionTest" in key and xads in value:
+                        xadsTestOutputMessage = str(key) + ":" + str(value)
+                        return (xadsTestStatus, xadsTestOutputMessage)
+            # Datasource connection test succeeded
+            # Just append the output message of the test to the overall output
+            else:
+                for key, value in xadsTestOutput.items():
+                    # But from the dict containing output of all tests, filter just
+                    # the output message relevant to this specific test
+                    if "SingleXADatasourceConnectionTest" in key and xads in value:
+                        xadsLoopOutput[key + " of '" + xads + "' XA datasource:"] = value
+
+        # In the case the connection test succeeded for all XA datasources,
+        # return success (ready status) and the overall output message
+        return (Status.READY, xadsLoopOutput)
+
+class SingleNonXADatasourceConnectionTest(Test):
+    """
+    Given a name of a non-XA datasource, checks if a JDBC connection can be obtained.
+    """
+
+    def __init__(self, datasourceName):
+        self.datasourceName = datasourceName
+        super(SingleNonXADatasourceConnectionTest, self).__init__(
+            {
+                "address": {
+                    "subsystem": "datasources",
+                    "data-source": self.datasourceName
+                },
+                "operation": "test-connection-in-pool"
+            }
+        )
+
+    def evaluate(self, results):
+        """
+        Evaluates the test:
+            READY if DMR query succeeded and the JDBC connection test returned 'True'
+            NOT_READY if DMR query succeeded, but the JDBC connection test returned anything else
+            FAILURE if the DMR query itself failed
+        """
+
+        # DMR query itself succeeded
+        if results["outcome"] == "success":
+            # And datasource connection test returned 'True'. Return ready
+            if str(results["result"][0]).lower() == "true":
+                return (Status.READY, "Successfully created a JDBC connection for the '" + self.datasourceName + "' datasource.")
+            # And datasource connection test returned anything else.
+            # Return not ready (not failed, but e.g. might be still starting up etc.)
+            else:
+                return (Status.NOT_READY, "Failed to create a JDBC connection for the '" + self.datasourceName + "' datasource.")
+        # DMR query failed
+        else:
+            # The connection test returned e.g. a failure with description like:
+            # "WFLYJCA0040: failed to invoke operation: WFLYJCA0047: Connection is not valid"
+            # Return failure (test failed this time, but might succeed next time)
+            return (Status.FAILURE, "Failed to create a JDBC connection for the '" + self.datasourceName + "' datasource.")
+
+class SingleXADatasourceConnectionTest(Test):
+    """
+    Given a name of a XA datasource, checks if a JDBC connection can be obtained.
+    """
+
+    def __init__(self, xaDatasourceName):
+        self.xaDatasourceName = xaDatasourceName
+        super(SingleXADatasourceConnectionTest, self).__init__(
+            {
+                "address": {
+                    "subsystem": "datasources",
+                    "xa-data-source": self.xaDatasourceName
+                },
+                "operation": "test-connection-in-pool"
+            }
+        )
+
+    def evaluate(self, results):
+        """
+        Evaluates the test:
+            READY if DMR query succeeded and the JDBC connection test returned 'True'
+            NOT_READY if DMR query succeeded, but the JDBC connection test returned anything else
+            FAILURE if the DMR query itself failed
+        """
+
+        # DMR query itself succeeded
+        if results["outcome"] == "success":
+            # And a XA datasource connection test returned 'True'. Return ready
+            if str(results["result"][0]).lower() == "true":
+                return (Status.READY, "Successfully created a JDBC connection for the '" + self.xaDatasourceName + "' XA datasource.")
+            # And a XA datasource connection test returned anything else.
+            # Return not ready (not failed, but e.g. might be still starting up etc.)
+            else:
+                return (Status.NOT_READY, "Failed to create a JDBC connection for the '" + self.xaDatasourceName + "' XA datasource.")
+        # DMR query failed
+        else:
+            # The connection test returned e.g. a failure with description like:
+            # "WFLYJCA0040: failed to invoke operation: WFLYJCA0047: Connection is not valid"
+            # Return failure (test failed this time, but might succeed next time)
+            return (Status.FAILURE, "Failed to create a JDBC connection for the '" + self.xaDatasourceName + "' XA datasource.")
+
 class HealthCheckProbe(DmrProbe):
     """
-    Basic EAP probe which uses the DMR interface to query server state.  It
+    Basic EAP probe which uses the DMR interface to query server state. It
     defines tests for server status, boot errors and deployment status.
     """
 
@@ -224,7 +467,7 @@ class HealthCheckTest(Test):
         """
         Evaluates the test:
             if the overall composite failed with JBAS014883 or WFLYCTL0030
-                READY as the failure means no health check extension configured on the system 
+                READY as the failure means no health check extension configured on the system
             elsif the 'read-resource' step failed:
                 READY as failure means no health check subsystem configured on the system
             elsif the 'check' step succeeded:
