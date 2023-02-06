@@ -127,7 +127,7 @@ class DmrProbe(BatchingProbe):
         )
         self.logger.debug("Probe response: %s", response)
 
-        if response.status_code != 200:
+        if response.status_code != 200 and response.status_code != 403:
             """
             See if this non-200 represents an unusable response, or just a failure
             response because one of the test steps failed, in which case we pass the
