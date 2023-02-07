@@ -39,7 +39,8 @@ function create_probe_netrc_file() {
     #
     # Verify the DMR probe netrc file path starts with same directories,
     # as used for the RH-SSO pod volume mountpoint in the templates
-    if [ "$(dirname "${PROBE_NETRC_FILE}")" != "${probe_vol_mount}" ]; then
+    local -r probe_netrc_dir="$(dirname "${PROBE_NETRC_FILE}")"
+    if [ "${probe_netrc_dir}" != "${probe_vol_mount}" ]; then
       local -a wrong_dir_prefix_errmsg=(
         "Can't create the DMR probe netrc file outside of '${probe_vol_mount}'"
         "directory. Please update the \$PROBE_NETRC_FILE environment variable."
@@ -73,19 +74,50 @@ function create_probe_netrc_file() {
       openssl enc -a -e -aes-256-cbc -pbkdf2 -pass pass:"${key}" \
       <<< "${plain}" 2>/dev/null | tr -d '\0'
     )
-    # Save encrypted netrc file (without newlines) for a future use
-    echo "${key}" | tr -d $'\n' > "${PROBE_NETRC_FILE}"
-    echo "${enc}" | tr -d $'\n' >> "${PROBE_NETRC_FILE}"
-    if [ -f "${PROBE_NETRC_FILE}" ]; then
-      log_info "Probe DMR netrc file successfully written to: ${PROBE_NETRC_FILE}"
+    # Prevent a race condition of multiple parallel probe instances
+    # trying to create the netrc file simultaneously at the same time
+    local -r netrc_lock_dir="${probe_netrc_dir}/netrc.lock"
+    # Attempt to obtain the lock for writing the probe netrc file failed
+    # (a parallel probe instance already started to create the netrc file)
+    if ! mkdir "${netrc_lock_dir}"; then
+      log_warning "Failed to acquire the lock for creating the probe netrc file."
+      # No exit with error here. Let the other parallel probe instance to
+      # finish the already started probe netrc file setup. Since the username
+      # used for probe JBoss DMR API requests is being loaded only later anyway
+      # (immediately right before the execution of the DMR query), execute the
+      # remainder of the probe and let it possibly to succeed
+    # Attempt to obtain the lock for writing the probe netrc file succeeded
+    else
+      # Prepare the content (without newlines) to save to the probe netrc file
+      local probe_netrc_content=$''
+      probe_netrc_content+=$(echo "${key}" | tr -d $'\n')
+      probe_netrc_content+=$(echo "${enc}" | tr -d $'\n')
+      # Save the probe netrc file content only it if doesn't exist yet
+      if ! [ -f "${PROBE_NETRC_FILE}" ]; then
+          # Overwriting the target file with whole content in a single step
+          echo "${probe_netrc_content}" >| "${PROBE_NETRC_FILE}"
+          # Confirm the write succeeded (netrc file content isn't corrupted)
+          if [ "$(cat "${PROBE_NETRC_FILE}")" == "${probe_netrc_content}" ]; then
+            log_info "Probe DMR netrc file successfully written to: ${PROBE_NETRC_FILE}"
+          # Something wrong happened (netrc file is corrupted). Exit with error
+          # this time (at least one probe instance needs to create it correctly)
+          else
+            log_error "Failed to write probe DMR netrc file to: ${PROBE_NETRC_FILE}"
+            exit 1
+          fi
+      else
+        log_info "'${PROBE_NETRC_FILE}' already exists. Ignoring a request to create it."
+        # No exit with error here, just proceed to the readiness/liveness probe
+        # code implementation itself and let it possibly to succeed
+      fi
+      # Remove the lock
+      rm -rf "${netrc_lock_dir}"
     fi
   # Path to DMR probe netrc file is defined & the file already exists
   else
-    log_info "'${PROBE_NETRC_FILE}' already exists. Ignoring request."
-    # In this moment, proceed to readiness/liveness code implementation itself.
-    # IOW no exit with error should be performed here, since the
-    # PROBE_NETRC_FILE already exists, let the DMR probe to process it
-    # and possibly succeed
+    log_info "'${PROBE_NETRC_FILE}' already exists. Ignoring a request to create it."
+    # No exit with error here, just proceed to the readiness/liveness probe
+    # code implementation itself and let is possibly to succeed
   fi
   # Re-enable echoing of expanded commands when in debug mode
   if [ "${SCRIPT_DEBUG}" == "true" ]; then
@@ -136,7 +168,7 @@ function ensure_probe_mgmt_user_exists() {
         exit 1
       fi
     else
-      log_info "'${username}' management probe user already exists."
+      log_info "Using the '${username}' username to authenticate the probe request against the JBoss DMR API."
     fi
   fi
   # Re-enable echoing of expanded commands when in debug mode
