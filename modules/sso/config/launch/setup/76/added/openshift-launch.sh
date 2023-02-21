@@ -20,6 +20,64 @@ function clean_shutdown() {
   wait $!
 }
 
+# RHSSO-1883
+#
+# In case the DB_SERVICE_PREFIX_MAPPING env var is set, for each of the
+# defined DB backends verify they are ready to accept connections.
+# In case if not, wait for them to become ready
+#
+function verify_db_backends_ready_to_accept_connections() {
+  if [ -n "${DB_SERVICE_PREFIX_MAPPING}" ]; then
+    # Delay (in seconds) how long to wait prior
+    # performing next DB TCP connection readiness check
+    # Default is 10 seconds
+    local -r DEFAULT_FREQ="10"
+    local -r CHECK_FREQ="${DB_READINESS_RETRY_WAIT_SECONDS:-${DEFAULT_FREQ}}"
+    IFS=',' read -ra db_backends <<< "${DB_SERVICE_PREFIX_MAPPING}"
+    for db_backend in "${db_backends[@]}"; do
+      service_name=${db_backend%=*}
+      service=${service_name^^}
+      service=${service//-/_}
+      db=${service##*_}
+      # Kubernetes automatically creates environment variables, containing the service
+      # host and port for all services that were running when a container was created:
+      # * https://kubernetes.io/docs/concepts/containers/container-environment/#cluster-information
+      # So if there exists a Kubernetes service for the DB backend, the pod environment
+      # must contain an environment variable, value of which includes:
+      # 1) Either "$service" substring, derived from DB_SERVICE_PREFIX_MAPPING env var
+      # 2) Or "$db_SERVICE" substring, where $db is derived from the "$service" string above
+      # Thus check the RH-SSO pod env for both substrings in that order
+      K8S_DB_SERVICE_HOST_VAR_NAME=$(
+        compgen -v | grep -s "${service}_SERVICE_HOST" ||
+        compgen -v | grep -s "${db}_SERVICE_HOST"
+      )
+      K8S_DB_SERVICE_PORT_VAR_NAME=$(
+        compgen -v | grep -s "${service}_SERVICE_PORT" ||
+        compgen -v | grep -s "${db}_SERVICE_PORT"
+      )
+      # If host/port is still unknown at this moment, that's an error
+      if [ -z "${K8S_DB_SERVICE_HOST_VAR_NAME}" ] || [ -z "${K8S_DB_SERVICE_PORT_VAR_NAME}" ]
+      then
+        log_error "Failed to determine the host and port of the database service to check."
+        exit 1
+      fi
+      # Otherwise evaluate the actual values of both the DB service host and port
+      # from the indirect references of automatic Kubernetes environment variables
+      # created for the service
+      local -r DB_HOST="${!K8S_DB_SERVICE_HOST_VAR_NAME}"
+      local -r DB_PORT="${!K8S_DB_SERVICE_PORT_VAR_NAME}"
+      # Finally wait for the DB system to become ready (wait till a moment, when
+      # attempt to open a TCP connection to the remote DB backend actually succeeds)
+      log_info "Checking connection readiness of the ${db} database system."
+      log_info "To change the frequency of the check, set the DB_READINESS_RETRY_WAIT_SECONDS environment variable to a desired count of seconds (default is ${DEFAULT_FREQ}s)."
+      until timeout 2 bash -c "</dev/tcp/${DB_HOST}/${DB_PORT}" >& /dev/null; do
+        log_info "Waiting ${CHECK_FREQ} seconds for the ${db} database system to be ready to accept connections.."
+        sleep "${CHECK_FREQ}"
+      done
+    done
+  fi
+}
+
 function runServer() {
   local instanceDir=$1
   local count=$2
@@ -47,6 +105,7 @@ function runServer() {
   exec_cli_scripts "${CLI_SCRIPT_FILE}"
   # EOF RHSSO-1953 correction
 
+  verify_db_backends_ready_to_accept_connections
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 
   trap "clean_shutdown" TERM
@@ -106,6 +165,7 @@ else
   exec_cli_scripts "${CLI_SCRIPT_FILE}"
   # EOF RHSSO-1953 correction
 
+  verify_db_backends_ready_to_accept_connections
   log_info "Running $JBOSS_IMAGE_NAME image, version $JBOSS_IMAGE_VERSION"
 
   trap "clean_shutdown" TERM
