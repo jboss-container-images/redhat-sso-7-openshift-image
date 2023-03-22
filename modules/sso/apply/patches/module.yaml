@@ -4,7 +4,13 @@ version: '1.0'
 description: Module to apply any possibly needed EAP / RH-SSO one-off patches via jboss-cli.sh
 execute:
 - script: apply-eap-rh-sso-one-off-patches.sh
-#artifacts:
+artifacts:
+## RHSSO-2354
+- md5: 95df73fc31c8d27c078b84ad4dcfc7cc
+  name: rhsso-KEYCLOAK-18881-18963.zip
+  target: rhsso-KEYCLOAK-18881-18963.zip
+  url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.6.2-RHSSO-2361-patch/rhsso-2361.zip
+
 ## CIAM-2657
 #- md5: 0925d9b712d75e1d12f8efa40bcc54ca
 #  name: rhsso-2657.zip
