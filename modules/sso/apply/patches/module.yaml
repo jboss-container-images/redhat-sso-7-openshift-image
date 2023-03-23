@@ -6,9 +6,9 @@ execute:
 - script: apply-eap-rh-sso-one-off-patches.sh
 artifacts:
 ## RHSSO-2354
-- md5: 95df73fc31c8d27c078b84ad4dcfc7cc
-  name: rhsso-KEYCLOAK-18881-18963.zip
-  target: rhsso-KEYCLOAK-18881-18963.zip
+- md5: cf8cecca14a19e3dd7e9c9405f4fd245
+  name: rhsso-2361.zip
+  target: rhsso-2361.zip
   url: http://$DOWNLOAD_SERVER/devel/candidates/JBSSO/JBSSO-7.6.2-RHSSO-2361-patch/rhsso-2361.zip
 
 ## CIAM-2657

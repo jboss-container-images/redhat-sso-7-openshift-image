@@ -10,6 +10,7 @@ function postConfigure() {
   verify_CVE_2020_10695_fix_present
   verify_KEYCLOAK_16736_fix_present
   verify_CIAM_1757_fix_present
+  verify_rhsso-2361_fix_present
   #verify_CIAM_1975_fix_present
   #verify_CIAM_2055_fix_present
   #verify_CIAM_2657_fix_present
@@ -112,6 +113,17 @@ function verify_CIAM_2657_fix_present() {
   if ! find "${JBOSS_HOME}"/modules/system/layers -name '*-rhsso-2657.jar' 2> /dev/null | grep -q .
   then
     log_error "The CIAM-2657 one-off patch wasn't properly installed."
+    log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
+    exit "${errorExitCode}"
+  fi
+}
+
+function verify_rhsso-2361_fix_present() {
+  local -r errorExitCode="1"
+  md5=$(md5sum $(find "${JBOSS_HOME}"/themes/base/admin/resources/js/authz -name authz-controller.js 2>/dev/null) | cut -d ' ' -f1)
+  if [[ "$md5" != "a3f1bf92c00282d12bc52fb0c332880e" ]]
+  then
+    log_error "The rhsso-2361 one-off patch wasn't properly installed."
     log_error "Cannot start the '${JBOSS_IMAGE_NAME}', version '${JBOSS_IMAGE_VERSION}'!"
     exit "${errorExitCode}"
   fi
