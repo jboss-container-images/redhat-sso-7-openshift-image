@@ -34,7 +34,7 @@ artifacts:
   url: http://$DOWNLOAD_SERVER/released/middleware/eap7/7.4.8/jboss-eap-7.4.8-image-builder-maven-repository.zip
 # Update RH-SSO server overlay to 'RH-SSO 7.6.1.CR1' build
 - name: keycloak-server-overlay.zip
-  md5: b43cdb5188c2fa45901a8f2dde524c07
+  md5: 989b119174a35436632511d40790698d
 # List remaining (particular RH-SSO build independent) artifacts below
 #
 # Note: The versions of the "txn-recovery-marker-jdbc-*" artifacts below should
