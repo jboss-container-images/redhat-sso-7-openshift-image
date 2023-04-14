@@ -14,7 +14,7 @@ cp $BATS_TEST_DIRNAME/../../../launch-config/os/added/launch/launch-common.sh $J
 cp $BATS_TEST_DIRNAME/../../../../../../test-common/logging.sh $JBOSS_HOME/bin/launch
 cp $BATS_TEST_DIRNAME/../added/launch/jgroups.sh $JBOSS_HOME/bin/launch
 cp $BATS_TEST_DIRNAME/../added/launch/jgroups_common.sh $JBOSS_HOME/bin/launch
-cp $BATS_TEST_DIRNAME/../added/launch/ha.sh $JBOSS_HOME/bin/launch
+cp $BATS_TEST_DIRNAME/../added/launch/high_availability.sh $JBOSS_HOME/bin/launch
 mkdir -p $JBOSS_HOME/standalone/configuration
 
 # Set up the environment variables and load dependencies
@@ -23,7 +23,7 @@ WILDFLY_SERVER_CONFIGURATION=standalone-openshift.xml
 # source the scripts needed
 source $JBOSS_HOME/bin/launch/openshift-common.sh
 source $JBOSS_HOME/bin/launch/logging.sh
-source $JBOSS_HOME/bin/launch/ha.sh
+source $JBOSS_HOME/bin/launch/high_availability.sh
 
 export OPENSHIFT_DNS_PING_SERVICE_NAMESPACE="testnamespace"
 export CONF_AUTH_MODE="xml"
@@ -156,7 +156,7 @@ EOF
 # check that non-empty OPENSHIFT_DNS_PING_SERVICE_NAME is present when using dns.DNS_PING
 @test "Generate JGroups ping config - dns.DNS_PING requires service name" {
     expected=$(cat <<EOF
-/tmp/jboss_home/bin/launch/ha.sh: line 295: init_node_name: command not found
+/tmp/jboss_home/bin/launch/high_availability.sh: line 295: init_node_name: command not found
 ERROR Environment variable OPENSHIFT_DNS_PING_SERVICE_NAME is required when using dns.DNS_PING ping protocol. Please refer to the documentation for configuration.
 EOF
 )

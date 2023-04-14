@@ -20,6 +20,8 @@ packages:
     # issue debugging / troubleshooting purposes
     - which
     - tree
+    # RHSSO-2347 bind-utils is needed to verify proper work of reverse IPv6 address lookups on dual-stack clusters
+    - bind-utils
     # End of RH-SSO add-on
     # --------------------
 ports:
