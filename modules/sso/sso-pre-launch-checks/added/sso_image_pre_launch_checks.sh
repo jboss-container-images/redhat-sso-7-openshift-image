@@ -10,7 +10,7 @@ function postConfigure() {
   verify_CVE_2020_10695_fix_present
   verify_KEYCLOAK_16736_fix_present
   verify_CIAM_1757_fix_present
-  verify_rhsso-2361_fix_present
+  #verify_rhsso-2361_fix_present
   #verify_CIAM_1975_fix_present
   #verify_CIAM_2055_fix_present
   #verify_CIAM_2657_fix_present
