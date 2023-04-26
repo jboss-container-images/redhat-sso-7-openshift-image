@@ -12,7 +12,7 @@ labels:
     - name: "org.jboss.product"
       value: &product "sso"
     - name: "org.jboss.product.version"
-      value: &product_version "7.6.2.GA"
+      value: &product_version "7.6.3.GA"
     - name: "org.jboss.product.sso.version"
       value: *product_version
     - name: "io.k8s.description"
@@ -70,8 +70,8 @@ ports:
     - value: 8443
 modules:
       repositories:
-          # The tags of the following four repositories are set to match "EAP_748_CR2" jboss-eap-7-openshift-image tag:
-          # https://github.com/jboss-container-images/jboss-eap-7-openshift-image/blob/EAP_748_CR2/image.yaml#L34
+          # The tags of the following four repositories are set to match "EAP_7410_CR2" jboss-eap-7-openshift-image tag:
+          # https://github.com/jboss-container-images/jboss-eap-7-openshift-image/blob/EAP_7410_CR2/image.yaml#L34
           - name: cct_module
             git:
                   url: https://github.com/jboss-openshift/cct_module.git
@@ -80,17 +80,17 @@ modules:
           - name: jboss-eap-modules
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-modules.git
-                  ref: EAP_748_CR2
+                  ref: EAP_7410_CR2
 
           - name: jboss-eap-image
             git:
                   url: https://github.com/jboss-container-images/jboss-eap-7-image.git
-                  ref: EAP_748_CR2
+                  ref: EAP_7410_CR2
 
           - name: wildfly-cekit-modules
             git:
                   url: https://github.com/wildfly/wildfly-cekit-modules.git
-                  ref: 0.23.8
+                  ref: 0.23.9
 
           - name: sso-modules
             path: modules
