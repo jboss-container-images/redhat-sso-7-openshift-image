@@ -4,7 +4,7 @@ version: '1.0'
 description: Module to apply any possibly needed EAP / RH-SSO one-off patches via jboss-cli.sh
 execute:
 - script: apply-eap-rh-sso-one-off-patches.sh
-artifacts:
+#artifacts:
 ### RHSSO-2354
 #- md5: cf8cecca14a19e3dd7e9c9405f4fd245
 #  name: rhsso-2361.zip
