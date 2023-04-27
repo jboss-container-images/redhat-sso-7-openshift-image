@@ -15,7 +15,7 @@ cp $BATS_TEST_DIRNAME/../../../launch-config/os/added/launch/configure-modules.s
 cp $BATS_TEST_DIRNAME/../../../../../../test-common/logging.sh $JBOSS_HOME/bin/launch
 cp $BATS_TEST_DIRNAME/../added/launch/jgroups.sh $JBOSS_HOME/bin/launch
 cp $BATS_TEST_DIRNAME/../added/launch/jgroups_common.sh $JBOSS_HOME/bin/launch
-cp $BATS_TEST_DIRNAME/../added/launch/ha.sh $JBOSS_HOME/bin/launch
+cp $BATS_TEST_DIRNAME/../added/launch/high_availability.sh $JBOSS_HOME/bin/launch
 cp $BATS_TEST_DIRNAME/../../elytron/added/launch/elytron.sh $JBOSS_HOME/bin/launch
 mkdir -p $JBOSS_HOME/standalone/configuration
 
@@ -148,7 +148,7 @@ test_ha_jgroups() {
   source $JBOSS_HOME/bin/launch/configure-modules.sh
 }
 
-@test "Test protocol list store -- Run ha.sh and jgroups.sh" {
+@test "Test protocol list store -- Run high_availability.sh and jgroups.sh" {
   expected=$(cat << EOF
 if (outcome != success) of /subsystem=jgroups:read-resource
                echo You have set JGROUPS_CLUSTER_PASSWORD environment variable to configure JGroups authentication protocol. Fix your configuration to contain JGgroups subsystem for this to happen. >> \${error_file}
@@ -246,7 +246,7 @@ EOF
   OPENSHIFT_DNS_PING_SERVICE_PORT="service_port"
   OPENSHIFT_DNS_PING_SERVICE_NAME="service_name"
 
-  CONFIGURE_SCRIPTS=("$JBOSS_HOME/bin/launch/ha.sh" "$JBOSS_HOME/bin/launch/jgroups.sh")
+  CONFIGURE_SCRIPTS=("$JBOSS_HOME/bin/launch/high_availability.sh" "$JBOSS_HOME/bin/launch/jgroups.sh")
 
   run test_ha_jgroups
   echo "CONSOLE:${output}"

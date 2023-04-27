@@ -53,7 +53,7 @@ export CONFIGURE_SCRIPTS=(
   "${JBOSS_HOME}/bin/launch/datasource.sh"
   "${JBOSS_HOME}/bin/launch/resource-adapter.sh"
   "${JBOSS_HOME}/bin/launch/mgmt_iface.sh"
-  "${JBOSS_HOME}/bin/launch/ha.sh"
+  "${JBOSS_HOME}/bin/launch/high_availability.sh"
   "${JBOSS_HOME}/bin/launch/openshift-x509.sh"
   "${JBOSS_HOME}/bin/launch/elytron.sh"
   # jgroups.sh requires elytron.sh as it uses some functions elytron.sh defines

@@ -291,9 +291,37 @@ generate_dns_ping_config() {
 }
 
 configure_ha_args() {
+  local -r INADDR6_ANY="::"
+  local -r INADDR6_LOOPBACK="::1"
   # Set HA args
-  IP_ADDR=`hostname -i | cut -d " " -f1`
+  IP_ADDR=$(hostname -i | cut -d " " -f1)
   JBOSS_HA_ARGS="-b ${JBOSS_HA_IP:-${IP_ADDR}} -bprivate ${JBOSS_HA_IP:-${IP_ADDR}}"
+
+  # If using IPv6
+  if grep -q ':' <<< "${IP_ADDR}"; then
+    # Adjust addresses of bindall and management interfaces to their IPv6 counterparts
+    JBOSS_HA_ARGS="${JBOSS_HA_ARGS} -bbindall ${INADDR6_ANY} -bmanagement ${INADDR6_LOOPBACK}"
+    # RHSSO-2347 Set "java.net.preferIPv6Addresses" property to "true" JGroups to prefer IPv6 addresses:
+    # * http://www.jgroups.org/manual5/index.html#_both_ipv4_and_ipv6_stacks_are_available_dual_stack
+    JBOSS_HA_ARGS="${JBOSS_HA_ARGS} -Djava.net.preferIPv6Addresses=true"
+    # RHSSO-2347 For DNS ping verify DNS SRV record exists for the IPv6 address. If not, issue
+    # a warning the 'spec.ipFamilyPolicy' field of the DNS ping service needs to be updated
+    # either to 'PreferDualStack' or to 'RequireDualStack'
+    if [ "${JGROUPS_PING_PROTOCOL}" == "openshift.DNS_PING" ] ||
+       [ "${JGROUPS_PING_PROTOCOL}" == "dns.DNS_PING" ]
+    then
+      # In the case a reverse DNS lookup of the obtained IPv6 address fails
+      # (the DNS SRV record is missing for the IPv6 address), IOW command like
+      #   $ host -t SRV $(hostname)
+      # doesn't contain a valid record for IPv6, or reverse DNS lookup of the IPv6
+      # address fails, issue a warning
+      if ! host "${IP_ADDR}" >& /dev/null; then
+        log_warning "Reverse DNS lookup of the '${IP_ADDR}' IPv6 address failed. Clustering will be unavailable."
+        log_warning "Please set the 'spec.ipFamilyPolicy' field of the '${OPENSHIFT_DNS_PING_SERVICE_NAME}' service"
+        log_warning "to \"PreferDualStack\" or \"RequireDualStack\" the IPv6-based clustering to work properly."
+      fi
+    fi
+  fi
 
   init_node_name
 
