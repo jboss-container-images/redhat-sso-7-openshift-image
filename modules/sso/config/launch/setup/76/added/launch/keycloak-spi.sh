@@ -83,7 +83,7 @@ function set_server_hostname_spi_to_fixed() {
       exit 1
     fi
 
-    local -r requested_hostname="$1"
+    local requested_hostname="$1"
     # RHSSO-2017 Escape possible ampersand and semicolong characters
     # which are interpolated when used in sed righ-hand side expression
     requested_hostname=$(escape_sed_rhs_interpolated_characters "${requested_hostname}")
