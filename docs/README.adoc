@@ -14,11 +14,17 @@ Source can be found https://github.com/jboss-container-images/redhat-sso-7-opens
 
 toc::[levels=1]
 
-== templates/passthrough
+== templates/passthrough/ocp-3.x
 
-* link:./templates/passthrough/sso76-https.adoc[sso76-https]
-* link:./templates/passthrough/sso76-postgresql-persistent.adoc[sso76-postgresql-persistent]
-* link:./templates/passthrough/sso76-postgresql.adoc[sso76-postgresql]
+* link:./templates/passthrough/ocp-3.x/sso76-ocp3-https.adoc[sso76-ocp3-https]
+* link:./templates/passthrough/ocp-3.x/sso76-ocp3-postgresql-persistent.adoc[sso76-ocp3-postgresql-persistent]
+* link:./templates/passthrough/ocp-3.x/sso76-ocp3-postgresql.adoc[sso76-ocp3-postgresql]
+
+== templates/passthrough/ocp-4.x
+
+* link:./templates/passthrough/ocp-4.x/sso76-ocp4-https.adoc[sso76-ocp4-https]
+* link:./templates/passthrough/ocp-4.x/sso76-ocp4-postgresql-persistent.adoc[sso76-ocp4-postgresql-persistent]
+* link:./templates/passthrough/ocp-4.x/sso76-ocp4-postgresql.adoc[sso76-ocp4-postgresql]
 
 == templates/reencrypt/ocp-3.x
 
