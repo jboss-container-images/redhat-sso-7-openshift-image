@@ -182,18 +182,18 @@ to be installed for the application to run.
 [[clustering]]
 ==== Clustering
 
-Clustering in OpenShift EAP is achieved through one of two discovery mechanisms:
+Clustering in OpenShift is achieved through one of two discovery mechanisms:
 Kubernetes or DNS. This is done by configuring the JGroups protocol stack in
-standalone-openshift.xml with either the `<openshift.KUBE_PING/>` or `<openshift.DNS_PING/>`
+standalone-openshift.xml with either the `<kubernetes.KUBE_PING/>` or `<dns.DNS_PING/>`
 elements. The templates are configured to use `DNS_PING`, however `KUBE_PING`is
 the default used by the image.
 
 The discovery mechanism used is specified by the `JGROUPS_PING_PROTOCOL` environment
-variable which can be set to either `openshift.DNS_PING` or `openshift.KUBE_PING`.
-`openshift.KUBE_PING` is the default used by the image if no value is specified
+variable which can be set to either `dns.DNS_PING` or `kubernetes.KUBE_PING`.
+`kubernetes.KUBE_PING` is the default used by the image if no value is specified
 for `JGROUPS_PING_PROTOCOL`.
 
-For DNS_PING to work, the following steps must be taken:
+For `DNS_PING` to work on `IPv4 or IPv6 single-stack cluster`, the following steps must be taken:
 
 . The `OPENSHIFT_DNS_PING_SERVICE_NAME` environment variable must be set to the
   name of the ping service for the cluster (see table above).  If not set, the
@@ -211,30 +211,66 @@ For DNS_PING to work, the following steps must be taken:
    cluster into the other nodes' clusters after startup (as the other nodes are
    not detected until after they have started).
 
-.Example ping service for use with DNS_PING
+.Example definition of a ping service for use with DNS_PING on a single-stack (IPv4 or IPv6) cluster
 [source,yaml]
 ----
 kind: Service
 apiVersion: v1
 spec:
     clusterIP: None
+    ipFamilyPolicy: SingleStack
     ports:
     - name: ping
       port: 8888
     publishNotReadyAddresses: true
     selector:
-        deploymentConfig: eap-app
+        deploymentConfig: sso
 metadata:
-    name: eap-app-ping
+    name: sso-ping
+    annotations:
+        description: "The JGroups ping port for clustering."
+----
+
+*Moreover, the `DNS_PING` to work also on dual-network clusters* that support both IPv4 and IPv6
+address families, the `spec.ipFamilyPolicy` field of the ping service for the cluster (see table
+above) must be set to `PreferDualStack` or `RequireDualStack`. This ensures the control plane
+assigns both IPv4 and IPv6 cluster IP addresses for the ping service on clusters that have dual-stack
+configured, enabling reverse DNS lookups for both IPv4 and IPv6 IP addresses to work properly,
+and creating corresponding DNS SRV records for the ping headless service:
+
+.Example of ping service DNS SRV records on a dual-stack configured cluster with `spec.ipFamilyPolicy` matching `PreferDualStack`
+[source,bash]
+----
+$ host -t SRV "${OPENSHIFT_DNS_PING_SERVICE_NAME}"
+sso-ping.dual-stack-demo.svc.cluster.local has SRV record 0 50 8888 10-128-0-239.sso-ping.dual-stack-demo.svc.cluster.local.
+sso-ping.dual-stack-demo.svc.cluster.local has SRV record 0 50 8888 fd01-0-0-1--b8.sso-ping.dual-stack-demo.svc.cluster.local.
+----
+
+.Example definition of a ping service for use with DNS_PING on dual-stack (IPv4 and IPv6) cluster
+[source,yaml]
+----
+kind: Service
+apiVersion: v1
+spec:
+    clusterIP: None
+    ipFamilyPolicy: PreferDualStack
+    ports:
+    - name: ping
+      port: 8888
+    publishNotReadyAddresses: true
+    selector:
+        deploymentConfig: sso
+metadata:
+    name: sso-ping
     annotations:
         description: "The JGroups ping port for clustering."
 ----
 
 For `KUBE_PING` to work, the following steps must be taken:
 
-. The `OPENSHIFT_KUBE_PING_NAMESPACE` environment variable must be set (see table above).
+. The `KUBERNETES_NAMESPACE` environment variable must be set (see table above).
   If not set, the server will act as if it is a single-node cluster (a "cluster of one").
-. The `OPENSHIFT_KUBE_PING_LABELS` environment variables should be set (see table above).
+. The `KUBERNETES_LABELS` environment variables should be set (see table above).
   If not set, pods outside of your application (albeit in your namespace) will try to join.
 . Authorization must be granted to the service account the pod is running under to be
   allowed to access Kubernetes' REST api. This is done on the command line.
@@ -245,9 +281,9 @@ Using the default service account in the myproject namespace:
 ....
 oc policy add-role-to-user view system:serviceaccount:myproject:default -n myproject
 ....
-Using the eap-service-account in the myproject namespace:
+Using the sso-service-account in the myproject namespace:
 ....
-oc policy add-role-to-user view system:serviceaccount:myproject:eap-service-account -n myproject
+oc policy add-role-to-user view system:serviceaccount:myproject:sso-service-account -n myproject
 ....
 ====
 {/clustering}

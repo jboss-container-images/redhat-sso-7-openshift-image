@@ -5,21 +5,21 @@
         "annotations": {
             "iconClass" : "icon-sso",
             "tags" : "sso,keycloak,jboss,hidden",
-            "version": "7.6.2.GA",
-            "openshift.io/display-name": "Red Hat Single Sign-On 7.6 on OpenJDK + PostgreSQL (Ephemeral with passthrough TLS)",
+            "version": "7.6.3.GA",
+            "openshift.io/display-name": "Red Hat Single Sign-On 7.6 on OpenJDK (Ephemeral with passthrough TLS)",
             "openshift.io/provider-display-name": "Red Hat, Inc.",
             "description": "An example application based on RH-SSO 7.6 on OpenJDK image. For more information about using this template, see https://github.com/jboss-container-images/redhat-sso-7-openshift-image/tree/sso76-dev/docs.",
-            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Single Sign-On 7.6 on OpenJDK server based deployment, deployment configuration for PostgreSQL using ephemeral (temporary) storage, and securing RH-SSO communication using passthrough TLS.",
+            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Single Sign-On 7.6 on OpenJDK server based deployment, securing RH-SSO communication using passthrough TLS. It is intended to be used solely on OpenShift 4.X versions. For OpenShift 3.X variant of this template refer to the 'sso76-ocp3-https' one.",
             "template.openshift.io/documentation-url": "https://access.redhat.com/documentation/en/red-hat-single-sign-on/",
             "template.openshift.io/support-url": "https://access.redhat.com"
         },
-        "name": "sso76-postgresql"
+        "name": "sso76-ocp4-https"
     },
     "labels": {
-        "template": "sso76-postgresql",
-        "rhsso": "7.6.2.GA"
+        "template": "sso76-ocp4-https",
+        "rhsso": "7.6.3.GA"
     },
-    "message": "A new RH-SSO service (using PostgreSQL) has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. The username/password for accessing the PostgreSQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}. Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications; \"${SSO_TRUSTSTORE_SECRET}\" containing the ${SSO_TRUSTSTORE} file used for securing RH-SSO requests.",
+    "message": "A new RH-SSO service has been created in your project. The admin username/password for accessing the master realm via the RH-SSO console is ${SSO_ADMIN_USERNAME}/${SSO_ADMIN_PASSWORD}. Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications; \"${SSO_TRUSTSTORE_SECRET}\" containing the ${SSO_TRUSTSTORE} file used for securing RH-SSO requests. To enable also dual-network clusters that support both IPv4 and IPv6 address families, all services defined by this template are configured having the 'spec.ipFamilyPolicy' field set to 'PreferDualStack' by default.",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -48,20 +48,6 @@
             "name": "SSO_HOSTNAME",
             "value": "",
             "required": false
-        },
-        {
-            "displayName": "Database JNDI Name",
-            "description": "Database JNDI name used by application to resolve the datasource, e.g. java:/jboss/datasources/postgresql",
-            "name": "DB_JNDI",
-            "value": "java:jboss/datasources/KeycloakDS",
-            "required": false
-        },
-        {
-            "displayName": "Database Name",
-            "description": "Database name",
-            "name": "DB_DATABASE",
-            "value": "root",
-            "required": true
         },
         {
             "displayName": "Server Keystore Secret Name",
@@ -115,34 +101,6 @@
             "description": "Sets transaction-isolation for the configured datasource.",
             "name": "DB_TX_ISOLATION",
             "required": false
-        },
-        {
-            "displayName": "PostgreSQL Maximum number of connections",
-            "description": "The maximum number of client connections allowed. This also sets the maximum number of prepared transactions.",
-            "name": "POSTGRESQL_MAX_CONNECTIONS",
-            "required": false
-        },
-        {
-            "displayName": "PostgreSQL Shared Buffers",
-            "description": "Configures how much memory is dedicated to PostgreSQL for caching data.",
-            "name": "POSTGRESQL_SHARED_BUFFERS",
-            "required": false
-        },
-        {
-            "displayName": "Database Username",
-            "description": "Database user name",
-            "name": "DB_USERNAME",
-            "from": "user[a-zA-Z0-9]{3}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Database Password",
-            "description": "Database user password",
-            "name": "DB_PASSWORD",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
         },
         {
             "displayName": "JGroups Secret Name",
@@ -246,13 +204,6 @@
             "required": false
         },
         {
-            "displayName": "PostgreSQL Image Stream Tag",
-            "description": "The tag to use for the \"postgresql\" image stream. Typically, this aligns with the major.minor version of PostgreSQL.",
-            "name": "POSTGRESQL_IMAGE_STREAM_TAG",
-            "value": "13-el8",
-            "required": true
-        },
-        {
             "displayName": "Container Memory Limit",
             "description": "Container memory limit.",
             "name": "MEMORY_LIMIT",
@@ -279,12 +230,10 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
+                    "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
-                    "description": "The web server's http port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-postgresql\", \"kind\": \"Service\"}]"
+                    "description": "The web server's http port."
                 }
             }
         },
@@ -306,38 +255,10 @@
             "metadata": {
                 "name": "secure-${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
+                    "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
-                    "description": "The web server's https port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-postgresql\", \"kind\": \"Service\"}]"
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ipFamilyPolicy": "PreferDualStack",
-                "ports": [
-                    {
-                        "port": 5432,
-                        "targetPort": 5432
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-postgresql"
-                }
-            },
-            "metadata": {
-                "name": "${APPLICATION_NAME}-postgresql",
-                "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "database"
-                },
-                "annotations": {
-                    "description": "The database server's port."
+                    "description": "The web server's https port."
                 }
             }
         },
@@ -375,8 +296,7 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
+                    "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
                     "description": "Route for application's http service."
@@ -396,8 +316,7 @@
             "metadata": {
                 "name": "secure-${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
+                    "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
                     "description": "Route for application's https service."
@@ -419,8 +338,7 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
+                    "application": "${APPLICATION_NAME}"
                 }
             },
             "spec": {
@@ -455,8 +373,7 @@
                         "name": "${APPLICATION_NAME}",
                         "labels": {
                             "deploymentConfig": "${APPLICATION_NAME}",
-                            "application": "${APPLICATION_NAME}",
-                            "component": "server"
+                            "application": "${APPLICATION_NAME}"
                         }
                     },
                     "spec": {
@@ -540,30 +457,6 @@
                                         "value": "${SSO_HOSTNAME}"
                                     },
                                     {
-                                        "name": "DB_SERVICE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-postgresql=DB"
-                                    },
-                                    {
-                                        "name": "DB_JNDI",
-                                        "value": "${DB_JNDI}"
-                                    },
-                                    {
-                                        "name": "DB_USERNAME",
-                                        "value": "${DB_USERNAME}"
-                                    },
-                                    {
-                                        "name": "DB_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "DB_DATABASE",
-                                        "value": "${DB_DATABASE}"
-                                    },
-                                    {
-                                        "name": "TX_DATABASE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-postgresql=DB"
-                                    },
-                                    {
                                         "name": "DB_MIN_POOL_SIZE",
                                         "value": "${DB_MIN_POOL_SIZE}"
                                     },
@@ -577,7 +470,7 @@
                                     },
                                     {
                                         "name": "JGROUPS_PING_PROTOCOL",
-                                        "value": "openshift.DNS_PING"
+                                        "value": "dns.DNS_PING"
                                     },
                                     {
                                         "name": "OPENSHIFT_DNS_PING_SERVICE_NAME",
@@ -690,125 +583,6 @@
                                 "emptyDir": {
                                     "medium": "Memory"
                                 }
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "kind": "DeploymentConfig",
-            "apiVersion": "apps.openshift.io/v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-postgresql",
-                "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "database"
-                }
-            },
-            "spec": {
-                "strategy": {
-                    "type": "Recreate"
-                },
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChangeParams": {
-                            "automatic": true,
-                            "containerNames": [
-                                "${APPLICATION_NAME}-postgresql"
-                            ],
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                                "name": "postgresql13-for-sso76-openshift-rhel8:${POSTGRESQL_IMAGE_STREAM_TAG}"
-                            }
-                        }
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "replicas": 1,
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-postgresql"
-                },
-                "template": {
-                    "metadata": {
-                        "name": "${APPLICATION_NAME}-postgresql",
-                        "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}-postgresql",
-                            "application": "${APPLICATION_NAME}",
-                            "component": "database"
-                        }
-                    },
-                    "spec": {
-                        "terminationGracePeriodSeconds": 60,
-                        "containers": [
-                            {
-                                "name": "${APPLICATION_NAME}-postgresql",
-                                "image": "postgresql",
-                                "imagePullPolicy": "Always",
-                                "ports": [
-                                    {
-                                        "containerPort": 5432,
-                                        "protocol": "TCP"
-                                    }
-                                ],
-                                "readinessProbe": {
-                                    "timeoutSeconds": 1,
-                                    "initialDelaySeconds": 5,
-                                    "exec": {
-                                        "command": [ "/bin/sh", "-i", "-c", "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]
-                                    }
-                                },
-                                "livenessProbe": {
-                                    "timeoutSeconds": 1,
-                                    "initialDelaySeconds": 30,
-                                    "tcpSocket": {
-                                        "port": 5432
-                                    }
-                                },
-                                "env": [
-                                    {
-                                        "name": "POSTGRESQL_USER",
-                                        "value": "${DB_USERNAME}"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_DATABASE",
-                                        "value": "${DB_DATABASE}"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_MAX_CONNECTIONS",
-                                        "value": "${POSTGRESQL_MAX_CONNECTIONS}"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_MAX_PREPARED_TRANSACTIONS",
-                                        "value": "${POSTGRESQL_MAX_CONNECTIONS}"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_SHARED_BUFFERS",
-                                        "value": "${POSTGRESQL_SHARED_BUFFERS}"
-                                    }
-                                ],
-                                "volumeMounts": [
-                                    {
-                                        "mountPath": "/var/lib/pgsql/data",
-                                        "name": "${APPLICATION_NAME}-data"
-                                    }
-                                ]
-                            }
-                        ],
-                        "volumes": [
-                            {
-                                "emptyDir": {
-                                    "medium": ""
-                                },
-                                "name": "${APPLICATION_NAME}-data"
                             }
                         ]
                     }

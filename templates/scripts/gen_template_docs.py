@@ -24,7 +24,7 @@ if sys.version_info[0] != 2:
     )
 
 TEMPLATE_DOCS = "docs/"
-template_dirs = ['templates/passthrough', 'templates/reencrypt/ocp-3.x', 'templates/reencrypt/ocp-4.x']
+template_dirs = ['templates/passthrough/ocp-3.x', 'templates/passthrough/ocp-4.x', 'templates/reencrypt/ocp-3.x', 'templates/reencrypt/ocp-4.x']
 amq_ssl_desc = None
 
 LINKS =  {
