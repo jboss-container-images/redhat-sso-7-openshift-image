@@ -47,16 +47,27 @@ function verify_db_backends_ready_to_accept_connections() {
       # 1) Either "$service" substring, derived from DB_SERVICE_PREFIX_MAPPING env var
       # 2) Or "$db_SERVICE" substring, where $db is derived from the "$service" string above
       # Thus check the RH-SSO pod env for both substrings in that order
-      K8S_DB_SERVICE_HOST_VAR_NAME=$(
-        compgen -v | grep -s "${service}_SERVICE_HOST" ||
-        compgen -v | grep -s "${db}_SERVICE_HOST"
+      #
+      # Note: If following 'compgen' commands return more than just one variable, we intentionally want
+      # the array to contain one element per variable, thus the corresponding ShellCheck test is disabled
+      # shellcheck disable=SC2207
+      declare -ra K8S_DB_SERVICE_HOST_VAR_NAME=(
+        $(
+          compgen -v | grep -sx "${service}_SERVICE_HOST" ||
+          compgen -v | grep -sx "${db}_SERVICE_HOST"
+        )
       )
-      K8S_DB_SERVICE_PORT_VAR_NAME=$(
-        compgen -v | grep -s "${service}_SERVICE_PORT" ||
-        compgen -v | grep -s "${db}_SERVICE_PORT"
+      # Note: If following 'compgen' commands return more than just one variable, we intentionally want
+      # the array to contain one element per variable, thus the corresponding ShellCheck test is disabled
+      # shellcheck disable=SC2207
+      declare -ra K8S_DB_SERVICE_PORT_VAR_NAME=(
+        $(
+          compgen -v | grep -sx "${service}_SERVICE_PORT" ||
+          compgen -v | grep -sx "${db}_SERVICE_PORT"
+        )
       )
-      # If host/port is still unknown at this moment, that's an error
-      if [ -z "${K8S_DB_SERVICE_HOST_VAR_NAME}" ] || [ -z "${K8S_DB_SERVICE_PORT_VAR_NAME}" ]
+      # If host/port is still unknown at this moment or there's more than one host/port entry, that's an error
+      if [ "${#K8S_DB_SERVICE_HOST_VAR_NAME[@]}" -ne "1" ] || [ "${#K8S_DB_SERVICE_PORT_VAR_NAME[@]}" -ne "1" ]
       then
         log_error "Failed to determine the host and port of the database service to check."
         exit 1
@@ -64,8 +75,8 @@ function verify_db_backends_ready_to_accept_connections() {
       # Otherwise evaluate the actual values of both the DB service host and port
       # from the indirect references of automatic Kubernetes environment variables
       # created for the service
-      local -r DB_HOST="${!K8S_DB_SERVICE_HOST_VAR_NAME}"
-      local -r DB_PORT="${!K8S_DB_SERVICE_PORT_VAR_NAME}"
+      local -r DB_HOST="${!K8S_DB_SERVICE_HOST_VAR_NAME[0]}"
+      local -r DB_PORT="${!K8S_DB_SERVICE_PORT_VAR_NAME[0]}"
       # Finally wait for the DB system to become ready (wait till a moment, when
       # attempt to open a TCP connection to the remote DB backend actually succeeds)
       log_info "Checking connection readiness of the ${db} database system."
