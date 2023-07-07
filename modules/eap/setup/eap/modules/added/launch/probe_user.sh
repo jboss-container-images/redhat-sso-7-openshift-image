@@ -136,7 +136,6 @@ function create_probe_netrc_file() {
 function ensure_probe_mgmt_user_exists() {
   # Disable echoing of expanded commands of this routine even in debug mode
   set +x
-  local -r props="${JBOSS_HOME}/standalone/configuration/mgmt-users.properties"
   if [[ "$#" -ne "1" ]] && [[ "$#" -ne "2" ]];
   then
     log_error "Please enter the username of the management user to be checked."
@@ -149,26 +148,18 @@ function ensure_probe_mgmt_user_exists() {
       local -r password=$(load_probe_netrc_file | cut -d $' ' -f 6)
     fi
     # Create a new management probe user, if it doesn't exist yet
-    if ! grep "${username}" "${props}" | grep -Pqv '\s*(#|!)'; then
+    if "${JBOSS_HOME}"/bin/jboss-cli.sh --connect --commands="/subsystem=elytron/filesystem-realm=ManagementRealm:read-identity(identity=\"${username}\")"; 
+    then 
+      log_info "Using the '${username}' username to authenticate the probe request against the JBoss DMR API."
+    else 
       log_info "Creating a new management probe user for DMR API."
-      # The '-sc' arg of the 'add-user.sh' command is used specify custom
-      # location of the EAP server config directory
-      "${JBOSS_HOME}"/bin/add-user.sh                \
-        --user "${username}"                         \
-        --password "${password}"                     \
-        -sc "${JBOSS_HOME}"/standalone/configuration \
-        --silent
-      # Confirm the user was added correctly (IOW it's present at some line in
-      # the "mgmt-users.properties" file, which is not a comment:
-      # * https://en.wikipedia.org/wiki/.properties#Format
-      if grep "${username}" "${props}" | grep -Pqv '\s*(#|!)'; then
+      if "${JBOSS_HOME}"/bin/jboss-cli.sh --connect --commands="/subsystem=elytron/filesystem-realm=ManagementRealm:add-identity(identity=\"${username}\"),/subsystem=elytron/filesystem-realm=ManagementRealm:set-password(clear={password=\"${password}\"}, identity=\"${username}\")";
+      then
         log_info "User '${username}' added successfully."
       else
         log_error "Failed to add a new '${username}' management user."
         exit 1
       fi
-    else
-      log_info "Using the '${username}' username to authenticate the probe request against the JBoss DMR API."
     fi
   fi
   # Re-enable echoing of expanded commands when in debug mode

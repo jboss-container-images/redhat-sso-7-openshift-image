@@ -74,8 +74,8 @@
             </logger>
         </audit-log>
         <management-interfaces>
-            <http-interface console-enabled="false"><!-- ##MGMT_IFACE_REALM## -->
-                <http-upgrade enabled="true"/>
+            <http-interface console-enabled="false" http-authentication-factory="management-http-authentication">
+                <http-upgrade enabled="true" sasl-authentication-factory="management-sasl-authentication"/>
                 <socket-binding http="management-http"/>
             </http-interface>
         </management-interfaces>
@@ -257,7 +257,7 @@
                     <realm name="local"/>
                 </security-domain>
                 <security-domain name="ManagementDomain" default-realm="ManagementRealm" permission-mapper="default-permission-mapper">
-                    <realm name="ManagementRealm" role-decoder="groups-to-roles"/>
+                    <realm name="ManagementRealm"/>
                     <realm name="local" role-mapper="super-user-mapper"/>
                 </security-domain>
             </security-domains>
@@ -267,10 +267,9 @@
                     <users-properties path="application-users.properties" relative-to="jboss.server.config.dir" digest-realm-name="ApplicationRealm"/>
                     <groups-properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </properties-realm>
-                <properties-realm name="ManagementRealm">
-                    <users-properties path="mgmt-users.properties" relative-to="jboss.server.config.dir" digest-realm-name="ManagementRealm"/>
-                    <groups-properties path="mgmt-groups.properties" relative-to="jboss.server.config.dir"/>
-                </properties-realm>
+                <filesystem-realm name="ManagementRealm">
+                    <file path="mgmt-realm-users" relative-to="jboss.server.config.dir"/>
+                </filesystem-realm>
             </security-realms>
             <mappers>
                 <simple-permission-mapper name="default-permission-mapper" mapping-mode="first">
@@ -302,7 +301,7 @@
             <http>
                 <http-authentication-factory name="management-http-authentication" security-domain="ManagementDomain" http-server-mechanism-factory="global">
                     <mechanism-configuration>
-                        <mechanism mechanism-name="DIGEST">
+                        <mechanism mechanism-name="DIGEST-SHA-256">
                             <mechanism-realm realm-name="ManagementRealm"/>
                         </mechanism>
                     </mechanism-configuration>
@@ -329,7 +328,7 @@
                 <sasl-authentication-factory name="management-sasl-authentication" sasl-server-factory="configured" security-domain="ManagementDomain">
                     <mechanism-configuration>
                         <mechanism mechanism-name="JBOSS-LOCAL-USER" realm-mapper="local"/>
-                        <mechanism mechanism-name="DIGEST-MD5">
+                        <mechanism mechanism-name="DIGEST-SHA-256">
                             <mechanism-realm realm-name="ManagementRealm"/>
                         </mechanism>
                     </mechanism-configuration>
