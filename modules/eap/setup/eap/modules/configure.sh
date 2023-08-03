@@ -936,6 +936,7 @@ if [ -d "$JBOSS_HOME/modules" ]; then
 fi
 
 # Install the producers and universe
+export MAVEN_OPTS="-Duser.home=$HOME -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -Dmaven.resolver.transport=wagon"
 mvn -f "$JBOSS_CONTAINER_WILDFLY_S2I_MODULE"/galleon/provisioning/jboss-s2i-producers/pom.xml install -Dmaven.repo.local=$TMP_GALLEON_LOCAL_MAVEN_REPO \
 --settings $GALLEON_MAVEN_BUILD_IMG_SETTINGS_XML
 mvn -f "$JBOSS_CONTAINER_WILDFLY_S2I_MODULE"/galleon/provisioning/jboss-s2i-universe/pom.xml install -Dmaven.repo.local=$TMP_GALLEON_LOCAL_MAVEN_REPO \
