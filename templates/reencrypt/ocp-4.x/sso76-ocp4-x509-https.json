@@ -290,7 +290,11 @@
                                             "/opt/eap/bin/livenessProbe.sh"
                                         ]
                                     },
-                                    "initialDelaySeconds": 60
+                                    "failureThreshold": 10,
+                                    "initialDelaySeconds": 30,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 22
                                 },
                                 "readinessProbe": {
                                     "exec": {
@@ -299,7 +303,12 @@
                                             "-c",
                                             "/opt/eap/bin/readinessProbe.sh"
                                         ]
-                                    }
+                                    },
+                                    "failureThreshold": 10,
+                                    "initialDelaySeconds": 40,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 22
                                 },
                                 "ports": [
                                     {
