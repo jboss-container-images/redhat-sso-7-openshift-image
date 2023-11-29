@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<layer-spec xmlns="urn:jboss:galleon:layer-spec:1.0" name="logging">
-    <exclude feature-id="subsystem.logging.pattern-formatter:pattern-formatter=PATTERN"/>
-    <exclude feature-id="subsystem.logging.periodic-rotating-file-handler:periodic-rotating-file-handler=FILE"/>
-    <feature-group name="os-logging"/>
-</layer-spec>
-
