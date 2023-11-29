@@ -1,7 +1,0 @@
-schema_version: 1
-name: sso-cli-extensions
-version: '1.0'
-description: Custom CLI script executor package.
-execute:
-- script: configure.sh
-  user: '185'

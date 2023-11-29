@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature-group-spec name="os-webservices" xmlns="urn:jboss:galleon:feature-group:1.0">
-    <feature spec="subsystem.webservices">
-        <param name="wsdl-host" value="jbossws.undefined.host"/>
-        <param name="modify-wsdl-address" value="true"/>
-    </feature>
-</feature-group-spec>

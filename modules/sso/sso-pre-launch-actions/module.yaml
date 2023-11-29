@@ -1,7 +1,0 @@
-schema_version: 1
-name: sso-pre-launch-actions
-version: '1.0'
-description: Module to perform various RH-SSO image pre-launch actions to prevent regressions.
-
-execute:
-- script: configure.sh
