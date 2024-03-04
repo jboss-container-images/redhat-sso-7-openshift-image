@@ -35,7 +35,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`SSO_REALM` | `SSO_REALM` | Realm to be created in the RH-SSO server (e.g. demorealm). | `${SSO_REALM}` | False
 |`SSO_SERVICE_USERNAME` | `SSO_SERVICE_USERNAME` | The username used to access the RH-SSO service. This is used by clients to create the appliction client(s) within the specified RH-SSO realm. | `${SSO_SERVICE_USERNAME}` | False
 |`SSO_SERVICE_PASSWORD` | `SSO_SERVICE_PASSWORD` | The password for the RH-SSO service user. | `${SSO_SERVICE_PASSWORD}` | False
-|`MEMORY_LIMIT` | -- | Container memory limit. | 1Gi | False
+|`MEMORY_LIMIT` | -- | Container memory limit. | 2Gi | False
 |=======================================================================
 
 

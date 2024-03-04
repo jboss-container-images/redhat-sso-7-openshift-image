@@ -46,7 +46,7 @@ https://docs.openshift.org/latest/architecture/core_concepts/templates.html#para
 |`POSTGRESQL_SOURCE_REPOSITORY_URL` | -- | Git source URI for the application extending PostgreSQL SQL server container image with SSL/TLS support. | https://github.com/iankko/redhat-sso-7-openshift-image | True
 |`POSTGRESQL_SOURCE_REPOSITORY_REF` | -- | Git branch/tag reference for the application extending PostgreSQL SQL server container image with SSL/TLS support. | KEYCLOAK-15633 | True
 |`POSTGRESQL_CONTEXT_DIR` | -- | Path within the Git project to build the application extending PostgreSQL SQL server container image with SSL/TLS support. | s2i/postgresql/enable-ssl | True
-|`MEMORY_LIMIT` | -- | Container memory limit. | 1Gi | False
+|`MEMORY_LIMIT` | -- | Container memory limit. | 2Gi | False
 |=======================================================================
 
 

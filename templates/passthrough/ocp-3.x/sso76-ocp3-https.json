@@ -207,7 +207,7 @@
             "displayName": "Container Memory Limit",
             "description": "Container memory limit.",
             "name": "MEMORY_LIMIT",
-            "value": "1Gi",
+            "value": "2Gi",
             "required": false
         }
     ],
